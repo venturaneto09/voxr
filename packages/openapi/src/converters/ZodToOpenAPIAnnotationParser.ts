@@ -9,7 +9,7 @@ export interface EnumEntry {
 	value: string | number;
 	description?: string;
 }
-export interface FluxerTypeAnnotation {
+export interface VoxrTypeAnnotation {
 	typeName: string;
 	userDescription: string | undefined;
 	enumNames?: Array<string>;
@@ -150,9 +150,9 @@ function splitTypeAndDescription(rest: string): {
 		userDescription: rest.slice(firstSpaceIndex + 1).trim() || undefined,
 	};
 }
-export function parseFluxerTypeAnnotation(description: string | undefined): FluxerTypeAnnotation | null {
-	if (!description?.startsWith('fluxer:')) return null;
-	const rest = description.slice('fluxer:'.length);
+export function parseVoxrTypeAnnotation(description: string | undefined): VoxrTypeAnnotation | null {
+	if (!description?.startsWith('voxr:')) return null;
+	const rest = description.slice('voxr:'.length);
 	const {typeAndData, userDescription: rawUserDescription} = splitTypeAndDescription(rest);
 	let userDescription = rawUserDescription;
 	let fieldDescription: string | undefined;

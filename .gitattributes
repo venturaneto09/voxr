@@ -1,4 +1,4 @@
 * text=auto
-fluxer_static/** -text -diff
-fluxer_static/**/*.md text diff
+voxr_static/** -text -diff
+voxr_static/**/*.md text diff
 packages/fonts/files/** -text -diff

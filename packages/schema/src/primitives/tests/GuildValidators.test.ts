@@ -7,8 +7,8 @@ import {
 	GuildSplashCardAlignment,
 	GuildVerificationLevel,
 	JoinSourceTypes,
-} from '@fluxer/constants/src/GuildConstants';
-import {MessageNotifications} from '@fluxer/constants/src/NotificationConstants';
+} from '@voxr/constants/src/GuildConstants';
+import {MessageNotifications} from '@voxr/constants/src/NotificationConstants';
 import {
 	DefaultMessageNotificationsSchema,
 	GuildExplicitContentFilterSchema,
@@ -17,7 +17,7 @@ import {
 	JoinSourceTypeSchema,
 	NSFWLevelSchema,
 	SplashCardAlignmentSchema,
-} from '@fluxer/schema/src/primitives/GuildValidators';
+} from '@voxr/schema/src/primitives/GuildValidators';
 import {describe, expect, it} from 'vitest';
 
 describe('GuildVerificationLevelSchema', () => {

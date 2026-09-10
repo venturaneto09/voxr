@@ -5,7 +5,7 @@ import {
 	createStringType,
 	SnowflakeStringType,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const HarvestStatusEnum = withOpenApiType(

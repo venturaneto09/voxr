@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {QueryBooleanType} from '@fluxer/schema/src/primitives/QueryValidators';
+import {QueryBooleanType} from '@voxr/schema/src/primitives/QueryValidators';
 import {z} from 'zod';
 
 export const PurgeQuery = z.object({

@@ -2,21 +2,21 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type {OpenAPIGenerationStats, OpenAPIRouteScope, SkippedRoute} from '@fluxer/openapi/src/OpenAPIGenerationTypes';
-import {OpenAPIGenerator} from '@fluxer/openapi/src/OpenAPIGenerator';
-import {transformAdminOpenAPISpec} from '@fluxer/openapi/src/output/AdminSpecTransform';
-import {printValidationResult, validateSpec} from '@fluxer/openapi/src/output/SpecValidator';
+import type {OpenAPIGenerationStats, OpenAPIRouteScope, SkippedRoute} from '@voxr/openapi/src/OpenAPIGenerationTypes';
+import {OpenAPIGenerator} from '@voxr/openapi/src/OpenAPIGenerator';
+import {transformAdminOpenAPISpec} from '@voxr/openapi/src/output/AdminSpecTransform';
+import {printValidationResult, validateSpec} from '@voxr/openapi/src/output/SpecValidator';
 import {
 	getAdminOutputPath,
 	getApiPackageOutputPath,
 	readSpec,
 	type WritableOpenAPISpec,
 	writeSpec,
-} from '@fluxer/openapi/src/output/SpecWriter';
+} from '@voxr/openapi/src/output/SpecWriter';
 
 type GenerateTarget = 'admin' | 'public';
 const API_DESCRIPTION =
-	'API for Fluxer, a free and open source instant messaging and VoIP chat app built for friends, groups, and communities.';
+	'API for Voxr, a free and open source instant messaging and VoIP chat app built for friends, groups, and communities.';
 function parseArgs(): {
 	validateOnly: boolean;
 	outputPath: string | null;
@@ -80,10 +80,10 @@ function reportRoutesLeftOut(target: GenerateTarget, stats: OpenAPIGenerationSta
 async function buildTargetSpec(basePath: string, target: GenerateTarget): Promise<WritableOpenAPISpec> {
 	const generator = new OpenAPIGenerator({
 		basePath,
-		title: 'Fluxer API',
+		title: 'Voxr API',
 		version: '1.0.0',
 		description: API_DESCRIPTION,
-		serverUrl: 'https://api.fluxer.app/v1',
+		serverUrl: 'https://api.voxr.app/v1',
 		routeScope: getRouteScope(target),
 	});
 	const {document, stats} = await generator.generateWithStats();
@@ -132,7 +132,7 @@ async function main(): Promise<void> {
 		throw new Error('--output requires --target when generating or validating multiple specs.');
 	}
 	const targets: Array<GenerateTarget> = requestedTarget ? [requestedTarget] : ['public', 'admin'];
-	console.log('Fluxer OpenAPI Specification Generator');
+	console.log('Voxr OpenAPI Specification Generator');
 	console.log('======================================');
 	console.log(`Base path: ${basePath}`);
 	console.log(`Targets: ${targets.join(', ')}`);

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {buildEndpointUrl, validateOutboundEndpointUrl} from '@fluxer/hono/src/security/OutboundEndpoint';
+import {buildEndpointUrl, validateOutboundEndpointUrl} from '@voxr/hono/src/security/OutboundEndpoint';
 import {describe, expect, test} from 'vitest';
 
 describe('OutboundEndpoint', () => {

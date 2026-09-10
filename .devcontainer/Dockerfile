@@ -135,9 +135,9 @@ RUN curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL https://deb.nodesour
 
 RUN python3 -m pip install --break-system-packages --no-cache-dir awscli
 
-COPY fluxer_media_proxy/tools/install-native-deps.sh /tmp/fluxer-install-native-deps.sh
-RUN /tmp/fluxer-install-native-deps.sh /usr/local \
-	&& rm /tmp/fluxer-install-native-deps.sh
+COPY voxr_media_proxy/tools/install-native-deps.sh /tmp/voxr-install-native-deps.sh
+RUN /tmp/voxr-install-native-deps.sh /usr/local \
+	&& rm /tmp/voxr-install-native-deps.sh
 
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig
 ENV LD_LIBRARY_PATH=/usr/local/lib
@@ -149,15 +149,15 @@ RUN printf '%s\n' \
 		'#error the source-built libheif headers must win the include search' \
 		'#endif' \
 		'int main(void) { return strcmp(heif_get_version(), LIBHEIF_VERSION) != 0; }' \
-		>/tmp/fluxer-heif-probe.c \
-	&& cc /tmp/fluxer-heif-probe.c $(pkg-config --cflags --libs libheif) -o /tmp/fluxer-heif-probe \
-	&& /tmp/fluxer-heif-probe \
+		>/tmp/voxr-heif-probe.c \
+	&& cc /tmp/voxr-heif-probe.c $(pkg-config --cflags --libs libheif) -o /tmp/voxr-heif-probe \
+	&& /tmp/voxr-heif-probe \
 	&& [ "$(pkg-config --variable=prefix libheif)" = /usr/local ] \
-	&& rm /tmp/fluxer-heif-probe.c /tmp/fluxer-heif-probe
+	&& rm /tmp/voxr-heif-probe.c /tmp/voxr-heif-probe
 
-COPY tools/fonts/requirements.txt /tmp/fluxer-fonts-requirements.txt
-RUN python3 -m pip install --break-system-packages --no-cache-dir -r /tmp/fluxer-fonts-requirements.txt \
-	&& rm /tmp/fluxer-fonts-requirements.txt \
+COPY tools/fonts/requirements.txt /tmp/voxr-fonts-requirements.txt
+RUN python3 -m pip install --break-system-packages --no-cache-dir -r /tmp/voxr-fonts-requirements.txt \
+	&& rm /tmp/voxr-fonts-requirements.txt \
 	&& pyftsubset --help >/dev/null \
 	&& python3 -c "import fontTools, brotli"
 
@@ -197,4 +197,4 @@ RUN curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL https://sh.rustup.rs
 RUN corepack prepare "pnpm@${PNPM_VERSION}" --activate \
 	&& pnpm --version
 
-WORKDIR /workspaces/fluxer
+WORKDIR /workspaces/voxr

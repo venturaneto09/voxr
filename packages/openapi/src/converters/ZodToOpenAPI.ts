@@ -6,20 +6,20 @@ import {
 	setEnumDescriptions,
 	setEnumNames,
 	setSnowflakeKeyType,
-} from '@fluxer/openapi/src/converters/OpenAPIExtensions';
-import {escapeRegex, parseFluxerTypeAnnotation} from '@fluxer/openapi/src/converters/ZodToOpenAPIAnnotationParser';
-import {getFluxerCustomTypeSchema, isSnowflakeType} from '@fluxer/openapi/src/converters/ZodToOpenAPICustomTypes';
+} from '@voxr/openapi/src/converters/OpenAPIExtensions';
+import {escapeRegex, parseVoxrTypeAnnotation} from '@voxr/openapi/src/converters/ZodToOpenAPIAnnotationParser';
+import {getVoxrCustomTypeSchema, isSnowflakeType} from '@voxr/openapi/src/converters/ZodToOpenAPICustomTypes';
 
 export {
 	getRegisteredBitflagSchemas,
 	getRegisteredInt32EnumSchemas,
-} from '@fluxer/openapi/src/converters/ZodToOpenAPICustomTypes';
+} from '@voxr/openapi/src/converters/ZodToOpenAPICustomTypes';
 
 import {
 	getSchemaNameMetadata,
 	getZodDefinition,
 	setSchemaNameMetadata,
-} from '@fluxer/openapi/src/converters/ZodInternals';
+} from '@voxr/openapi/src/converters/ZodInternals';
 import {
 	buildEnumSchemaFromInfo,
 	extractNumberConstraints,
@@ -43,8 +43,8 @@ import {
 	getTupleRest,
 	getUserDescription,
 	getZodTypeName,
-} from '@fluxer/openapi/src/converters/ZodToOpenAPIIntrospection';
-import type {OpenAPISchema, OpenAPISchemaOrRef} from '@fluxer/openapi/src/Types';
+} from '@voxr/openapi/src/converters/ZodToOpenAPIIntrospection';
+import type {OpenAPISchema, OpenAPISchemaOrRef} from '@voxr/openapi/src/Types';
 import type {ZodTypeAny} from 'zod';
 
 export function setSchemaName(schema: ZodTypeAny, name: string): void {
@@ -209,7 +209,7 @@ export function zodToOpenAPISchema(schema: ZodTypeAny, depth = 0): OpenAPISchema
 	if (schemaName && depth > 0) {
 		return {$ref: `#/components/schemas/${schemaName}`};
 	}
-	const customTypeSchema = getFluxerCustomTypeSchema(schema);
+	const customTypeSchema = getVoxrCustomTypeSchema(schema);
 	if (customTypeSchema) {
 		return addDescription(customTypeSchema, schema);
 	}
@@ -395,16 +395,16 @@ export function zodToOpenAPISchema(schema: ZodTypeAny, depth = 0): OpenAPISchema
 				}
 			}
 			const description = getDescription(schema);
-			const fluxer = parseFluxerTypeAnnotation(description);
-			if (fluxer?.typeName === 'EnumValues' && fluxer.enumEntries && fluxer.enumEntries.length > 0) {
-				const enumValues = getNumericEnumValues(fluxer.enumEntries);
+			const voxr = parseVoxrTypeAnnotation(description);
+			if (voxr?.typeName === 'EnumValues' && voxr.enumEntries && voxr.enumEntries.length > 0) {
+				const enumValues = getNumericEnumValues(voxr.enumEntries);
 				if (enumValues) {
 					result.enum = enumValues;
 					setEnumNames(
 						result,
-						fluxer.enumEntries.map((entry) => entry.name),
+						voxr.enumEntries.map((entry) => entry.name),
 					);
-					const descriptions = getEnumDescriptions(fluxer.enumEntries);
+					const descriptions = getEnumDescriptions(voxr.enumEntries);
 					if (descriptions) {
 						setEnumDescriptions(result, descriptions);
 					}
@@ -470,7 +470,7 @@ export function zodToOpenAPISchema(schema: ZodTypeAny, depth = 0): OpenAPISchema
 			if (!shape) {
 				return {type: 'object'};
 			}
-			const objectAnnotation = parseFluxerTypeAnnotation(getDescription(schema));
+			const objectAnnotation = parseVoxrTypeAnnotation(getDescription(schema));
 			const namedObjectName = objectAnnotation?.typeName === 'NamedObject' ? objectAnnotation.objectName : undefined;
 			if (namedObjectName && depth > 0 && namedObjectRegistry.has(namedObjectName)) {
 				return makeNamedObjectRef(namedObjectName, objectAnnotation?.fieldDescription);
@@ -545,19 +545,19 @@ export function zodToOpenAPISchema(schema: ZodTypeAny, depth = 0): OpenAPISchema
 				return {};
 			}
 			const description = getDescription(schema);
-			const fluxer = parseFluxerTypeAnnotation(description);
-			if (fluxer?.typeName === 'FlexibleEnumValues' && fluxer.enumEntries && fluxer.enumEntries.length > 0) {
+			const voxr = parseVoxrTypeAnnotation(description);
+			if (voxr?.typeName === 'FlexibleEnumValues' && voxr.enumEntries && voxr.enumEntries.length > 0) {
 				const result: OpenAPISchema = {type: 'string'};
 				setEnumNames(
 					result,
-					fluxer.enumEntries.map((entry) => entry.name),
+					voxr.enumEntries.map((entry) => entry.name),
 				);
-				const descriptions = getEnumDescriptions(fluxer.enumEntries);
+				const descriptions = getEnumDescriptions(voxr.enumEntries);
 				if (descriptions) {
 					setEnumDescriptions(result, descriptions);
 				}
-				const knownValues = fluxer.enumEntries.map((e) => String(e.value)).join(', ');
-				const baseDescription = fluxer.userDescription ?? '';
+				const knownValues = voxr.enumEntries.map((e) => String(e.value)).join(', ');
+				const baseDescription = voxr.userDescription ?? '';
 				result.description = baseDescription
 					? `${baseDescription} Known values: ${knownValues} (other values allowed)`
 					: `Known values: ${knownValues} (other values allowed)`;
@@ -572,18 +572,18 @@ export function zodToOpenAPISchema(schema: ZodTypeAny, depth = 0): OpenAPISchema
 				if (literalValues.every((vals) => Array.isArray(vals) && vals.length > 0)) {
 					const flattened = literalValues.flatMap((vals) => vals ?? []);
 					const literalSchema = getLiteralSchema(flattened);
-					const fluxerForLiterals = parseFluxerTypeAnnotation(description);
+					const voxrForLiterals = parseVoxrTypeAnnotation(description);
 					if (
-						fluxerForLiterals?.typeName === 'EnumValues' &&
-						fluxerForLiterals.enumNames &&
-						fluxerForLiterals.enumNames.length === flattened.length
+						voxrForLiterals?.typeName === 'EnumValues' &&
+						voxrForLiterals.enumNames &&
+						voxrForLiterals.enumNames.length === flattened.length
 					) {
-						setEnumNames(literalSchema, fluxerForLiterals.enumNames);
-						if (fluxerForLiterals.enumEntries && fluxerForLiterals.enumEntries.length === flattened.length) {
+						setEnumNames(literalSchema, voxrForLiterals.enumNames);
+						if (voxrForLiterals.enumEntries && voxrForLiterals.enumEntries.length === flattened.length) {
 							const descriptions: Array<string | null> = [];
 							for (let i = 0; i < flattened.length; i++) {
 								const literalValue = flattened[i];
-								const entry = fluxerForLiterals.enumEntries[i];
+								const entry = voxrForLiterals.enumEntries[i];
 								if (entry && (entry.value === literalValue || String(entry.value) === String(literalValue))) {
 									descriptions.push(entry.description ?? null);
 								} else {
@@ -616,11 +616,11 @@ export function zodToOpenAPISchema(schema: ZodTypeAny, depth = 0): OpenAPISchema
 				}
 				const literalSchema = getLiteralSchema(values);
 				const description = getDescription(schema);
-				const fluxer = parseFluxerTypeAnnotation(description);
-				if (fluxer?.typeName === 'EnumValue' && fluxer.enumNames && fluxer.enumNames.length > 0) {
-					setEnumNames(literalSchema, fluxer.enumNames);
-					if (fluxer.enumEntries && fluxer.enumEntries.length > 0 && fluxer.enumEntries[0].description) {
-						setEnumDescriptions(literalSchema, [fluxer.enumEntries[0].description]);
+				const voxr = parseVoxrTypeAnnotation(description);
+				if (voxr?.typeName === 'EnumValue' && voxr.enumNames && voxr.enumNames.length > 0) {
+					setEnumNames(literalSchema, voxr.enumNames);
+					if (voxr.enumEntries && voxr.enumEntries.length > 0 && voxr.enumEntries[0].description) {
+						setEnumDescriptions(literalSchema, [voxr.enumEntries[0].description]);
 					}
 				}
 				return addDescription(literalSchema, schema);

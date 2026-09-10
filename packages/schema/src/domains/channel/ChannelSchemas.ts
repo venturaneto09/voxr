@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {CONTENT_WARNING_TEXT_MAX_LENGTH} from '@fluxer/constants/src/GuildConstants';
-import {MAX_GROUP_DM_OTHER_RECIPIENTS, MAX_GROUP_DM_RECIPIENTS} from '@fluxer/constants/src/LimitConstants';
-import {type UserPartial, UserPartialResponse} from '@fluxer/schema/src/domains/user/UserResponseSchemas';
-import {ChannelOverwriteTypeSchema, ChannelTypeSchema} from '@fluxer/schema/src/primitives/ChannelValidators';
-import {ContentWarningLevelSchema} from '@fluxer/schema/src/primitives/GuildValidators';
-import {PermissionStringType} from '@fluxer/schema/src/primitives/PermissionValidators';
-import {createStringType, Int32Type, SnowflakeStringType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {CONTENT_WARNING_TEXT_MAX_LENGTH} from '@voxr/constants/src/GuildConstants';
+import {MAX_GROUP_DM_OTHER_RECIPIENTS, MAX_GROUP_DM_RECIPIENTS} from '@voxr/constants/src/LimitConstants';
+import {type UserPartial, UserPartialResponse} from '@voxr/schema/src/domains/user/UserResponseSchemas';
+import {ChannelOverwriteTypeSchema, ChannelTypeSchema} from '@voxr/schema/src/primitives/ChannelValidators';
+import {ContentWarningLevelSchema} from '@voxr/schema/src/primitives/GuildValidators';
+import {PermissionStringType} from '@voxr/schema/src/primitives/PermissionValidators';
+import {createStringType, Int32Type, SnowflakeStringType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 export const ChannelOverwriteResponse = z.object({
 	id: SnowflakeStringType.describe('The unique identifier for the role or user this overwrite applies to'),
 	type: ChannelOverwriteTypeSchema.describe('The type of entity the overwrite applies to'),
-	allow: PermissionStringType.describe('fluxer:PermissionStringType The bitwise value of allowed permissions'),
-	deny: PermissionStringType.describe('fluxer:PermissionStringType The bitwise value of denied permissions'),
+	allow: PermissionStringType.describe('voxr:PermissionStringType The bitwise value of allowed permissions'),
+	deny: PermissionStringType.describe('voxr:PermissionStringType The bitwise value of denied permissions'),
 });
 
 export type ChannelOverwriteResponse = z.infer<typeof ChannelOverwriteResponse>;

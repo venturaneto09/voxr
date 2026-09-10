@@ -13,7 +13,7 @@ pub static ROOT: LazyLock<PathBuf> = LazyLock::new(|| {
         .to_path_buf()
 });
 
-pub static DEV_STATE_DIR: LazyLock<PathBuf> = LazyLock::new(|| ROOT.join(".fluxer/dev"));
+pub static DEV_STATE_DIR: LazyLock<PathBuf> = LazyLock::new(|| ROOT.join(".voxr/dev"));
 pub static DEV_CASSANDRA_DIR: LazyLock<PathBuf> = LazyLock::new(|| DEV_STATE_DIR.join("cassandra"));
 pub static DEV_GATEWAY_DIR: LazyLock<PathBuf> = LazyLock::new(|| DEV_STATE_DIR.join("gateway"));
 pub static DEV_LOG_DIR: LazyLock<PathBuf> = LazyLock::new(|| DEV_STATE_DIR.join("logs"));
@@ -26,9 +26,9 @@ pub static DEV_LOCAL_ENV_FILE: LazyLock<PathBuf> =
     LazyLock::new(|| ROOT.join("config/env/local.env"));
 pub static ROOT_LOCAL_ENV_FILE: LazyLock<PathBuf> = LazyLock::new(|| ROOT.join(".env.local"));
 pub static TARGET_DIR: LazyLock<PathBuf> = LazyLock::new(|| ROOT.join("target"));
-pub static DESKTOP_DIR: LazyLock<PathBuf> = LazyLock::new(|| ROOT.join("fluxer_desktop"));
+pub static DESKTOP_DIR: LazyLock<PathBuf> = LazyLock::new(|| ROOT.join("voxr_desktop"));
 pub static GATEWAY_CONFIG_DIR: LazyLock<PathBuf> =
-    LazyLock::new(|| ROOT.join("fluxer_gateway/config"));
+    LazyLock::new(|| ROOT.join("voxr_gateway/config"));
 
 pub fn ensure_state_dirs() -> Result<()> {
     for path in [
@@ -79,7 +79,7 @@ pub fn which(name: &str) -> Option<PathBuf> {
 }
 
 fn is_writable(path: &Path) -> bool {
-    let probe = path.join(".fluxer-write-test");
+    let probe = path.join(".voxr-write-test");
     match std::fs::OpenOptions::new()
         .create(true)
         .write(true)

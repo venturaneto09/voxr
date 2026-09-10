@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {createErrorHandler} from '@fluxer/hono/src/middleware/ErrorHandler';
-import {createInternalAuth} from '@fluxer/hono/src/middleware/InternalAuth';
+import {createErrorHandler} from '@voxr/hono/src/middleware/ErrorHandler';
+import {createInternalAuth} from '@voxr/hono/src/middleware/InternalAuth';
 import {Hono} from 'hono';
 import {describe, expect, test} from 'vitest';
 

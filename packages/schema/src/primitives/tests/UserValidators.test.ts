@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
 import {
 	DiscriminatorType,
 	EmailType,
@@ -9,7 +9,7 @@ import {
 	PhoneNumberType,
 	UsernameType,
 	WebhookNameType,
-} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/UserValidators';
 import {describe, expect, it} from 'vitest';
 
 describe('EmailType', () => {
@@ -155,8 +155,8 @@ describe('UsernameType', () => {
 			expect(result.error.issues[0].message).toBe(ValidationErrorCodes.USERNAME_RESERVED_VALUE);
 		}
 	});
-	it('rejects usernames containing "fluxer"', () => {
-		const result = UsernameType.safeParse('fluxeruser');
+	it('rejects usernames containing "voxr"', () => {
+		const result = UsernameType.safeParse('voxruser');
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			expect(result.error.issues[0].message).toBe(ValidationErrorCodes.USERNAME_CANNOT_CONTAIN_RESERVED_TERMS);

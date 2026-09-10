@@ -22,7 +22,7 @@ use std::time::{Duration, Instant};
 use tokio::time::sleep;
 
 const GATEWAY_FOREGROUND_EVAL: &str = concat!(
-    "case application:ensure_all_started(fluxer_gateway) of ",
+    "case application:ensure_all_started(voxr_gateway) of ",
     "{ok, _Apps} -> io:format(\"gateway started~n\"), receive after infinity -> ok end; ",
     "Error -> io:format(\"gateway failed: ~p~n\", [Error]), halt(1) end."
 );
@@ -36,7 +36,7 @@ const GATEWAY_CLUSTER_ROLES: &[&str] = &[
 ];
 const GATEWAY_CLUSTER_DEFAULT_REPLICAS: u16 = 3;
 const GATEWAY_CLUSTER_DIST_PORT_BASE: u16 = 9001;
-const GATEWAY_CLUSTER_COOKIE: &str = "fluxer-dev";
+const GATEWAY_CLUSTER_COOKIE: &str = "voxr-dev";
 const GATEWAY_COMPILE_COMMAND: &[&str] = &[
     "cargo",
     "run",
@@ -72,8 +72,8 @@ impl GatewayNode {
     }
 
     pub fn erlang_name(&self) -> String {
-        let prefix = env::var("FLUXER_DEV_GATEWAY_CLUSTER_NODE_PREFIX")
-            .unwrap_or_else(|_| "fluxer_gateway".to_owned());
+        let prefix = env::var("VOXR_DEV_GATEWAY_CLUSTER_NODE_PREFIX")
+            .unwrap_or_else(|_| "voxr_gateway".to_owned());
         format!("{prefix}_{}_{}@127.0.0.1", self.role, self.ordinal)
     }
 
@@ -83,7 +83,7 @@ impl GatewayNode {
 }
 
 pub fn gateway_dir() -> PathBuf {
-    ROOT.join("fluxer_gateway")
+    ROOT.join("voxr_gateway")
 }
 
 fn gateway_ebin_root() -> PathBuf {
@@ -93,10 +93,10 @@ fn gateway_ebin_root() -> PathBuf {
 pub fn setup_gateway_config() -> Result<()> {
     write_gateway_config(
         DEV_GATEWAY_DIR.as_path(),
-        &env::var("FLUXER_ERLANG_NODE_NAME")
-            .unwrap_or_else(|_| "fluxer_gateway@127.0.0.1".to_owned()),
-        &env::var("FLUXER_ERLANG_COOKIE").unwrap_or_else(|_| GATEWAY_CLUSTER_COOKIE.to_owned()),
-        &env::var("FLUXER_ERLANG_DIST_PORT").unwrap_or_else(|_| "8081".to_owned()),
+        &env::var("VOXR_ERLANG_NODE_NAME")
+            .unwrap_or_else(|_| "voxr_gateway@127.0.0.1".to_owned()),
+        &env::var("VOXR_ERLANG_COOKIE").unwrap_or_else(|_| GATEWAY_CLUSTER_COOKIE.to_owned()),
+        &env::var("VOXR_ERLANG_DIST_PORT").unwrap_or_else(|_| "8081".to_owned()),
     )?;
     remove_stale_gateway_config()
 }
@@ -115,9 +115,9 @@ pub fn write_gateway_config(
         fs::read_to_string(sys_template)?,
     )?;
     let vm_text = fs::read_to_string(vm_template)?
-        .replace("${FLUXER_ERLANG_NODE_NAME}", node_name)
-        .replace("${FLUXER_ERLANG_COOKIE}", cookie)
-        .replace("${FLUXER_ERLANG_DIST_PORT}", dist_port);
+        .replace("${VOXR_ERLANG_NODE_NAME}", node_name)
+        .replace("${VOXR_ERLANG_COOKIE}", cookie)
+        .replace("${VOXR_ERLANG_DIST_PORT}", dist_port);
     fs::write(config_dir.join("vm.args"), vm_text)?;
     Ok(())
 }
@@ -137,8 +137,8 @@ fn remove_stale_gateway_config() -> Result<()> {
 
 pub async fn run_gateway() -> Result<i32> {
     let mut shutdown = ShutdownSignal::new()?;
-    let node_names = std::collections::HashSet::from([env::var("FLUXER_ERLANG_NODE_NAME")
-        .unwrap_or_else(|_| "fluxer_gateway@127.0.0.1".to_owned())]);
+    let node_names = std::collections::HashSet::from([env::var("VOXR_ERLANG_NODE_NAME")
+        .unwrap_or_else(|_| "voxr_gateway@127.0.0.1".to_owned())]);
     cleanup_orphaned_gateway_processes(&node_names).await?;
     if let Some(signal) = pending_shutdown(&mut shutdown).await {
         println!("Received {signal}; stopping gateway startup...");
@@ -412,20 +412,20 @@ fn stop_supervised(supervised: &mut [SupervisedNode]) {
 
 pub fn build_gateway_cluster_nodes() -> Result<Vec<GatewayNode>> {
     let replicas = positive_int_env(
-        "FLUXER_DEV_GATEWAY_CLUSTER_REPLICAS",
+        "VOXR_DEV_GATEWAY_CLUSTER_REPLICAS",
         GATEWAY_CLUSTER_DEFAULT_REPLICAS,
     );
     if replicas > GATEWAY_CLUSTER_DEFAULT_REPLICAS {
         bail!(
-            "FLUXER_DEV_GATEWAY_CLUSTER_REPLICAS={replicas} exceeds the configured local port table ({GATEWAY_CLUSTER_DEFAULT_REPLICAS})"
+            "VOXR_DEV_GATEWAY_CLUSTER_REPLICAS={replicas} exceeds the configured local port table ({GATEWAY_CLUSTER_DEFAULT_REPLICAS})"
         );
     }
     let mut nodes = Vec::new();
     let mut dist_port = positive_int_env(
-        "FLUXER_DEV_GATEWAY_CLUSTER_DIST_PORT_BASE",
+        "VOXR_DEV_GATEWAY_CLUSTER_DIST_PORT_BASE",
         GATEWAY_CLUSTER_DIST_PORT_BASE,
     );
-    let http_port_offset = non_negative_int_env("FLUXER_DEV_GATEWAY_CLUSTER_HTTP_PORT_OFFSET", 0);
+    let http_port_offset = non_negative_int_env("VOXR_DEV_GATEWAY_CLUSTER_HTTP_PORT_OFFSET", 0);
     for role in GATEWAY_CLUSTER_ROLES {
         let ports = gateway_cluster_http_ports(role);
         for ordinal in 1..=replicas {
@@ -488,7 +488,7 @@ fn wait_for_cluster_ports_available_sync(nodes: &[GatewayNode]) -> Result<()> {
         .collect::<Vec<_>>();
     if !conflicts.is_empty() {
         bail!(
-            "Gateway cluster port(s) already in use: {}. Stop the conflicting process or set FLUXER_DEV_GATEWAY_CLUSTER_HTTP_PORT_OFFSET/FLUXER_DEV_GATEWAY_CLUSTER_DIST_PORT_BASE for an isolated run.",
+            "Gateway cluster port(s) already in use: {}. Stop the conflicting process or set VOXR_DEV_GATEWAY_CLUSTER_HTTP_PORT_OFFSET/VOXR_DEV_GATEWAY_CLUSTER_DIST_PORT_BASE for an isolated run.",
             conflicts.join(", ")
         );
     }
@@ -496,7 +496,7 @@ fn wait_for_cluster_ports_available_sync(nodes: &[GatewayNode]) -> Result<()> {
 }
 
 async fn wait_for_cluster_ports_available(nodes: &[GatewayNode]) -> Result<()> {
-    let timeout = env::var("FLUXER_DEV_GATEWAY_CLUSTER_PORT_WAIT_SECONDS")
+    let timeout = env::var("VOXR_DEV_GATEWAY_CLUSTER_PORT_WAIT_SECONDS")
         .ok()
         .and_then(|value| value.parse::<f64>().ok())
         .unwrap_or(10.0);
@@ -626,7 +626,7 @@ struct GatewayProcess {
 fn orphaned_gateway_leaders(
     node_names: &std::collections::HashSet<String>,
 ) -> Result<Vec<GatewayLeader>> {
-    let current_exe = std::env::current_exe().context("failed to resolve fluxer-dev executable")?;
+    let current_exe = std::env::current_exe().context("failed to resolve voxr-dev executable")?;
     let processes = gateway_process_snapshot()?;
     let mut owned_pids = BTreeSet::new();
     for process in &processes {
@@ -823,7 +823,7 @@ fn signal_process_groups(leaders: &[GatewayLeader], signal: i32) -> Vec<i32> {
 
 fn setup_gateway_cluster_config(nodes: &[GatewayNode]) -> Result<()> {
     let cookie =
-        env::var("FLUXER_ERLANG_COOKIE").unwrap_or_else(|_| GATEWAY_CLUSTER_COOKIE.to_owned());
+        env::var("VOXR_ERLANG_COOKIE").unwrap_or_else(|_| GATEWAY_CLUSTER_COOKIE.to_owned());
     for node in nodes {
         write_gateway_config(
             &node.config_dir(),
@@ -838,30 +838,30 @@ fn setup_gateway_cluster_config(nodes: &[GatewayNode]) -> Result<()> {
 fn gateway_node_env(node: &GatewayNode, static_peers: &str) -> Vec<(String, Option<String>)> {
     vec![
         (
-            "FLUXER_GATEWAY_CLUSTER_ENABLED".to_owned(),
+            "VOXR_GATEWAY_CLUSTER_ENABLED".to_owned(),
             Some("true".to_owned()),
         ),
         (
-            "FLUXER_GATEWAY_CLUSTER_STATIC_PEERS".to_owned(),
+            "VOXR_GATEWAY_CLUSTER_STATIC_PEERS".to_owned(),
             Some(static_peers.to_owned()),
         ),
-        ("FLUXER_GATEWAY_ROLE".to_owned(), Some(node.role.clone())),
+        ("VOXR_GATEWAY_ROLE".to_owned(), Some(node.role.clone())),
         (
-            "FLUXER_GATEWAY_PORT".to_owned(),
+            "VOXR_GATEWAY_PORT".to_owned(),
             Some(node.http_port.to_string()),
         ),
         (
-            "FLUXER_ERLANG_NODE_NAME".to_owned(),
+            "VOXR_ERLANG_NODE_NAME".to_owned(),
             Some(node.erlang_name()),
         ),
         (
-            "FLUXER_ERLANG_DIST_PORT".to_owned(),
+            "VOXR_ERLANG_DIST_PORT".to_owned(),
             Some(node.dist_port.to_string()),
         ),
         (
-            "FLUXER_ERLANG_COOKIE".to_owned(),
+            "VOXR_ERLANG_COOKIE".to_owned(),
             Some(
-                env::var("FLUXER_ERLANG_COOKIE")
+                env::var("VOXR_ERLANG_COOKIE")
                     .unwrap_or_else(|_| GATEWAY_CLUSTER_COOKIE.to_owned()),
             ),
         ),
@@ -1030,17 +1030,17 @@ mod tests {
         let env = gateway_node_env(&node, "a,b");
         assert!(
             env.iter()
-                .any(|(key, value)| key == "FLUXER_GATEWAY_ROLE"
+                .any(|(key, value)| key == "VOXR_GATEWAY_ROLE"
                     && value.as_deref() == Some("calls"))
         );
         assert!(
             env.iter().any(
-                |(key, value)| key == "FLUXER_GATEWAY_PORT" && value.as_deref() == Some("8811")
+                |(key, value)| key == "VOXR_GATEWAY_PORT" && value.as_deref() == Some("8811")
             )
         );
         assert!(
             env.iter()
-                .any(|(key, value)| key == "FLUXER_GATEWAY_CLUSTER_STATIC_PEERS"
+                .any(|(key, value)| key == "VOXR_GATEWAY_CLUSTER_STATIC_PEERS"
                     && value.as_deref() == Some("a,b"))
         );
     }
@@ -1048,13 +1048,13 @@ mod tests {
     #[test]
     fn cmdline_gateway_node_detection_matches_exact_name_argument() {
         let node_names =
-            std::collections::HashSet::from([String::from("fluxer_gateway_websocket_1@127.0.0.1")]);
+            std::collections::HashSet::from([String::from("voxr_gateway_websocket_1@127.0.0.1")]);
 
         assert!(cmdline_has_gateway_node(
             &strings(&[
                 "/usr/local/bin/beam.smp",
                 "-name",
-                "fluxer_gateway_websocket_1@127.0.0.1"
+                "voxr_gateway_websocket_1@127.0.0.1"
             ]),
             &node_names
         ));
@@ -1062,7 +1062,7 @@ mod tests {
             &strings(&[
                 "/usr/local/bin/beam.smp",
                 "-sname",
-                "fluxer_gateway_websocket_1@127.0.0.1"
+                "voxr_gateway_websocket_1@127.0.0.1"
             ]),
             &node_names
         ));

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {FluxerError, type FluxerErrorData} from '@fluxer/errors/src/FluxerError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {VoxrError, type VoxrErrorData} from '@voxr/errors/src/VoxrError';
 
-export class ServiceUnavailableError extends FluxerError {
+export class ServiceUnavailableError extends VoxrError {
 	constructor({
 		code = APIErrorCodes.SERVICE_UNAVAILABLE,
 		message,
@@ -13,7 +13,7 @@ export class ServiceUnavailableError extends FluxerError {
 	}: {
 		code?: string;
 		message?: string;
-		data?: FluxerErrorData;
+		data?: VoxrErrorData;
 		headers?: Record<string, string>;
 		messageVariables?: Record<string, unknown>;
 	} = {}) {

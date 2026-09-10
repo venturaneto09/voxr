@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ChannelTypes} from '@fluxer/constants/src/ChannelConstants';
+import {ChannelTypes} from '@voxr/constants/src/ChannelConstants';
 
 export interface ChannelOrderingChannel<Id extends string | bigint = string> {
 	id: Id;

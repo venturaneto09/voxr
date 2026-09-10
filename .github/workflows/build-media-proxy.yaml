@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       build-version:
-        description: "Explicit Fluxer CalVer build version (YYYY.MDD.MICRO, UTC HHMMSS without leading zeroes) to use instead of automatic UTC clock allocation"
+        description: "Explicit Voxr CalVer build version (YYYY.MDD.MICRO, UTC HHMMSS without leading zeroes) to use instead of automatic UTC clock allocation"
         type: string
         required: false
         default: ""
@@ -31,6 +31,6 @@ jobs:
     uses: ./.github/workflows/_build-image.yaml
     secrets: inherit
     with:
-      image: fluxer-media-proxy
-      dockerfile: fluxer_media_proxy/Dockerfile
+      image: voxr-media-proxy
+      dockerfile: voxr_media_proxy/Dockerfile
       build-version: ${{ inputs['build-version'] }}

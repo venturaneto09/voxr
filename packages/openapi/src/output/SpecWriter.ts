@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type {OpenAPIDocument} from '@fluxer/openapi/src/Types';
+import type {OpenAPIDocument} from '@voxr/openapi/src/Types';
 import prettier from 'prettier';
 export type WritableOpenAPISpec = OpenAPIDocument | Record<string, unknown>;
 async function formatSpec(spec: WritableOpenAPISpec, outputPath?: string): Promise<string> {
@@ -26,8 +26,8 @@ export function readSpec(inputPath: string): OpenAPIDocument {
 	return JSON.parse(content) as OpenAPIDocument;
 }
 export function getApiPackageOutputPath(basePath: string): string {
-	return path.join(basePath, 'fluxer_api', 'src', 'api', 'openapi', 'openapi.json');
+	return path.join(basePath, 'voxr_api', 'src', 'api', 'openapi', 'openapi.json');
 }
 export function getAdminOutputPath(basePath: string): string {
-	return path.join(basePath, 'fluxer_admin', 'openapi-admin.json');
+	return path.join(basePath, 'voxr_admin', 'openapi-admin.json');
 }

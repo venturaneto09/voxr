@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {MediaProxyImageSize} from '@fluxer/constants/src/MediaProxyImageSizes';
+import type {MediaProxyImageSize} from '@voxr/constants/src/MediaProxyImageSizes';
 
 export const MEDIA_PROXY_AVATAR_SIZE_DEFAULT: MediaProxyImageSize = 160;
 export const MEDIA_PROXY_AVATAR_SIZE_PROFILE: MediaProxyImageSize = 240;

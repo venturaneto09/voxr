@@ -1,0 +1,64 @@
+{
+	"name": "voxr_desktop",
+	"version": "0.0.0",
+	"description": "Instant messaging and VoIP application",
+	"homepage": "https://voxr.app",
+	"author": "Voxr Platform AB <support@voxr.app>",
+	"license": "AGPL-3.0-or-later",
+	"private": true,
+	"type": "module",
+	"main": "dist/main/index.js",
+	"scripts": {
+		"build": "node scripts/build.mjs",
+		"set-channel": "../tools/ci/run.sh build-desktop --step set_build_channel",
+		"test": "cargo test --manifest-path native/rust/Cargo.toml",
+		"typecheck": "pnpm set-channel && tsgo --noEmit"
+	},
+	"dependencies": {
+		"@voxr/voice_engine_v2": "workspace:*",
+		"@simplewebauthn/browser": "13.2.2",
+		"franc-min": "6.2.0",
+		"hunspell-asm": "4.0.2",
+		"update-electron-app": "3.1.2",
+		"velopack": "0.0.1298"
+	},
+	"devDependencies": {
+		"@types/node": "24.10.9",
+		"@typescript/native-preview": "7.0.0-dev.20260130.1",
+		"electron": "44.1.1",
+		"electron-builder": "27.0.0-alpha.7",
+		"electron-builder-squirrel-windows": "27.0.0-alpha.7",
+		"esbuild": "0.27.2",
+		"typescript": "5.9.3"
+	},
+	"knip": {
+		"ignoreDependencies": [
+			"electron-builder"
+		]
+	},
+	"optionalDependencies": {
+		"@voxr/hardware-encoder": "file:./native/hardware-encoder",
+		"@voxr/linux-audio-capture": "file:./native/linux-audio-capture",
+		"@voxr/linux-evdev": "file:./native/linux-evdev",
+		"@voxr/linux-input-hook": "file:./native/linux-input-hook",
+		"@voxr/linux-notifications": "file:./native/linux-notifications",
+		"@voxr/linux-portals": "file:./native/linux-portals",
+		"@voxr/linux-screen-capture": "file:./native/linux-screen-capture",
+		"@voxr/mac-app-audio": "file:./native/mac-app-audio",
+		"@voxr/mac-clipboard": "file:./native/mac-clipboard",
+		"@voxr/mac-screen-capture": "file:./native/mac-screen-capture",
+		"@voxr/mac-sysctl": "file:./native/mac-sysctl",
+		"@voxr/mac-tcc": "file:./native/mac-tcc",
+		"@voxr/macos-input-hook": "file:./native/macos-input-hook",
+		"@voxr/platform-info": "file:./native/platform-info",
+		"@voxr/system-hunspell": "file:./native/system-hunspell",
+		"@voxr/webauthn": "file:./native/webauthn",
+		"@voxr/win-clipboard": "file:./native/win-clipboard",
+		"@voxr/win-shell": "file:./native/win-shell",
+		"@voxr/win-toast": "file:./native/win-toast",
+		"@voxr/win-game-capture": "file:./native/win-game-capture",
+		"@voxr/win-process-loopback": "file:./native/win-process-loopback",
+		"@voxr/windows-input-hook": "file:./native/windows-input-hook",
+		"electron-log": "5.4.3"
+	}
+}

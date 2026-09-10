@@ -4,8 +4,8 @@
 			"platform": "windows",
 			"host": "iva",
 			"user": "Hampus",
-			"repo": "C:\\Users\\Hampus\\src\\fluxer-private",
-			"repoUrl": "git@github.com:REPLACE_ME/fluxer-private.git",
+			"repo": "C:\\Users\\Hampus\\src\\voxr-private",
+			"repoUrl": "git@github.com:REPLACE_ME/voxr-private.git",
 			"identityFile": "~/.ssh/id_ed25519",
 			"forwards": []
 		},
@@ -13,8 +13,8 @@
 			"platform": "macos",
 			"host": "replace-with-mac-tailnet-name",
 			"user": "replace-with-mac-username",
-			"repo": "/Users/replace-with-mac-username/src/fluxer-private",
-			"repoUrl": "git@github.com:REPLACE_ME/fluxer-private.git",
+			"repo": "/Users/replace-with-mac-username/src/voxr-private",
+			"repoUrl": "git@github.com:REPLACE_ME/voxr-private.git",
 			"identityFile": "~/.ssh/id_ed25519",
 			"forwards": []
 		}

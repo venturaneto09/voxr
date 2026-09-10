@@ -3,8 +3,8 @@
 import {
 	calculateSpecificity as calculateRuntimeSpecificity,
 	compareSpecificity as compareRuntimeSpecificity,
-} from '@fluxer/limits/src/LimitRuleRuntime';
-import type {LimitFilter} from '@fluxer/limits/src/LimitTypes';
+} from '@voxr/limits/src/LimitRuleRuntime';
+import type {LimitFilter} from '@voxr/limits/src/LimitTypes';
 
 export function calculateSpecificity(filters: LimitFilter | undefined): number {
 	return calculateRuntimeSpecificity(filters);

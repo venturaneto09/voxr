@@ -1,7 +1,7 @@
 port: 7880
 
 keys:
-  devkey: fluxer-livekit-development-secret
+  devkey: voxr-livekit-development-secret
 
 rtc:
   tcp_port: 7881

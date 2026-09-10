@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {HttpStatus} from '@fluxer/constants/src/HttpConstants';
-import {createErrorHandler, type ErrorHandlerOptions} from '@fluxer/errors/src/ErrorHandler';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
+import {HttpStatus} from '@voxr/constants/src/HttpConstants';
+import {createErrorHandler, type ErrorHandlerOptions} from '@voxr/errors/src/ErrorHandler';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
 import {Hono} from 'hono';
 import {HTTPException} from 'hono/http-exception';
 import {describe, expect, it, vi} from 'vitest';
@@ -21,11 +21,11 @@ function createTestApp(options: ErrorHandlerOptions = {}) {
 }
 
 describe('createErrorHandler', () => {
-	describe('FluxerError handling', () => {
-		it('should return FluxerError response directly', async () => {
+	describe('VoxrError handling', () => {
+		it('should return VoxrError response directly', async () => {
 			const app = createTestApp();
 			app.get('/test', () => {
-				throw new FluxerError({
+				throw new VoxrError({
 					code: 'TEST_ERROR',
 					message: 'Test error message',
 					status: 400,
@@ -39,10 +39,10 @@ describe('createErrorHandler', () => {
 				message: 'Test error message',
 			});
 		});
-		it('should include FluxerError data in response', async () => {
+		it('should include VoxrError data in response', async () => {
 			const app = createTestApp();
 			app.get('/test', () => {
-				throw new FluxerError({
+				throw new VoxrError({
 					code: 'VALIDATION_ERROR',
 					message: 'Validation failed',
 					status: 400,
@@ -57,10 +57,10 @@ describe('createErrorHandler', () => {
 				field: 'email',
 			});
 		});
-		it('should include FluxerError custom headers', async () => {
+		it('should include VoxrError custom headers', async () => {
 			const app = createTestApp();
 			app.get('/test', () => {
-				throw new FluxerError({
+				throw new VoxrError({
 					code: 'RATE_LIMITED',
 					status: 429,
 					headers: {'Retry-After': '60'},
@@ -147,15 +147,15 @@ describe('createErrorHandler', () => {
 			expect(logError.mock.calls[0][0]).toBeInstanceOf(Error);
 			expect((logError.mock.calls[0][0] as Error).message).toBe('Logged error');
 		});
-		it('should call logError for FluxerError', async () => {
+		it('should call logError for VoxrError', async () => {
 			const logError = vi.fn();
 			const app = createTestApp({logError});
 			app.get('/test', () => {
-				throw new FluxerError({code: 'TEST', status: 400});
+				throw new VoxrError({code: 'TEST', status: 400});
 			});
 			await app.request('/test');
 			expect(logError).toHaveBeenCalledTimes(1);
-			expect(logError.mock.calls[0][0]).toBeInstanceOf(FluxerError);
+			expect(logError.mock.calls[0][0]).toBeInstanceOf(VoxrError);
 		});
 	});
 	describe('customHandler callback', () => {
@@ -182,7 +182,7 @@ describe('createErrorHandler', () => {
 			const customHandler = vi.fn().mockReturnValue(undefined);
 			const app = createTestApp({customHandler});
 			app.get('/test', () => {
-				throw new FluxerError({code: 'FALLBACK', status: 400});
+				throw new VoxrError({code: 'FALLBACK', status: 400});
 			});
 			const response = await app.request('/test');
 			expect(response.status).toBe(400);

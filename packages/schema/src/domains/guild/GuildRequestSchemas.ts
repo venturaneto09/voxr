@@ -6,7 +6,7 @@ import {
 	GuildMemberProfileFlagsDescriptions,
 	SystemChannelFlags,
 	SystemChannelFlagsDescriptions,
-} from '@fluxer/constants/src/GuildConstants';
+} from '@voxr/constants/src/GuildConstants';
 import {
 	AVATAR_MAX_SIZE,
 	EMOJI_MAX_SIZE,
@@ -15,12 +15,12 @@ import {
 	MAX_TEMP_BAN_DURATION_SECONDS,
 	MIN_TEMP_BAN_DURATION_SECONDS,
 	STICKER_MAX_SIZE,
-} from '@fluxer/constants/src/LimitConstants';
-import {SudoVerificationSchema} from '@fluxer/schema/src/domains/auth/AuthSchemas';
-import {GuildFeatureSchema} from '@fluxer/schema/src/domains/guild/GuildResponseSchemas';
-import {TemplateSerializedGuild} from '@fluxer/schema/src/domains/guild/GuildTemplateSchemas';
-import {VanityURLCodeType} from '@fluxer/schema/src/primitives/ChannelValidators';
-import {base64LengthForBytes, createBase64StringType} from '@fluxer/schema/src/primitives/FileValidators';
+} from '@voxr/constants/src/LimitConstants';
+import {SudoVerificationSchema} from '@voxr/schema/src/domains/auth/AuthSchemas';
+import {GuildFeatureSchema} from '@voxr/schema/src/domains/guild/GuildResponseSchemas';
+import {TemplateSerializedGuild} from '@voxr/schema/src/domains/guild/GuildTemplateSchemas';
+import {VanityURLCodeType} from '@voxr/schema/src/primitives/ChannelValidators';
+import {base64LengthForBytes, createBase64StringType} from '@voxr/schema/src/primitives/FileValidators';
 import {
 	ContentWarningLevelSchema,
 	DefaultMessageNotificationsSchema,
@@ -29,8 +29,8 @@ import {
 	GuildVerificationLevelSchema,
 	NSFWLevelSchema,
 	SplashCardAlignmentSchema,
-} from '@fluxer/schema/src/primitives/GuildValidators';
-import {QueryBooleanType} from '@fluxer/schema/src/primitives/QueryValidators';
+} from '@voxr/schema/src/primitives/GuildValidators';
+import {QueryBooleanType} from '@voxr/schema/src/primitives/QueryValidators';
 import {
 	ColorType,
 	createBitflagInt32Type,
@@ -38,9 +38,9 @@ import {
 	SnowflakeType,
 	UnsignedInt64Type,
 	withFieldDescription,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {MentionReplyPreferencesSchema} from '@fluxer/schema/src/primitives/UserSettingsValidators';
-import {PasswordType} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {MentionReplyPreferencesSchema} from '@voxr/schema/src/primitives/UserSettingsValidators';
+import {PasswordType} from '@voxr/schema/src/primitives/UserValidators';
 import {z} from 'zod';
 
 function coerceBlankStringToNull(value: unknown): unknown {
@@ -188,7 +188,7 @@ export type MyGuildMemberUpdateRequest = z.infer<typeof MyGuildMemberUpdateReque
 export const GuildRoleCreateRequest = z.object({
 	name: createStringType(1, 100).describe('The name of the role (1-100 characters)'),
 	color: ColorType.default(0x000000).describe('The color of the role as an integer (default: 0)'),
-	permissions: UnsignedInt64Type.optional().describe('fluxer:UnsignedInt64Type The permissions bitfield for the role'),
+	permissions: UnsignedInt64Type.optional().describe('voxr:UnsignedInt64Type The permissions bitfield for the role'),
 });
 
 export type GuildRoleCreateRequest = z.infer<typeof GuildRoleCreateRequest>;
@@ -196,7 +196,7 @@ export type GuildRoleCreateRequest = z.infer<typeof GuildRoleCreateRequest>;
 export const GuildRoleUpdateRequest = z.object({
 	name: createStringType(1, 100).optional().describe('The name of the role (1-100 characters)'),
 	color: ColorType.optional().describe('The color of the role as an integer'),
-	permissions: UnsignedInt64Type.optional().describe('fluxer:UnsignedInt64Type The permissions bitfield for the role'),
+	permissions: UnsignedInt64Type.optional().describe('voxr:UnsignedInt64Type The permissions bitfield for the role'),
 	hoist: z.boolean().optional().describe('Whether the role should be displayed separately in the member list'),
 	hoist_position: z.number().int().nullish().describe('The position of the role in the hoisted member list'),
 	mentionable: z.boolean().optional().describe('Whether the role can be mentioned by anyone'),

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ErrorCodeToI18nKey} from '@fluxer/errors/src/i18n/ErrorCodeMappings';
-import {ERROR_I18N_LOCALE_MESSAGES} from '@fluxer/errors/src/i18n/ErrorI18nLocales';
-import {ERROR_I18N_MESSAGES, type ErrorI18nCatalog, type ErrorI18nKey} from '@fluxer/errors/src/i18n/ErrorI18nMessages';
-import {identityLocale} from '@fluxer/i18n/src/normalization/IdentityLocale';
-import {createStaticI18n} from '@fluxer/i18n/src/runtime/CreateStaticI18n';
-import type {I18nResult} from '@fluxer/i18n/src/runtime/I18nTypes';
+import {ErrorCodeToI18nKey} from '@voxr/errors/src/i18n/ErrorCodeMappings';
+import {ERROR_I18N_LOCALE_MESSAGES} from '@voxr/errors/src/i18n/ErrorI18nLocales';
+import {ERROR_I18N_MESSAGES, type ErrorI18nCatalog, type ErrorI18nKey} from '@voxr/errors/src/i18n/ErrorI18nMessages';
+import {identityLocale} from '@voxr/i18n/src/normalization/IdentityLocale';
+import {createStaticI18n} from '@voxr/i18n/src/runtime/CreateStaticI18n';
+import type {I18nResult} from '@voxr/i18n/src/runtime/I18nTypes';
 import type {
 	MessageArgsForTemplate,
 	MessageArgsWithFallbackForTemplate,
-} from '@fluxer/i18n/src/runtime/MessageCatalogTypes';
-import {validateMessageTemplateVariables} from '@fluxer/i18n/src/runtime/MessageCatalogTypes';
+} from '@voxr/i18n/src/runtime/MessageCatalogTypes';
+import {validateMessageTemplateVariables} from '@voxr/i18n/src/runtime/MessageCatalogTypes';
 
 const DEFAULT_LOCALE = 'en-US';
 

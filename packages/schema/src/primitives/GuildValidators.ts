@@ -8,13 +8,13 @@ import {
 	GuildSplashCardAlignment,
 	GuildVerificationLevel,
 	JoinSourceTypes,
-} from '@fluxer/constants/src/GuildConstants';
-import {MessageNotifications} from '@fluxer/constants/src/NotificationConstants';
+} from '@voxr/constants/src/GuildConstants';
+import {MessageNotifications} from '@voxr/constants/src/NotificationConstants';
 import {
 	createInt32EnumType,
 	createNamedLiteralUnion,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 
 export const GuildVerificationLevelSchema = createInt32EnumType(
 	[

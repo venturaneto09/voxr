@@ -11,9 +11,9 @@ import {
 	isValidDiscoveryLanguage,
 	isValidDiscoveryTag,
 	normalizeDiscoveryTag,
-} from '@fluxer/constants/src/DiscoveryConstants';
-import {NSFWLevelSchema} from '@fluxer/schema/src/primitives/GuildValidators';
-import {SnowflakeStringType, SnowflakeType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/constants/src/DiscoveryConstants';
+import {NSFWLevelSchema} from '@voxr/schema/src/primitives/GuildValidators';
+import {SnowflakeStringType, SnowflakeType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const DISCOVERY_CATEGORY_MAX = Math.max(...Object.values(DiscoveryCategories));

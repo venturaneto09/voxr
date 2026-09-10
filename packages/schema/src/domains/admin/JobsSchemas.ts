@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
-import {createQueryIntegerType} from '@fluxer/schema/src/primitives/QueryValidators';
-import {createStringType, SnowflakeStringType, SnowflakeType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
+import {createQueryIntegerType} from '@voxr/schema/src/primitives/QueryValidators';
+import {createStringType, SnowflakeStringType, SnowflakeType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const JobStatusEnum = z.enum(['queued', 'running', 'succeeded', 'cancelled', 'deadletter']);

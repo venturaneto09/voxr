@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        This form covers <https://fluxer.dev> and operator documentation.
+        This form covers <https://voxr.dev> and operator documentation.
 
   - type: textarea
     id: issue
@@ -23,7 +23,7 @@ body:
     attributes:
       label: Location
       description: Provide the page URL or file path and heading.
-      placeholder: https://fluxer.dev/gateway/overview/
+      placeholder: https://voxr.dev/gateway/overview/
     validations:
       required: false
 

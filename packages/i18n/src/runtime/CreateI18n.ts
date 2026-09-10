@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import * as fs from 'node:fs';
-import {hasLocaleFile} from '@fluxer/i18n/src/io/LocaleFilePath';
-import {parseYamlRecord} from '@fluxer/i18n/src/io/ParseYamlRecord';
-import {buildTemplates} from '@fluxer/i18n/src/runtime/BuildTemplates';
-import {getTemplate} from '@fluxer/i18n/src/runtime/GetTemplate';
-import type {I18nConfig, I18nResult, I18nState, TemplateCompiler} from '@fluxer/i18n/src/runtime/I18nTypes';
+import {hasLocaleFile} from '@voxr/i18n/src/io/LocaleFilePath';
+import {parseYamlRecord} from '@voxr/i18n/src/io/ParseYamlRecord';
+import {buildTemplates} from '@voxr/i18n/src/runtime/BuildTemplates';
+import {getTemplate} from '@voxr/i18n/src/runtime/GetTemplate';
+import type {I18nConfig, I18nResult, I18nState, TemplateCompiler} from '@voxr/i18n/src/runtime/I18nTypes';
 
 interface I18nModule<TKey extends string, TValue, TVariables> {
 	getTemplate(key: TKey, locale: string | null, variables: TVariables): I18nResult<TKey, TValue>;

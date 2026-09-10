@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {I18nResult, TemplateCompiler} from '@fluxer/i18n/src/runtime/I18nTypes';
-import {getEffectiveStaticLocale} from '@fluxer/i18n/src/runtime/StaticLocale';
+import type {I18nResult, TemplateCompiler} from '@voxr/i18n/src/runtime/I18nTypes';
+import {getEffectiveStaticLocale} from '@voxr/i18n/src/runtime/StaticLocale';
 import MessageFormat from '@messageformat/core';
 
 export type StaticLocaleMessages<TKey extends string, TValue> = Partial<Record<TKey, TValue>>;

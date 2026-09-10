@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {sanitizeRetryAfterSeconds} from '@fluxer/errors/src/domains/core/RetryAfterSeconds';
-import {ThrottledError} from '@fluxer/errors/src/domains/core/ThrottledError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {sanitizeRetryAfterSeconds} from '@voxr/errors/src/domains/core/RetryAfterSeconds';
+import {ThrottledError} from '@voxr/errors/src/domains/core/ThrottledError';
 
 export class IpAuthorizationResendCooldownError extends ThrottledError {
 	constructor(resendAvailableIn: number) {

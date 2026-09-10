@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {ValidationErrorCode} from '@fluxer/constants/src/ValidationErrorCodes';
+import type {ValidationErrorCode} from '@voxr/constants/src/ValidationErrorCodes';
 
 export interface ValidationError {
 	path: string;

@@ -13,13 +13,13 @@ import {
 	SYNCED_PREFERENCES_MAX_ENCODED_LENGTH,
 	SyncedPreferencesDecodeError,
 	SyncedPreferencesSchema,
-} from '@fluxer/schema/src/domains/user/SyncedPreferencesCodec';
-import {AccessibilitySettingsSchema} from '@fluxer/schema/src/gen/fluxer/user/preferences/v1/accessibility_pb';
+} from '@voxr/schema/src/domains/user/SyncedPreferencesCodec';
+import {AccessibilitySettingsSchema} from '@voxr/schema/src/gen/voxr/user/preferences/v1/accessibility_pb';
 import {
 	FavoriteGifSettingsSchema,
 	SoundSettingsSchema,
-} from '@fluxer/schema/src/gen/fluxer/user/preferences/v1/pickers_pb';
-import {ChatInputSettingsSchema} from '@fluxer/schema/src/gen/fluxer/user/preferences/v1/preferences_pb';
+} from '@voxr/schema/src/gen/voxr/user/preferences/v1/pickers_pb';
+import {ChatInputSettingsSchema} from '@voxr/schema/src/gen/voxr/user/preferences/v1/preferences_pb';
 import {describe, expect, it} from 'vitest';
 
 describe('SyncedPreferencesCodec', () => {

@@ -6,7 +6,7 @@ import {
 	EMPTY_READ_STATE_PROTO,
 	encodeReadStateProto,
 	ReadStateProtoDecodeError,
-} from '@fluxer/schema/src/domains/read_state/ReadStateProtoCodec';
+} from '@voxr/schema/src/domains/read_state/ReadStateProtoCodec';
 import {describe, expect, it} from 'vitest';
 
 describe('ReadStateProtoCodec', () => {

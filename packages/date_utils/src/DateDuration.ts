@@ -8,9 +8,9 @@ import {
 	MINUTES_PER_HOUR,
 	SECONDS_PER_HOUR,
 	SECONDS_PER_MINUTE,
-} from '@fluxer/date_utils/src/DateConstants';
-import {parseDate} from '@fluxer/date_utils/src/DateParsing';
-import type {DateInput} from '@fluxer/date_utils/src/DateTypes';
+} from '@voxr/date_utils/src/DateConstants';
+import {parseDate} from '@voxr/date_utils/src/DateParsing';
+import type {DateInput} from '@voxr/date_utils/src/DateTypes';
 
 export function formatDuration(seconds: number): string {
 	if (!Number.isFinite(seconds) || seconds < 0) {

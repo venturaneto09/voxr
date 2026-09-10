@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {cors} from '@fluxer/hono/src/middleware/Cors';
+import {cors} from '@voxr/hono/src/middleware/Cors';
 import {Hono} from 'hono';
 import {describe, expect, test} from 'vitest';
 

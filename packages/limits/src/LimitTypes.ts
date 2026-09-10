@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {LimitKey} from '@fluxer/constants/src/LimitConfigMetadata';
+import type {LimitKey} from '@voxr/constants/src/LimitConfigMetadata';
 
 export interface LimitFilter {
 	traits?: Array<string>;

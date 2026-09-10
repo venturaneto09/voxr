@@ -191,7 +191,7 @@ async fn build_services(
     let env = if env::var_os("CARGO_BUILD_JOBS").is_none() {
         vec![(
             "CARGO_BUILD_JOBS".to_owned(),
-            Some(env::var("FLUXER_DEV_CARGO_JOBS").unwrap_or_else(|_| "2".to_owned())),
+            Some(env::var("VOXR_DEV_CARGO_JOBS").unwrap_or_else(|_| "2".to_owned())),
         )]
     } else {
         Vec::new()
@@ -233,7 +233,7 @@ fn start_service(spec: &RustServiceSpec, mode: &str, port: u16) -> Result<Child>
 }
 
 pub fn service_command(spec: &RustServiceSpec) -> Vec<String> {
-    if env::var("FLUXER_DEV_RUST_HOT_RELOAD")
+    if env::var("VOXR_DEV_RUST_HOT_RELOAD")
         .map(|value| matches!(value.to_ascii_lowercase().as_str(), "1" | "true" | "yes"))
         .unwrap_or(false)
     {
@@ -246,9 +246,9 @@ pub fn service_command(spec: &RustServiceSpec) -> Vec<String> {
             "-w".to_owned(),
             rel.join("Cargo.toml").display().to_string(),
             "-w".to_owned(),
-            "fluxer_svc/src".to_owned(),
+            "voxr_svc/src".to_owned(),
             "-w".to_owned(),
-            "fluxer_svc/Cargo.toml".to_owned(),
+            "voxr_svc/Cargo.toml".to_owned(),
             "-x".to_owned(),
             format!("run -p {}", spec.package),
         ];
@@ -272,48 +272,48 @@ pub fn service_command(spec: &RustServiceSpec) -> Vec<String> {
 
 pub fn service_env(spec: &RustServiceSpec, mode: &str, port: u16) -> Vec<(String, Option<String>)> {
     let mut envs = vec![
-        ("FLUXER_SVC_NAME".to_owned(), Some(spec.name.to_owned())),
-        ("FLUXER_SVC_MODE".to_owned(), Some(mode.to_owned())),
-        ("FLUXER_SVC_PORT".to_owned(), Some(port.to_string())),
+        ("VOXR_SVC_NAME".to_owned(), Some(spec.name.to_owned())),
+        ("VOXR_SVC_MODE".to_owned(), Some(mode.to_owned())),
+        ("VOXR_SVC_PORT".to_owned(), Some(port.to_string())),
         (
-            "FLUXER_SVC_LISTEN_HOST".to_owned(),
+            "VOXR_SVC_LISTEN_HOST".to_owned(),
             Some("0.0.0.0".to_owned()),
         ),
-        ("FLUXER_SVC_SHARD_COUNT".to_owned(), Some("1".to_owned())),
+        ("VOXR_SVC_SHARD_COUNT".to_owned(), Some("1".to_owned())),
         (
-            "FLUXER_SVC_NATS_URL".to_owned(),
+            "VOXR_SVC_NATS_URL".to_owned(),
             Some(
-                env::var("FLUXER_SVC_NATS_URL")
-                    .or_else(|_| env::var("FLUXER_NATS_URL"))
+                env::var("VOXR_SVC_NATS_URL")
+                    .or_else(|_| env::var("VOXR_NATS_URL"))
                     .unwrap_or_else(|_| "nats://nats:4222".to_owned()),
             ),
         ),
     ];
     if mode == "shard" {
-        envs.push(("FLUXER_SVC_SHARD_ID".to_owned(), Some("0".to_owned())));
+        envs.push(("VOXR_SVC_SHARD_ID".to_owned(), Some("0".to_owned())));
     }
     if spec.name == "unfurl" {
         envs.extend([
             (
-                "FLUXER_MEDIA_PROXY_ENDPOINT".to_owned(),
+                "VOXR_MEDIA_PROXY_ENDPOINT".to_owned(),
                 Some(
-                    env::var("FLUXER_MEDIA_PROXY_ENDPOINT")
+                    env::var("VOXR_MEDIA_PROXY_ENDPOINT")
                         .unwrap_or_else(|_| format!("http://127.0.0.1:{MEDIA_PROXY_PORT}")),
                 ),
             ),
             (
-                "FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT".to_owned(),
+                "VOXR_MEDIA_PROXY_PUBLIC_ENDPOINT".to_owned(),
                 Some(
-                    env::var("FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT")
-                        .or_else(|_| env::var("FLUXER_MEDIA_ENDPOINT"))
+                    env::var("VOXR_MEDIA_PROXY_PUBLIC_ENDPOINT")
+                        .or_else(|_| env::var("VOXR_MEDIA_ENDPOINT"))
                         .unwrap_or_else(|_| format!("http://localhost:{DEV_PROXY_PORT}/media")),
                 ),
             ),
             (
-                "FLUXER_STATIC_CDN_ENDPOINT".to_owned(),
+                "VOXR_STATIC_CDN_ENDPOINT".to_owned(),
                 Some(
-                    env::var("FLUXER_STATIC_CDN_ENDPOINT")
-                        .or_else(|_| env::var("FLUXER_PUBLIC_URL"))
+                    env::var("VOXR_STATIC_CDN_ENDPOINT")
+                        .or_else(|_| env::var("VOXR_PUBLIC_URL"))
                         .unwrap_or_else(|_| format!("http://localhost:{DEV_PROXY_PORT}")),
                 ),
             ),
@@ -546,19 +546,19 @@ fn proc_has_managed_service_environment(pid: i32, services: &[RustServiceSpec]) 
             ))
         })
         .collect::<std::collections::HashMap<_, _>>();
-    let Some(name) = environment.get("FLUXER_SVC_NAME") else {
+    let Some(name) = environment.get("VOXR_SVC_NAME") else {
         return false;
     };
-    let Some(mode) = environment.get("FLUXER_SVC_MODE") else {
+    let Some(mode) = environment.get("VOXR_SVC_MODE") else {
         return false;
     };
     let Some(port) = environment
-        .get("FLUXER_SVC_PORT")
+        .get("VOXR_SVC_PORT")
         .and_then(|port| port.parse::<u16>().ok())
     else {
         return false;
     };
-    if environment.get("FLUXER_SVC_LISTEN_HOST") != Some(&"0.0.0.0") {
+    if environment.get("VOXR_SVC_LISTEN_HOST") != Some(&"0.0.0.0") {
         return false;
     }
     services.iter().any(|service| {
@@ -687,11 +687,11 @@ mod tests {
     ) {
         let _guard = ENV_LOCK.lock().unwrap();
         let keys = [
-            "FLUXER_MEDIA_PROXY_ENDPOINT",
-            "FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT",
-            "FLUXER_MEDIA_ENDPOINT",
-            "FLUXER_STATIC_CDN_ENDPOINT",
-            "FLUXER_PUBLIC_URL",
+            "VOXR_MEDIA_PROXY_ENDPOINT",
+            "VOXR_MEDIA_PROXY_PUBLIC_ENDPOINT",
+            "VOXR_MEDIA_ENDPOINT",
+            "VOXR_STATIC_CDN_ENDPOINT",
+            "VOXR_PUBLIC_URL",
         ];
         let saved = keys
             .iter()
@@ -743,12 +743,12 @@ mod tests {
         with_public_env(&[], |env| {
             assert!(
                 env.iter()
-                    .any(|(key, value)| key == "FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT"
+                    .any(|(key, value)| key == "VOXR_MEDIA_PROXY_PUBLIC_ENDPOINT"
                         && value.as_deref() == Some("http://localhost:8088/media"))
             );
             assert!(
                 env.iter()
-                    .any(|(key, value)| key == "FLUXER_STATIC_CDN_ENDPOINT"
+                    .any(|(key, value)| key == "VOXR_STATIC_CDN_ENDPOINT"
                         && value.as_deref() == Some("http://localhost:8088"))
             );
         });
@@ -759,23 +759,23 @@ mod tests {
         with_public_env(
             &[
                 (
-                    "FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT",
+                    "VOXR_MEDIA_PROXY_PUBLIC_ENDPOINT",
                     Some("https://dev.example.com/media"),
                 ),
                 (
-                    "FLUXER_STATIC_CDN_ENDPOINT",
+                    "VOXR_STATIC_CDN_ENDPOINT",
                     Some("https://dev.example.com"),
                 ),
             ],
             |env| {
                 assert!(
                     env.iter()
-                        .any(|(key, value)| key == "FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT"
+                        .any(|(key, value)| key == "VOXR_MEDIA_PROXY_PUBLIC_ENDPOINT"
                             && value.as_deref() == Some("https://dev.example.com/media"))
                 );
                 assert!(
                     env.iter()
-                        .any(|(key, value)| key == "FLUXER_STATIC_CDN_ENDPOINT"
+                        .any(|(key, value)| key == "VOXR_STATIC_CDN_ENDPOINT"
                             && value.as_deref() == Some("https://dev.example.com"))
                 );
             },
@@ -784,13 +784,13 @@ mod tests {
 
     #[test]
     fn cmdline_binary_match_uses_selected_service_binary_suffix() {
-        let binaries = BTreeSet::from(["target/debug/fluxer_messages".to_owned()]);
+        let binaries = BTreeSet::from(["target/debug/voxr_messages".to_owned()]);
         assert!(cmdline_has_service_binary(
-            &["/workspaces/fluxer/target/debug/fluxer_messages".to_owned()],
+            &["/workspaces/voxr/target/debug/voxr_messages".to_owned()],
             &binaries
         ));
         assert!(!cmdline_has_service_binary(
-            &["/workspaces/fluxer/target/debug/fluxer_users".to_owned()],
+            &["/workspaces/voxr/target/debug/voxr_users".to_owned()],
             &binaries
         ));
     }

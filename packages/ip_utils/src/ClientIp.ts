@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {IpAddressFamily, ParsedIpAddress} from '@fluxer/ip_utils/src/IpAddress';
-import {parseIpAddress} from '@fluxer/ip_utils/src/IpAddress';
+import type {IpAddressFamily, ParsedIpAddress} from '@voxr/ip_utils/src/IpAddress';
+import {parseIpAddress} from '@voxr/ip_utils/src/IpAddress';
 
 interface ClientIpExtractionOptions {
 	trustClientIpHeader?: boolean;

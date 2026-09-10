@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {MS_PER_DAY} from '@fluxer/date_utils/src/DateConstants';
-import {parseDate} from '@fluxer/date_utils/src/DateParsing';
-import type {DateInput} from '@fluxer/date_utils/src/DateTypes';
+import {MS_PER_DAY} from '@voxr/date_utils/src/DateConstants';
+import {parseDate} from '@voxr/date_utils/src/DateParsing';
+import type {DateInput} from '@voxr/date_utils/src/DateTypes';
 
 export function isSameDay(date1: DateInput, date2?: DateInput): boolean {
 	const d1 = parseDate(date1);

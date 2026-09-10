@@ -2,14 +2,14 @@
 
 packages:
   - packages/*
-  - fluxer_api
-  - fluxer_app
-  - fluxer_api/pkgs/*
-  - fluxer_app/pkgs/*
-  - '!fluxer_app/pkgs/libfluxcore'
-  - fluxer_desktop
-  - fluxer_admin
-  - fluxer_docs
+  - voxr_api
+  - voxr_app
+  - voxr_api/pkgs/*
+  - voxr_app/pkgs/*
+  - '!voxr_app/pkgs/libfluxcore'
+  - voxr_desktop
+  - voxr_admin
+  - voxr_docs
 
 allowBuilds:
   '@bufbuild/buf': true

@@ -20,7 +20,7 @@ interface PackageConfig {
 
 const PACKAGES: Array<PackageConfig> = [
 	{
-		name: '@fluxer/errors',
+		name: '@voxr/errors',
 		packagePath: path.join(REPO_ROOT, 'packages/errors'),
 		localesPath: path.join(REPO_ROOT, 'packages/errors/src/i18n/locales'),
 		i18nMethod: 'getMessage',
@@ -28,8 +28,8 @@ const PACKAGES: Array<PackageConfig> = [
 	},
 	{
 		name: '@pkgs/email',
-		packagePath: path.join(REPO_ROOT, 'fluxer_api/pkgs/email'),
-		localesPath: path.join(REPO_ROOT, 'fluxer_api/pkgs/email/src/email_i18n/locales'),
+		packagePath: path.join(REPO_ROOT, 'voxr_api/pkgs/email'),
+		localesPath: path.join(REPO_ROOT, 'voxr_api/pkgs/email/src/email_i18n/locales'),
 		i18nMethod: 'getTemplate',
 		skip: true,
 	},

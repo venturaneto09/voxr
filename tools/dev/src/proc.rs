@@ -64,7 +64,7 @@ pub fn merged_env(
         }
     }
     if load_default_env {
-        current.insert("FLUXER_SELF_HOSTED".to_owned(), "true".to_owned());
+        current.insert("VOXR_SELF_HOSTED".to_owned(), "true".to_owned());
     }
     Ok(current)
 }

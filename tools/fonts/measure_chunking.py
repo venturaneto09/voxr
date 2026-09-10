@@ -19,7 +19,7 @@ CACHE = bf.TOOL_ROOT / ".cache"
 SFNT_CACHE = CACHE / "measure"
 
 CORPUS: dict[str, dict[str, str]] = {
-    "FluxerSansSC": {
+    "VoxrSansSC": {
         "one glyph (文)": "文",
         "display name": "小明",
         "three display names": "小明 李伟 王芳",
@@ -34,7 +34,7 @@ CORPUS: dict[str, dict[str, str]] = {
             "静音 耳机 麦克风 摄像头 主题 语言 隐私 安全 账号 个人资料 状态 在线 离线 忙碌 勿扰"
         ),
     },
-    "FluxerSansTC": {
+    "VoxrSansTC": {
         "one glyph (文)": "文",
         "display name": "小明",
         "three display names": "小明 李偉 王芳",
@@ -49,7 +49,7 @@ CORPUS: dict[str, dict[str, str]] = {
             "靜音 耳機 麥克風 攝影機 主題 語言 隱私 安全 帳號 個人資料 狀態 線上 離線 忙碌 勿擾"
         ),
     },
-    "FluxerSansJP": {
+    "VoxrSansJP": {
         "one glyph (語)": "語",
         "display name": "田中太郎",
         "three display names": "田中太郎 佐藤花子 鈴木一郎",
@@ -66,7 +66,7 @@ CORPUS: dict[str, dict[str, str]] = {
             "プライバシー セキュリティ アカウント プロフィール ステータス オンライン オフライン 取り込み中 応答不可"
         ),
     },
-    "FluxerSansKR": {
+    "VoxrSansKR": {
         "one syllable (한)": "한",
         "display name": "김민준",
         "three display names": "김민준 이서연 박지훈",

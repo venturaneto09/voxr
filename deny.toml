@@ -1,4 +1,4 @@
-# cargo-deny configuration for the Fluxer workspace.
+# cargo-deny configuration for the Voxr workspace.
 #
 # Applies to the root workspace (Cargo.toml at the repo root).
 
@@ -75,8 +75,8 @@ external-default-features = "allow"
 # Keep workspace artifacts away from the obsolete libfuse2 stack.
 # AppImage packaging must use the static electron-builder runtime instead.
 deny = [
-    { crate = "fuse", reason = "libfuse2-based Rust wrapper; use a maintained FUSE3-native crate only if Fluxer ever needs FUSE directly" },
-    { crate = "fuse-sys", reason = "libfuse2 FFI crate; Fluxer AppImages must not reintroduce libfuse2 through native Rust dependencies" },
+    { crate = "fuse", reason = "libfuse2-based Rust wrapper; use a maintained FUSE3-native crate only if Voxr ever needs FUSE directly" },
+    { crate = "fuse-sys", reason = "libfuse2 FFI crate; Voxr AppImages must not reintroduce libfuse2 through native Rust dependencies" },
 ]
 skip = [
     { crate = "block-buffer@0.10.4", reason = "transitive dependency requires the older digest API" },

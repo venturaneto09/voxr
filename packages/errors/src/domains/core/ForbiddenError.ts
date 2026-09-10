@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {APIErrorCode} from '@fluxer/constants/src/ApiErrorCodes';
-import {FluxerError, type FluxerErrorData} from '@fluxer/errors/src/FluxerError';
+import type {APIErrorCode} from '@voxr/constants/src/ApiErrorCodes';
+import {VoxrError, type VoxrErrorData} from '@voxr/errors/src/VoxrError';
 
-export class ForbiddenError extends FluxerError {
+export class ForbiddenError extends VoxrError {
 	constructor({
 		code,
 		message,
@@ -13,7 +13,7 @@ export class ForbiddenError extends FluxerError {
 	}: {
 		code: APIErrorCode;
 		message?: string;
-		data?: FluxerErrorData;
+		data?: VoxrErrorData;
 		headers?: Record<string, string>;
 		messageVariables?: Record<string, unknown>;
 	}) {

@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - name: Checkout fluxer
+      - name: Checkout voxr
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           persist-credentials: false
@@ -50,7 +50,7 @@ jobs:
 
       - name: Check drift of OpenAPI schemas
         run: |
-          if ! git diff --exit-code -- fluxer_api/src/api/openapi/openapi.json fluxer_admin/openapi-admin.json; then
+          if ! git diff --exit-code -- voxr_api/src/api/openapi/openapi.json voxr_admin/openapi-admin.json; then
             echo "::error::OpenAPI schemas are outdated."
             exit 1
           fi

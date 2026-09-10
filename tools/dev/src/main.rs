@@ -2,16 +2,16 @@
 
 use anyhow::{Context, Result, bail};
 use clap::{Args, Parser, Subcommand};
-use fluxer_dev::cassandra::{
+use voxr_dev::cassandra::{
     apply_schema, compute_diff, render_target_schema, verify_schema, write_diff_file,
 };
-use fluxer_dev::desktop::{
+use voxr_dev::desktop::{
     build_desktop, install_desktop, package_desktop, run_desktop, run_desktop_canary,
     typecheck_desktop,
 };
-use fluxer_dev::env::merge_default_env_with_current;
-use fluxer_dev::manifest::{DEV_PROXY_PORT, LOCAL_APP_URL};
-use fluxer_dev::paths::{DEV_ENV_FILE, DEV_LOCAL_ENV_FILE, ROOT, ROOT_LOCAL_ENV_FILE};
+use voxr_dev::env::merge_default_env_with_current;
+use voxr_dev::manifest::{DEV_PROXY_PORT, LOCAL_APP_URL};
+use voxr_dev::paths::{DEV_ENV_FILE, DEV_LOCAL_ENV_FILE, ROOT, ROOT_LOCAL_ENV_FILE};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::Command as ProcessCommand;
@@ -26,7 +26,7 @@ const DEV_INFRA_SERVICES: &[&str] = &[
 ];
 
 #[derive(Debug, Parser)]
-#[command(name = "fluxer-dev")]
+#[command(name = "voxr-dev")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -175,7 +175,7 @@ enum MediaProxyCommand {
         path: Option<String>,
     },
     RustStressSmoke,
-    SignExternalUrl(fluxer_dev::media_external::SignExternalUrlArgs),
+    SignExternalUrl(voxr_dev::media_external::SignExternalUrlArgs),
 }
 
 #[derive(Debug, Args)]
@@ -197,7 +197,7 @@ enum TunnelCommand {
         public_url: String,
     },
     Run {
-        #[arg(long, env = "FLUXER_CLOUDFLARE_TUNNEL_TOKEN", hide_env_values = true)]
+        #[arg(long, env = "VOXR_CLOUDFLARE_TUNNEL_TOKEN", hide_env_values = true)]
         token: Option<String>,
         #[arg(long)]
         token_file: Option<PathBuf>,
@@ -216,31 +216,31 @@ async fn main() -> Result<()> {
 
     match cli.command {
         Command::Bootstrap(args) => {
-            fluxer_dev::bootstrap::bootstrap(args.skip_install).await?;
+            voxr_dev::bootstrap::bootstrap(args.skip_install).await?;
         }
-        Command::PostStart => fluxer_dev::bootstrap::post_start().await?,
+        Command::PostStart => voxr_dev::bootstrap::post_start().await?,
         Command::Gateway(args) if args.mode == "single" => {
-            std::process::exit(fluxer_dev::gateway::run_gateway().await?)
+            std::process::exit(voxr_dev::gateway::run_gateway().await?)
         }
         Command::Gateway(_) => {
-            std::process::exit(fluxer_dev::gateway::run_gateway_cluster().await?)
+            std::process::exit(voxr_dev::gateway::run_gateway_cluster().await?)
         }
-        Command::Build => std::process::exit(fluxer_dev::tasks::run_build()?),
-        Command::Knip => std::process::exit(fluxer_dev::tasks::run_knip()?),
-        Command::Lint => std::process::exit(fluxer_dev::tasks::run_lint()?),
-        Command::Test => std::process::exit(fluxer_dev::tasks::run_test()?),
-        Command::Typecheck => std::process::exit(fluxer_dev::tasks::run_typecheck()?),
-        Command::Proxy(args) => fluxer_dev::proxy::run_proxy(&args.host, args.port).await?,
+        Command::Build => std::process::exit(voxr_dev::tasks::run_build()?),
+        Command::Knip => std::process::exit(voxr_dev::tasks::run_knip()?),
+        Command::Lint => std::process::exit(voxr_dev::tasks::run_lint()?),
+        Command::Test => std::process::exit(voxr_dev::tasks::run_test()?),
+        Command::Typecheck => std::process::exit(voxr_dev::tasks::run_typecheck()?),
+        Command::Proxy(args) => voxr_dev::proxy::run_proxy(&args.host, args.port).await?,
         Command::Dev(args) => {
             if args.cloudflare_tunnel {
-                fluxer_dev::tunnel::apply_cloudflare_public_url_env(args.public_url.as_deref())?;
+                voxr_dev::tunnel::apply_cloudflare_public_url_env(args.public_url.as_deref())?;
             } else if let Some(public_url) = args.public_url.as_deref() {
-                fluxer_dev::tunnel::apply_public_url_env(public_url)?;
+                voxr_dev::tunnel::apply_public_url_env(public_url)?;
             }
-            std::process::exit(fluxer_dev::dev::run_dev(&args.tasks, args.cloudflare_tunnel).await?)
+            std::process::exit(voxr_dev::dev::run_dev(&args.tasks, args.cloudflare_tunnel).await?)
         }
         Command::RustServices(args) => {
-            std::process::exit(fluxer_dev::rust_services::run_rust_services(&args.services).await?)
+            std::process::exit(voxr_dev::rust_services::run_rust_services(&args.services).await?)
         }
         Command::Infra(args) => run_infra(args.command)?,
         Command::Cassandra(args) => match args.command {
@@ -259,7 +259,7 @@ async fn main() -> Result<()> {
                 apply_schema(None).await?;
             }
             CassandraCommand::Verify => verify_schema(None, None).await?,
-            CassandraCommand::TargetSchema => print!("{}", render_target_schema("fluxer")),
+            CassandraCommand::TargetSchema => print!("{}", render_target_schema("voxr")),
         },
         Command::Desktop(args) => match args.command {
             DesktopCommand::Install => install_desktop()?,
@@ -283,7 +283,7 @@ async fn main() -> Result<()> {
                 run_desktop_canary(app_url.as_deref(), &extra_args, !no_build).await?;
             }
             DesktopCommand::ExecDisclaimed { program, args } => {
-                fluxer_dev::disclaim::exec_disclaimed(&program, &args)?
+                voxr_dev::disclaim::exec_disclaimed(&program, &args)?
             }
         },
         Command::MediaProxy(args) => match args.command {
@@ -292,16 +292,16 @@ async fn main() -> Result<()> {
                 base_url,
                 path,
             } => {
-                fluxer_dev::media_proxy::run_dev_media_doctor(repair, &base_url, path.as_deref())
+                voxr_dev::media_proxy::run_dev_media_doctor(repair, &base_url, path.as_deref())
                     .await?;
             }
             MediaProxyCommand::RustStressSmoke => {
-                fluxer_dev::media_proxy::run_rust_stress_smoke()?;
+                voxr_dev::media_proxy::run_rust_stress_smoke()?;
             }
             MediaProxyCommand::SignExternalUrl(args) => {
                 println!(
                     "{}",
-                    fluxer_dev::media_external::sign_external_url(
+                    voxr_dev::media_external::sign_external_url(
                         &args.secret_key,
                         &args.server_url,
                         &args.upstream
@@ -311,16 +311,16 @@ async fn main() -> Result<()> {
         },
         Command::Tunnel(args) => match args.command {
             TunnelCommand::Configure { public_url, token } => {
-                fluxer_dev::tunnel::write_cloudflare_public_url_file(&public_url)?;
+                voxr_dev::tunnel::write_cloudflare_public_url_file(&public_url)?;
                 if let Some(token) = token {
-                    fluxer_dev::tunnel::write_cloudflare_token_file(&token)?;
+                    voxr_dev::tunnel::write_cloudflare_token_file(&token)?;
                 }
             }
             TunnelCommand::PrintEnv { public_url } => {
-                print!("{}", fluxer_dev::tunnel::public_url_env_text(&public_url)?);
+                print!("{}", voxr_dev::tunnel::public_url_env_text(&public_url)?);
             }
             TunnelCommand::Run { token, token_file } => std::process::exit(
-                fluxer_dev::tunnel::run_cloudflare_tunnel(token, token_file).await?,
+                voxr_dev::tunnel::run_cloudflare_tunnel(token, token_file).await?,
             ),
         },
     }

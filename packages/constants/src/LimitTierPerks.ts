@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {LimitKey} from '@fluxer/constants/src/LimitConfigMetadata';
+import type {LimitKey} from '@voxr/constants/src/LimitConfigMetadata';
 
 type PerkStatus = 'available' | 'coming_soon' | 'beta';
 type PerkType = 'boolean' | 'numeric' | 'text';

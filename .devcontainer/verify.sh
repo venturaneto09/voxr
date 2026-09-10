@@ -64,23 +64,23 @@ else
 	echo "=== pnpm install === (skipped)"
 fi
 
-stage "wasm: pnpm --filter fluxer_app wasm:codegen" pnpm --filter fluxer_app wasm:codegen
+stage "wasm: pnpm --filter voxr_app wasm:codegen" pnpm --filter voxr_app wasm:codegen
 
-stage "app: typecheck" pnpm --filter fluxer_app typecheck
-stage "app: unit tests" pnpm --filter fluxer_app exec vitest run
+stage "app: typecheck" pnpm --filter voxr_app typecheck
+stage "app: unit tests" pnpm --filter voxr_app exec vitest run
 
 if [ "$QUICK" -eq 0 ]; then
-	stage "desktop: typecheck" pnpm --filter fluxer_desktop typecheck
-	stage "app: production build" pnpm --filter fluxer_app build
+	stage "desktop: typecheck" pnpm --filter voxr_desktop typecheck
+	stage "app: production build" pnpm --filter voxr_app build
 fi
 
 stage "rust: fmt" cargo fmt --all -- --check
 if [ "$QUICK" -eq 0 ]; then
 	stage "rust: clippy (workspace)" cargo clippy --workspace --all-targets -- -D warnings
 else
-	stage "rust: clippy (servers)" cargo clippy -p fluxer_app_proxy -p fluxer_admin --all-targets -- -D warnings
+	stage "rust: clippy (servers)" cargo clippy -p voxr_app_proxy -p voxr_admin --all-targets -- -D warnings
 fi
-stage "rust: app proxy tests" cargo test -p fluxer_app_proxy
+stage "rust: app proxy tests" cargo test -p voxr_app_proxy
 
 echo
 echo "---------------------------------------------"

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {BadRequestError} from '@fluxer/errors/src/domains/core/BadRequestError';
-import {AppErrorHandler} from '@fluxer/errors/src/domains/core/ErrorHandlers';
-import {ServiceUnavailableError} from '@fluxer/errors/src/HttpErrors';
-import type {BaseHonoEnv} from '@fluxer/hono_types/src/HonoTypes';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {BadRequestError} from '@voxr/errors/src/domains/core/BadRequestError';
+import {AppErrorHandler} from '@voxr/errors/src/domains/core/ErrorHandlers';
+import {ServiceUnavailableError} from '@voxr/errors/src/HttpErrors';
+import type {BaseHonoEnv} from '@voxr/hono_types/src/HonoTypes';
 import {Hono} from 'hono';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
@@ -16,8 +16,8 @@ const logCalls = vi.hoisted(() => ({
 	error: [] as Array<LogCall>,
 }));
 
-vi.mock('@fluxer/logger/src/Logger', async (importOriginal) => {
-	const actual = await importOriginal<typeof import('@fluxer/logger/src/Logger')>();
+vi.mock('@voxr/logger/src/Logger', async (importOriginal) => {
+	const actual = await importOriginal<typeof import('@voxr/logger/src/Logger')>();
 	const record = (bucket: Array<LogCall>) => (obj: Record<string, unknown>, msg?: string) => {
 		bucket.push([obj, msg]);
 	};
@@ -47,7 +47,7 @@ describe('AppErrorHandler logging', () => {
 		logCalls.error.length = 0;
 	});
 
-	it('logs 5xx FluxerErrors with the underlying cause', async () => {
+	it('logs 5xx VoxrErrors with the underlying cause', async () => {
 		const cause = new Error('connect ECONNREFUSED 127.0.0.1:9000');
 		const app = createApp();
 		app.use('*', async (ctx, next) => {
@@ -75,7 +75,7 @@ describe('AppErrorHandler logging', () => {
 		expect(loggedError.cause).toBe(cause);
 	});
 
-	it('logs 4xx FluxerErrors at debug rather than error', async () => {
+	it('logs 4xx VoxrErrors at debug rather than error', async () => {
 		const app = createApp();
 		app.get('/thing', () => {
 			throw new BadRequestError({code: APIErrorCodes.BAD_REQUEST});

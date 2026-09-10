@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {MasterConfig} from '@fluxer/config/src/MasterConfig';
+import type {MasterConfig} from '@voxr/config/src/MasterConfig';
 import {
 	extractBaseServiceConfig,
 	extractBuildInfoConfig,
 	extractKVClientConfig,
 	extractRateLimit,
-} from '@fluxer/config/src/ServiceConfigSlices';
+} from '@voxr/config/src/ServiceConfigSlices';
 import {describe, expect, test, vi} from 'vitest';
 
 function createMasterStub(overrides: Partial<MasterConfig> = {}): MasterConfig {

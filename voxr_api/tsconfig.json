@@ -1,0 +1,11 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"paths": {
+			"@app/*": ["./src/*"],
+			"@voxr/*": ["./../packages/*", "./../packages/*/src/index.ts"],
+			"@pkgs/*": ["./pkgs/*"]
+		}
+	},
+	"include": ["src/**/*", "scripts/**/*", "pkgs/**/*"]
+}

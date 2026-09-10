@@ -14,11 +14,11 @@ use crate::openrouter::is_openrouter_available;
 use crate::runner::translate_main;
 
 const ENV_KEYS: &[&str] = &[
-    "FLUXER_AUTO_I18N",
-    "FLUXER_AUTO_I18N_LOCALE_CONCURRENCY",
-    "FLUXER_AUTO_I18N_PROGRESS_INTERVAL",
-    "FLUXER_AUTO_I18N_REQUEST_TIMEOUT",
-    "FLUXER_AUTO_I18N_STRING_CONCURRENCY",
+    "VOXR_AUTO_I18N",
+    "VOXR_AUTO_I18N_LOCALE_CONCURRENCY",
+    "VOXR_AUTO_I18N_PROGRESS_INTERVAL",
+    "VOXR_AUTO_I18N_REQUEST_TIMEOUT",
+    "VOXR_AUTO_I18N_STRING_CONCURRENCY",
     "I18N_LLM_MODEL",
     "OPENROUTER_API_KEY",
     "OPENROUTER_APP_TITLE",
@@ -31,7 +31,7 @@ const ENV_KEYS: &[&str] = &[
 
 pub fn auto_main(args: &[String]) -> Result<u8> {
     let env_overrides = load_env_from_files(ENV_KEYS);
-    let fluxer_auto_i18n = env_value("FLUXER_AUTO_I18N", &env_overrides, "");
+    let voxr_auto_i18n = env_value("VOXR_AUTO_I18N", &env_overrides, "");
     let openrouter_base_url = trim_trailing_slash(&env_value(
         "OPENROUTER_BASE_URL",
         &env_overrides,
@@ -45,19 +45,19 @@ pub fn auto_main(args: &[String]) -> Result<u8> {
             || arg.starts_with("--dry-run=")
     });
     let explicitly_disabled = matches!(
-        fluxer_auto_i18n.to_lowercase().as_str(),
+        voxr_auto_i18n.to_lowercase().as_str(),
         "0" | "false" | "no" | "off"
     );
     if explicitly_disabled && !bypass_run_gate {
-        eprintln!("i18n:auto skipped: FLUXER_AUTO_I18N=0 disables automatic translations.");
+        eprintln!("i18n:auto skipped: VOXR_AUTO_I18N=0 disables automatic translations.");
         return Ok(0);
     }
     let openrouter_is_available =
         is_openrouter_available(&openrouter_base_url, &openrouter_api_key);
-    let should_run = fluxer_auto_i18n == "1" || (!explicitly_disabled && openrouter_is_available);
+    let should_run = voxr_auto_i18n == "1" || (!explicitly_disabled && openrouter_is_available);
     if !should_run && !bypass_run_gate {
         eprintln!(
-            "i18n:auto skipped: OpenRouter is unavailable. Set OPENROUTER_API_KEY, or set FLUXER_AUTO_I18N=1 to attempt translations with {} at {}.",
+            "i18n:auto skipped: OpenRouter is unavailable. Set OPENROUTER_API_KEY, or set VOXR_AUTO_I18N=1 to attempt translations with {} at {}.",
             if i18n_llm_model.is_empty() {
                 DEFAULT_OPENROUTER_MODEL
             } else {
@@ -67,19 +67,19 @@ pub fn auto_main(args: &[String]) -> Result<u8> {
         );
         return Ok(0);
     }
-    if should_run && fluxer_auto_i18n != "1" && openrouter_is_available {
+    if should_run && voxr_auto_i18n != "1" && openrouter_is_available {
         println!(
-            "i18n:auto detected OpenRouter availability at {openrouter_base_url}; running without FLUXER_AUTO_I18N=1."
+            "i18n:auto detected OpenRouter availability at {openrouter_base_url}; running without VOXR_AUTO_I18N=1."
         );
     }
 
     let mut runner_env = env_overrides;
     runner_env.insert(
-        "FLUXER_AUTO_I18N".to_string(),
+        "VOXR_AUTO_I18N".to_string(),
         if should_run {
             "1".to_string()
         } else {
-            fluxer_auto_i18n
+            voxr_auto_i18n
         },
     );
     runner_env.insert("I18N_LLM_MODEL".to_string(), i18n_llm_model.clone());
@@ -203,8 +203,8 @@ mod tests {
             Some(("OPENROUTER_MODEL".to_string(), "translator".to_string()))
         );
         assert_eq!(
-            parse_export_line("export FLUXER_AUTO_I18N=1"),
-            Some(("FLUXER_AUTO_I18N".to_string(), "1".to_string()))
+            parse_export_line("export VOXR_AUTO_I18N=1"),
+            Some(("VOXR_AUTO_I18N".to_string(), "1".to_string()))
         );
         assert_eq!(parse_export_line("OPENROUTER_MODEL=translator"), None);
         assert_eq!(parse_export_line("export 1BAD=value"), None);

@@ -13,7 +13,7 @@ pub struct SignExternalUrlArgs {
 }
 
 pub fn sign_external_url(secret_key: &str, server_url: &str, upstream: &str) -> Result<String> {
-    fluxer_common::external_media_path::build_external_media_proxy_url(
+    voxr_common::external_media_path::build_external_media_proxy_url(
         server_url.trim_end_matches('/'),
         upstream,
         secret_key.as_bytes(),
@@ -37,7 +37,7 @@ mod tests {
         assert!(signed.ends_with("/https/example.test/a%20b.jpg"));
         assert_eq!(
             "https://example.test/a b.jpg",
-            fluxer_common::external_media_path::reconstruct_original_url(
+            voxr_common::external_media_path::reconstruct_original_url(
                 signed
                     .split_once("/external/")
                     .unwrap()

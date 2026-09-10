@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {AVATAR_MAX_SIZE, MAX_GROUP_DM_OTHER_RECIPIENTS} from '@fluxer/constants/src/LimitConstants';
-import {StatusTypes} from '@fluxer/constants/src/StatusConstants';
+import {AVATAR_MAX_SIZE, MAX_GROUP_DM_OTHER_RECIPIENTS} from '@voxr/constants/src/LimitConstants';
+import {StatusTypes} from '@voxr/constants/src/StatusConstants';
 import {
 	DEFAULT_GUILD_FOLDER_ICON,
 	FriendSourceFlags,
@@ -16,17 +16,17 @@ import {
 	ProfileFieldPrivacyFlags,
 	ProfileFieldPrivacyFlagsDescriptions,
 	ThemeTypes,
-} from '@fluxer/constants/src/UserConstants';
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
-import {SudoVerificationSchema} from '@fluxer/schema/src/domains/auth/AuthSchemas';
+} from '@voxr/constants/src/UserConstants';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
+import {SudoVerificationSchema} from '@voxr/schema/src/domains/auth/AuthSchemas';
 import {
 	isValidSyncedPreferencesEncoding,
 	SYNCED_PREFERENCES_MAX_ENCODED_LENGTH,
-} from '@fluxer/schema/src/domains/user/SyncedPreferencesCodec';
-import {isValidSingleUnicodeEmoji} from '@fluxer/schema/src/primitives/EmojiValidators';
-import {base64LengthForBytes, createBase64StringType} from '@fluxer/schema/src/primitives/FileValidators';
-import {LocaleSchema} from '@fluxer/schema/src/primitives/LocaleSchema';
-import {createQueryIntegerType, DateTimeType, QueryBooleanType} from '@fluxer/schema/src/primitives/QueryValidators';
+} from '@voxr/schema/src/domains/user/SyncedPreferencesCodec';
+import {isValidSingleUnicodeEmoji} from '@voxr/schema/src/primitives/EmojiValidators';
+import {base64LengthForBytes, createBase64StringType} from '@voxr/schema/src/primitives/FileValidators';
+import {LocaleSchema} from '@voxr/schema/src/primitives/LocaleSchema';
+import {createQueryIntegerType, DateTimeType, QueryBooleanType} from '@voxr/schema/src/primitives/QueryValidators';
 import {
 	ColorType,
 	createBitflagInt32Type,
@@ -38,8 +38,8 @@ import {
 	SnowflakeType,
 	withFieldDescription,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {URLType} from '@fluxer/schema/src/primitives/UrlValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {URLType} from '@voxr/schema/src/primitives/UrlValidators';
 import {
 	MentionReplyPreferencesSchema,
 	ProfilePrivacyLevelSchema,
@@ -50,14 +50,14 @@ import {
 	StickerAnimationOptionsSchema,
 	TimeFormatTypesSchema,
 	UserNotificationSettingsSchema,
-} from '@fluxer/schema/src/primitives/UserSettingsValidators';
+} from '@voxr/schema/src/primitives/UserSettingsValidators';
 import {
 	DiscriminatorType,
 	EmailType,
 	GlobalNameType,
 	PasswordType,
 	UsernameType,
-} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/UserValidators';
 import {z} from 'zod';
 
 export const UserUpdateRequest = z

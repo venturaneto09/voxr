@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {resolveRegionDisplayName, resolveRegionDisplayNames} from '@fluxer/geo_utils/src/RegionDisplayNameResolver';
+import {resolveRegionDisplayName, resolveRegionDisplayNames} from '@voxr/geo_utils/src/RegionDisplayNameResolver';
 import {describe, expect, it} from 'vitest';
 
 describe('resolveRegionDisplayName', () => {

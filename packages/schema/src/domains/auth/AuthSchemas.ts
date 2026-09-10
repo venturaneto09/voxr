@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ThemeTypes} from '@fluxer/constants/src/UserConstants';
-import {UserPartialResponse} from '@fluxer/schema/src/domains/user/UserResponseSchemas';
+import {ThemeTypes} from '@voxr/constants/src/UserConstants';
+import {UserPartialResponse} from '@voxr/schema/src/domains/user/UserResponseSchemas';
 import {
 	createNamedStringLiteralUnion,
 	createStringType,
 	SnowflakeStringType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {
 	EmailType,
 	GlobalNameType,
 	PasswordType,
 	PhoneNumberType,
 	UsernameType,
-} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/UserValidators';
 import type {
 	AuthenticationResponseJSON,
 	PublicKeyCredentialCreationOptionsJSON,
@@ -433,7 +433,7 @@ const PhoneSendVerificationDeliveredResponse = z.object({
 });
 
 const PhoneSendVerificationInboundChallengeResponse = z.object({
-	channel: z.literal('inbound_challenge').describe('The user must send Fluxer an SMS instead of receiving one'),
+	channel: z.literal('inbound_challenge').describe('The user must send Voxr an SMS instead of receiving one'),
 	challenge_code: createStringType(4, 12).describe('The numeric code the user must text to our number'),
 	our_number: createStringType(4, 32).describe('The Twilio number the user must text the code to (E.164)'),
 	expires_at: z.iso.datetime().describe('ISO 8601 timestamp when this inbound challenge expires'),

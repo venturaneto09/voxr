@@ -2,21 +2,21 @@
 
 import {
 	createSnowflake,
-	FLUXER_EPOCH,
+	VOXR_EPOCH,
 	MAX_SEQUENCE,
 	MAX_WORKER_ID,
 	TIMESTAMP_SHIFT,
-} from '@fluxer/snowflake/src/Snowflake';
+} from '@voxr/snowflake/src/Snowflake';
 
-const FLUXER_EPOCH_NUMBER = Number(FLUXER_EPOCH);
+const VOXR_EPOCH_NUMBER = Number(VOXR_EPOCH);
 
 function extractTimestampWithEpoch(snowflake: bigint, epoch: bigint): number {
 	return Number((snowflake >> TIMESTAMP_SHIFT) + epoch);
 }
 
 function toClampedTimestamp(timestamp: number): number {
-	if (timestamp <= FLUXER_EPOCH_NUMBER) {
-		return FLUXER_EPOCH_NUMBER;
+	if (timestamp <= VOXR_EPOCH_NUMBER) {
+		return VOXR_EPOCH_NUMBER;
 	}
 	return timestamp;
 }
@@ -42,19 +42,19 @@ function assertValidSequenceValue(sequence: number): void {
 
 export function extractTimestamp(snowflake: string): number {
 	try {
-		return extractTimestampWithEpoch(BigInt(snowflake), FLUXER_EPOCH);
+		return extractTimestampWithEpoch(BigInt(snowflake), VOXR_EPOCH);
 	} catch (_error) {
 		return Number.NaN;
 	}
 }
 
 export function extractTimestampBigInt(snowflake: bigint): number {
-	return extractTimestampWithEpoch(snowflake, FLUXER_EPOCH);
+	return extractTimestampWithEpoch(snowflake, VOXR_EPOCH);
 }
 
 export function fromTimestamp(timestamp: number): string {
 	const clampedTimestamp = toClampedTimestamp(timestamp);
-	if (clampedTimestamp === FLUXER_EPOCH_NUMBER) {
+	if (clampedTimestamp === VOXR_EPOCH_NUMBER) {
 		return '0';
 	}
 	return createSnowflake({timestamp: clampedTimestamp}).toString();
@@ -62,7 +62,7 @@ export function fromTimestamp(timestamp: number): string {
 
 export function fromTimestampBigInt(timestamp: number): bigint {
 	const clampedTimestamp = toClampedTimestamp(timestamp);
-	if (clampedTimestamp === FLUXER_EPOCH_NUMBER) {
+	if (clampedTimestamp === VOXR_EPOCH_NUMBER) {
 		return 0n;
 	}
 	return createSnowflake({timestamp: clampedTimestamp});
@@ -186,7 +186,7 @@ export function ageBigInt(snowflake: bigint): number {
 
 export function extractTimestampFromSnowflake(snowflake: string, epoch?: string | bigint): number {
 	try {
-		const epochBigInt = epoch != null ? (typeof epoch === 'string' ? BigInt(epoch) : epoch) : FLUXER_EPOCH;
+		const epochBigInt = epoch != null ? (typeof epoch === 'string' ? BigInt(epoch) : epoch) : VOXR_EPOCH;
 		return extractTimestampWithEpoch(BigInt(snowflake), epochBigInt);
 	} catch (_error) {
 		return Number.NaN;

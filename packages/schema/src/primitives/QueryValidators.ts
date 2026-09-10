@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
 import {z} from 'zod';
 
 const TRUE_VALUES = ['true', 'True', '1'];

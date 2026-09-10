@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use fluxer_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
+use voxr_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
 use libfuzzer_sys::fuzz_target;
 
 fuzz_target!(|data: &[u8]| {

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ClientUploadedAttachmentRequest} from '@fluxer/schema/src/domains/message/AttachmentSchemas';
+import {ClientUploadedAttachmentRequest} from '@voxr/schema/src/domains/message/AttachmentSchemas';
 import {
 	PresignedAttachmentUploadRequest,
 	PresignedAttachmentUploadResponse,
-} from '@fluxer/schema/src/domains/message/AttachmentUploadSchemas';
-import {MessageAttachmentResponse} from '@fluxer/schema/src/domains/message/MessageResponseSchemas';
+} from '@voxr/schema/src/domains/message/AttachmentUploadSchemas';
+import {MessageAttachmentResponse} from '@voxr/schema/src/domains/message/MessageResponseSchemas';
 import {describe, expect, it} from 'vitest';
 
 describe('attachment byte size schemas', () => {

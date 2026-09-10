@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {GuildFeatures, GuildSplashCardAlignment} from '@fluxer/constants/src/GuildConstants';
+import {GuildFeatures, GuildSplashCardAlignment} from '@voxr/constants/src/GuildConstants';
 import {
 	GuildPartialResponse,
 	GuildResponse,
 	GuildVanityURLResponse,
-} from '@fluxer/schema/src/domains/guild/GuildResponseSchemas';
+} from '@voxr/schema/src/domains/guild/GuildResponseSchemas';
 import {describe, expect, it} from 'vitest';
 
 describe('GuildResponse', () => {

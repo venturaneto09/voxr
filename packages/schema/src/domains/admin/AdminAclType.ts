@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {AdminACLs} from '@fluxer/constants/src/AdminACLs';
+import {AdminACLs} from '@voxr/constants/src/AdminACLs';
 import {z} from 'zod';
 
 type AdminACL = (typeof AdminACLs)[keyof typeof AdminACLs];

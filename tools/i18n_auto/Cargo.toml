@@ -1,5 +1,5 @@
 [package]
-name = "fluxer-i18n-auto"
+name = "voxr-i18n-auto"
 version = "0.1.0"
 edition.workspace = true
 license.workspace = true

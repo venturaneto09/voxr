@@ -4,12 +4,12 @@ import {
 	MessageRequestSchema,
 	MessageUpdateRequestSchema,
 	RichEmbedRequest,
-} from '@fluxer/schema/src/domains/message/MessageRequestSchemas';
+} from '@voxr/schema/src/domains/message/MessageRequestSchemas';
 import {describe, expect, it} from 'vitest';
 
 describe('MessageRequestSchema', () => {
 	it('preserves ANSI escape characters in message content', () => {
-		const content = '```ansi\nWelcome to \u001b[2;33mFluxer\u001b[0m!\n```';
+		const content = '```ansi\nWelcome to \u001b[2;33mVoxr\u001b[0m!\n```';
 		const result = MessageRequestSchema.safeParse({content});
 		expect(result.success).toBe(true);
 		if (!result.success) {

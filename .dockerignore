@@ -3,13 +3,13 @@
 
 /.claude/
 /.direnv/
-/.fluxer/
+/.voxr/
 /.git/
 **/.git
 **/.git/**
 /.github/
 /.pnpm-store/
-/fluxer_marketing
+/voxr_marketing
 
 **/.env
 **/.env.*.local
@@ -29,24 +29,24 @@
 **/node_modules/
 **/target/
 **/test-results.json
-/fluxer_docs/dist/
-/fluxer_docs/.astro/
-/fluxer_app/.devserver-cache.json
-/fluxer_app/pkgs/libfluxcore/
-/fluxer_app/src/features/i18n/locales/*/messages.mjs
-/fluxer_app/src/features/messaging/utils/markdown/parser/MarkdownParserWasmBytes.ts
-/fluxer_app/src/features/theme/styles/generated/
-/fluxer_app/src/features/ui/components/SVGMasks.tsx
-/fluxer_app/src/features/ui/constants/AvatarStatusGeometry.ts
-/fluxer_gateway/priv/
+/voxr_docs/dist/
+/voxr_docs/.astro/
+/voxr_app/.devserver-cache.json
+/voxr_app/pkgs/libfluxcore/
+/voxr_app/src/features/i18n/locales/*/messages.mjs
+/voxr_app/src/features/messaging/utils/markdown/parser/MarkdownParserWasmBytes.ts
+/voxr_app/src/features/theme/styles/generated/
+/voxr_app/src/features/ui/components/SVGMasks.tsx
+/voxr_app/src/features/ui/constants/AvatarStatusGeometry.ts
+/voxr_gateway/priv/
 
-/fluxer_media_proxy/fuzz/artifacts/
-/fluxer_media_proxy/fuzz/corpus/
+/voxr_media_proxy/fuzz/artifacts/
+/voxr_media_proxy/fuzz/corpus/
 /packages/markdown_parser/rust/fuzz/artifacts/
 /packages/markdown_parser/rust/fuzz/corpus/
 
-/fluxer_media_proxy/.benchmark-cache/
-/fluxer_media_proxy/bench-results/
+/voxr_media_proxy/.benchmark-cache/
+/voxr_media_proxy/bench-results/
 
 /app-dist-output/
 /artifacts/
@@ -54,7 +54,7 @@
 /upload_staging/
 
 
-/fluxer_desktop/
+/voxr_desktop/
 
 **/.idea/
 **/*.iml

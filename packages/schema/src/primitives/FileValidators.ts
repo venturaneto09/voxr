@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
 import {
 	normalizeString,
 	withOpenApiType,
 	withStringLengthRangeValidation,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const WHITESPACE_REGEX = /\s+/g;

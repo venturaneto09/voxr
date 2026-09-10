@@ -2,7 +2,7 @@
 
 import {create, fromBinary, toBinary} from '@bufbuild/protobuf';
 import {timestampDate, timestampFromDate} from '@bufbuild/protobuf/wkt';
-import {type ReadStateBundle, ReadStateBundleSchema} from '@fluxer/schema/src/gen/fluxer/read_state/v1/read_state_pb';
+import {type ReadStateBundle, ReadStateBundleSchema} from '@voxr/schema/src/gen/voxr/read_state/v1/read_state_pb';
 import {base64ToUint8Array, uint8ArrayToBase64} from 'uint8array-extras';
 
 interface ReadStateProtoEntryInput {

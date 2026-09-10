@@ -5,17 +5,17 @@ import {
 	MessageAttachmentFlagsDescriptions,
 	MessageFlags,
 	MessageFlagsDescriptions,
-} from '@fluxer/constants/src/ChannelConstants';
-import {AVATAR_MAX_SIZE, MAX_MESSAGE_LENGTH_PREMIUM} from '@fluxer/constants/src/LimitConstants';
-import {ClientUploadedAttachmentRequest} from '@fluxer/schema/src/domains/message/AttachmentSchemas';
+} from '@voxr/constants/src/ChannelConstants';
+import {AVATAR_MAX_SIZE, MAX_MESSAGE_LENGTH_PREMIUM} from '@voxr/constants/src/LimitConstants';
+import {ClientUploadedAttachmentRequest} from '@voxr/schema/src/domains/message/AttachmentSchemas';
 import {
 	MessageContentRequest,
 	MessageNonceRequest,
 	RichEmbedRequest,
-} from '@fluxer/schema/src/domains/message/MessageRequestSchemas';
-import {AllowedMentionsRequest, MessageReferenceRequest} from '@fluxer/schema/src/domains/message/SharedMessageSchemas';
-import {base64LengthForBytes, createBase64StringType} from '@fluxer/schema/src/primitives/FileValidators';
-import {QueryBooleanType} from '@fluxer/schema/src/primitives/QueryValidators';
+} from '@voxr/schema/src/domains/message/MessageRequestSchemas';
+import {AllowedMentionsRequest, MessageReferenceRequest} from '@voxr/schema/src/domains/message/SharedMessageSchemas';
+import {base64LengthForBytes, createBase64StringType} from '@voxr/schema/src/primitives/FileValidators';
+import {QueryBooleanType} from '@voxr/schema/src/primitives/QueryValidators';
 import {
 	coerceNumberFromString,
 	createBitflagInt32Type,
@@ -24,9 +24,9 @@ import {
 	Int32Type,
 	NonNegativeSafeIntegerType,
 	SnowflakeType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {URLType} from '@fluxer/schema/src/primitives/UrlValidators';
-import {WebhookNameType} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {URLType} from '@voxr/schema/src/primitives/UrlValidators';
+import {WebhookNameType} from '@voxr/schema/src/primitives/UserValidators';
 import {z} from 'zod';
 
 export const WebhookCreateRequest = z.object({

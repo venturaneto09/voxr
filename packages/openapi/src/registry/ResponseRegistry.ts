@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type {OpenAPIResponse, OpenAPISchema} from '@fluxer/openapi/src/Types';
+import type {OpenAPIResponse, OpenAPISchema} from '@voxr/openapi/src/Types';
 export const ERROR_SCHEMA: OpenAPISchema = {
 	type: 'object',
 	properties: {

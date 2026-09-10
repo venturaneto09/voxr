@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {AuditLogActionType} from '@fluxer/constants/src/AuditLogActionType';
-import {AuditLogActionTypeSchema} from '@fluxer/schema/src/primitives/AuditLogValidators';
+import {AuditLogActionType} from '@voxr/constants/src/AuditLogActionType';
+import {AuditLogActionTypeSchema} from '@voxr/schema/src/primitives/AuditLogValidators';
 import {describe, expect, it} from 'vitest';
 
 describe('AuditLogActionTypeSchema', () => {

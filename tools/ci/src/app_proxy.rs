@@ -25,10 +25,10 @@ use tokio::sync::Semaphore;
 use tokio::task::JoinSet;
 use tokio::time::sleep;
 
-const DEFAULT_PUBLIC_ASSET_BASE_URL: &str = "https://fluxerstatic.com";
+const DEFAULT_PUBLIC_ASSET_BASE_URL: &str = "https://voxrstatic.com";
 const DEFAULT_APP_PROXY_TIME_FREEZE_ENABLED: &str = "true";
 const DEFAULT_APP_PROXY_BUNDLE_LOCAL_ASSETS: &str = "false";
-const DEFAULT_STATIC_BUCKET: &str = "fluxer-static";
+const DEFAULT_STATIC_BUCKET: &str = "voxr-static";
 const DEFAULT_S3_ENDPOINT: &str = "https://ewr1.vultrobjects.com";
 const IMMUTABLE_ASSET_CACHE_CONTROL: &str = "public, max-age=31536000, immutable";
 const RUNTIME_STATIC_DIR: &str = "/srv/app/static";
@@ -81,8 +81,8 @@ fn set_metadata_step(build_version_arg: Option<&str>) -> Result<()> {
     let calver_env = CalverEnv {
         build_version: trim_option(build_version_arg.map(ToOwned::to_owned))
             .or_else(|| trim_option(env::var("BUILD_VERSION").ok())),
-        fluxer_build_version: trim_option(env::var("FLUXER_BUILD_VERSION").ok()),
-        fluxer_build_date: trim_option(env::var("FLUXER_BUILD_DATE").ok()),
+        voxr_build_version: trim_option(env::var("VOXR_BUILD_VERSION").ok()),
+        voxr_build_date: trim_option(env::var("VOXR_BUILD_DATE").ok()),
     };
     let version = resolve_calver(&calver_env, Utc::now())?;
     append_github_output(&[
@@ -175,7 +175,7 @@ fn assets_image_ref(image_repo: &str, build_version: &str) -> String {
 fn image_repo() -> Result<String> {
     match env::var("IMAGE_REPO") {
         Ok(value) => Ok(value),
-        Err(_) => Ok(format!("ghcr.io/{}/fluxer-app-proxy", ghcr_owner()?)),
+        Err(_) => Ok(format!("ghcr.io/{}/voxr-app-proxy", ghcr_owner()?)),
     }
 }
 
@@ -184,14 +184,14 @@ fn bake_command(targets: &[&str]) -> Result<CommandSpec> {
     let public_asset_base_url = env::var("PUBLIC_ASSET_BASE_URL")
         .unwrap_or_else(|_| DEFAULT_PUBLIC_ASSET_BASE_URL.to_string());
     Ok(CommandSpec::new("docker")
-        .args(["buildx", "bake", "-f", "fluxer_app_proxy/docker-bake.hcl"])
+        .args(["buildx", "bake", "-f", "voxr_app_proxy/docker-bake.hcl"])
         .args(targets.iter().copied())
         .env("IMAGE_REPO", image_repo()?)
         .env("BUILD_VERSION", build_version)
         .env("PUBLIC_ASSET_BASE_URL", public_asset_base_url)
         .env(
-            "FLUXER_APP_PROXY_TIME_FREEZE_ENABLED",
-            env::var("FLUXER_APP_PROXY_TIME_FREEZE_ENABLED")
+            "VOXR_APP_PROXY_TIME_FREEZE_ENABLED",
+            env::var("VOXR_APP_PROXY_TIME_FREEZE_ENABLED")
                 .unwrap_or_else(|_| DEFAULT_APP_PROXY_TIME_FREEZE_ENABLED.to_string()),
         )
         .env(
@@ -223,8 +223,8 @@ fn bake_command(targets: &[&str]) -> Result<CommandSpec> {
 }
 
 fn default_app_proxy_cache_ref() -> String {
-    let owner = ghcr_owner().unwrap_or_else(|_| "fluxerapp".to_string());
-    format!("type=registry,ref=ghcr.io/{owner}/fluxer-app-proxy:buildcache-amd64")
+    let owner = ghcr_owner().unwrap_or_else(|_| "voxrapp".to_string());
+    format!("type=registry,ref=ghcr.io/{owner}/voxr-app-proxy:buildcache-amd64")
 }
 
 fn ghcr_owner() -> Result<String> {
@@ -653,8 +653,8 @@ mod tests {
     fn resolves_calver_from_explicit_or_date_override() {
         let explicit = CalverEnv {
             build_version: Some("2026.520.1".to_string()),
-            fluxer_build_version: Some("2026.521.2".to_string()),
-            fluxer_build_date: Some("2026-05-22T03:04:05Z".to_string()),
+            voxr_build_version: Some("2026.521.2".to_string()),
+            voxr_build_date: Some("2026-05-22T03:04:05Z".to_string()),
         };
         assert_eq!(
             resolve_calver(&explicit, dt(2026, 1, 1, 0, 0, 0)).unwrap(),
@@ -662,7 +662,7 @@ mod tests {
         );
 
         let generated = CalverEnv {
-            fluxer_build_date: Some("2026-05-20T01:02:03Z".to_string()),
+            voxr_build_date: Some("2026-05-20T01:02:03Z".to_string()),
             ..CalverEnv::default()
         };
         assert_eq!(
@@ -727,12 +727,12 @@ mod tests {
     #[test]
     fn build_command_sets_bake_environment() {
         let command = CommandSpec::new("docker")
-            .args(["buildx", "bake", "-f", "fluxer_app_proxy/docker-bake.hcl"])
-            .env("IMAGE_REPO", "ghcr.io/example/fluxer-app-proxy")
+            .args(["buildx", "bake", "-f", "voxr_app_proxy/docker-bake.hcl"])
+            .env("IMAGE_REPO", "ghcr.io/example/voxr-app-proxy")
             .env("BUILD_VERSION", "2026.520.1")
             .env("PUBLIC_ASSET_BASE_URL", DEFAULT_PUBLIC_ASSET_BASE_URL)
             .env(
-                "FLUXER_APP_PROXY_TIME_FREEZE_ENABLED",
+                "VOXR_APP_PROXY_TIME_FREEZE_ENABLED",
                 DEFAULT_APP_PROXY_TIME_FREEZE_ENABLED,
             );
 
@@ -743,7 +743,7 @@ mod tests {
                 OsString::from("buildx"),
                 OsString::from("bake"),
                 OsString::from("-f"),
-                OsString::from("fluxer_app_proxy/docker-bake.hcl"),
+                OsString::from("voxr_app_proxy/docker-bake.hcl"),
             ]
         );
         assert!(command.env.contains(&(
@@ -751,7 +751,7 @@ mod tests {
             OsString::from("2026.520.1")
         )));
         assert!(command.env.contains(&(
-            OsString::from("FLUXER_APP_PROXY_TIME_FREEZE_ENABLED"),
+            OsString::from("VOXR_APP_PROXY_TIME_FREEZE_ENABLED"),
             OsString::from(DEFAULT_APP_PROXY_TIME_FREEZE_ENABLED)
         )));
     }
@@ -763,7 +763,7 @@ mod tests {
 
     #[test]
     fn dockerfile_guards_the_trim_on_an_absolute_asset_base_url() {
-        let dockerfile = include_str!("../../../fluxer_app_proxy/Dockerfile");
+        let dockerfile = include_str!("../../../voxr_app_proxy/Dockerfile");
         let trim = dockerfile
             .split("FROM alpine:3.21 AS app-assets")
             .nth(1)
@@ -780,7 +780,7 @@ mod tests {
 
     #[test]
     fn dockerfile_workspace_manifest_keeps_the_release_profile() {
-        let dockerfile = include_str!("../../../fluxer_app_proxy/Dockerfile");
+        let dockerfile = include_str!("../../../voxr_app_proxy/Dockerfile");
         let manifest = dockerfile
             .split("'[workspace]'")
             .nth(1)
@@ -801,7 +801,7 @@ mod tests {
         }
         assert!(
             !manifest.contains("panic"),
-            "fluxer_svc runs every request on its own tokio task, so a panicking handler must unwind instead of aborting the pod"
+            "voxr_svc runs every request on its own tokio task, so a panicking handler must unwind instead of aborting the pod"
         );
     }
 
@@ -923,10 +923,10 @@ mod tests {
     #[test]
     fn referenced_assets_collects_absolute_and_root_relative_urls() {
         let index = concat!(
-            "<script src=\"https://fluxerstatic.com/assets/a.js\"></script>",
+            "<script src=\"https://voxrstatic.com/assets/a.js\"></script>",
             "<link rel=\"stylesheet\" href=\"/assets/b.css\">",
             "<a href=\"assets/fonts-NOTICE.txt\">notice</a>",
-            "<script src=\"https://fluxerstatic.com/assets/a.js\"></script>",
+            "<script src=\"https://voxrstatic.com/assets/a.js\"></script>",
         );
 
         assert_eq!(
@@ -1034,26 +1034,26 @@ mod tests {
     #[test]
     fn asset_url_joins_the_base_and_key_once() {
         assert_eq!(
-            asset_url("https://fluxerstatic.com", "assets/a.js"),
-            "https://fluxerstatic.com/assets/a.js"
+            asset_url("https://voxrstatic.com", "assets/a.js"),
+            "https://voxrstatic.com/assets/a.js"
         );
         assert_eq!(
-            asset_url("https://fluxerstatic.com/", "assets/a.js"),
-            "https://fluxerstatic.com/assets/a.js"
+            asset_url("https://voxrstatic.com/", "assets/a.js"),
+            "https://voxrstatic.com/assets/a.js"
         );
     }
 
     #[test]
     fn assets_image_ref_names_the_canonical_image() {
         assert_eq!(
-            assets_image_ref("ghcr.io/example/fluxer-app-proxy", "2026.520.1"),
-            "ghcr.io/example/fluxer-app-proxy:2026.520.1-assets"
+            assets_image_ref("ghcr.io/example/voxr-app-proxy", "2026.520.1"),
+            "ghcr.io/example/voxr-app-proxy:2026.520.1-assets"
         );
     }
 
     #[test]
     fn extract_commands_pin_the_image_platform() {
-        let pull = pull_command("ghcr.io/example/fluxer-app-proxy:1-assets", AMD64_PLATFORM);
+        let pull = pull_command("ghcr.io/example/voxr-app-proxy:1-assets", AMD64_PLATFORM);
         assert_eq!(pull.program, OsString::from("docker"));
         assert_eq!(
             pull.args,
@@ -1061,18 +1061,18 @@ mod tests {
                 OsString::from("pull"),
                 OsString::from("--platform"),
                 OsString::from(AMD64_PLATFORM),
-                OsString::from("ghcr.io/example/fluxer-app-proxy:1-assets"),
+                OsString::from("ghcr.io/example/voxr-app-proxy:1-assets"),
             ]
         );
 
-        let create = create_command("ghcr.io/example/fluxer-app-proxy:1-arm64", ARM64_PLATFORM);
+        let create = create_command("ghcr.io/example/voxr-app-proxy:1-arm64", ARM64_PLATFORM);
         assert_eq!(
             create.args,
             vec![
                 OsString::from("create"),
                 OsString::from("--platform"),
                 OsString::from(ARM64_PLATFORM),
-                OsString::from("ghcr.io/example/fluxer-app-proxy:1-arm64"),
+                OsString::from("ghcr.io/example/voxr-app-proxy:1-arm64"),
             ]
         );
 
@@ -1089,7 +1089,7 @@ mod tests {
 
     #[test]
     fn dockerfile_injects_one_canonical_asset_tree_into_every_architecture() {
-        let dockerfile = include_str!("../../../fluxer_app_proxy/Dockerfile");
+        let dockerfile = include_str!("../../../voxr_app_proxy/Dockerfile");
         for entry in [
             "ARG APP_ASSETS_REF=app-assets",
             "ARG APP_ASSETS_PLATFORM=$BUILDPLATFORM",
@@ -1105,7 +1105,7 @@ mod tests {
 
     #[test]
     fn dockerfile_prepares_the_asset_tree_once_before_the_architecture_stages() {
-        let dockerfile = include_str!("../../../fluxer_app_proxy/Dockerfile");
+        let dockerfile = include_str!("../../../voxr_app_proxy/Dockerfile");
         let canonical = dockerfile
             .split("FROM alpine:3.21 AS app-assets")
             .nth(1)
@@ -1128,7 +1128,7 @@ mod tests {
 
     #[test]
     fn bake_publishes_the_canonical_asset_image() {
-        let bake = include_str!("../../../fluxer_app_proxy/docker-bake.hcl");
+        let bake = include_str!("../../../voxr_app_proxy/docker-bake.hcl");
         for entry in [
             "target \"app-assets-image\"",
             "${BUILD_VERSION}-assets",
@@ -1142,7 +1142,7 @@ mod tests {
 
     #[test]
     fn canonical_assets_platform_falls_back_to_the_bake_default() {
-        let bake = include_str!("../../../fluxer_app_proxy/docker-bake.hcl");
+        let bake = include_str!("../../../voxr_app_proxy/docker-bake.hcl");
         let declared =
             format!("variable \"APP_ASSETS_PLATFORM\" {{ default = \"{AMD64_PLATFORM}\" }}");
         assert!(
@@ -1160,7 +1160,7 @@ mod tests {
         ] {
             assert!(
                 workflow.contains(entry),
-                "a self-hosted dist that inherits the hosted CDN default would ship index.html pointing at fluxerstatic.com, so the workflow must set {entry}"
+                "a self-hosted dist that inherits the hosted CDN default would ship index.html pointing at voxrstatic.com, so the workflow must set {entry}"
             );
         }
     }

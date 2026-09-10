@@ -1,4 +1,4 @@
-name: fluxer-dev
+name: voxr-dev
 
 services:
   workspace:
@@ -10,255 +10,255 @@ services:
     environment:
       DOCKER_HOST: unix:///var/run/docker.sock
       npm_config_store_dir: /home/vscode/.local/share/pnpm/store
-      FLUXER_PUBLIC_PORT: "${FLUXER_DEV_PROXY_PORT:-8088}"
-      FLUXER_PUBLIC_URL: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}"
-      FLUXER_API_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/api"
-      FLUXER_API_CLIENT_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/api"
-      FLUXER_APP_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}"
-      FLUXER_GATEWAY_ENDPOINT: "ws://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/gateway"
-      FLUXER_MEDIA_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/media"
-      FLUXER_STATIC_CDN_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}"
-      FLUXER_ADMIN_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/admin"
-      FLUXER_MEDIA_PROXY_PUBLIC_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/media"
-      FLUXER_S3_PUBLIC_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}"
-      FLUXER_LIVEKIT_URL: "ws://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/livekit"
-      FLUXER_LIVEKIT_INTERNAL_URL: "http://livekit:7880"
-      FLUXER_LIVEKIT_WEBHOOK_URL: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/api/webhooks/livekit"
-      FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/media"
-      FLUXER_GATEWAY_MEDIA_PROXY_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/media"
-      FLUXER_GATEWAY_STATIC_CDN_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}"
-      FLUXER_ADMIN_OAUTH_REDIRECT_URI: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/admin/oauth2_callback"
-      FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: "http://localhost,http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}"
-      PUBLIC_BOOTSTRAP_API_PUBLIC_ENDPOINT: "http://localhost:${FLUXER_DEV_PROXY_PORT:-8088}/api"
+      VOXR_PUBLIC_PORT: "${VOXR_DEV_PROXY_PORT:-8088}"
+      VOXR_PUBLIC_URL: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}"
+      VOXR_API_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/api"
+      VOXR_API_CLIENT_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/api"
+      VOXR_APP_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}"
+      VOXR_GATEWAY_ENDPOINT: "ws://localhost:${VOXR_DEV_PROXY_PORT:-8088}/gateway"
+      VOXR_MEDIA_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/media"
+      VOXR_STATIC_CDN_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}"
+      VOXR_ADMIN_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/admin"
+      VOXR_MEDIA_PROXY_PUBLIC_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/media"
+      VOXR_S3_PUBLIC_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}"
+      VOXR_LIVEKIT_URL: "ws://localhost:${VOXR_DEV_PROXY_PORT:-8088}/livekit"
+      VOXR_LIVEKIT_INTERNAL_URL: "http://livekit:7880"
+      VOXR_LIVEKIT_WEBHOOK_URL: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/api/webhooks/livekit"
+      VOXR_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/media"
+      VOXR_GATEWAY_MEDIA_PROXY_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/media"
+      VOXR_GATEWAY_STATIC_CDN_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}"
+      VOXR_ADMIN_OAUTH_REDIRECT_URI: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/admin/oauth2_callback"
+      VOXR_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: "http://localhost,http://localhost:${VOXR_DEV_PROXY_PORT:-8088}"
+      PUBLIC_BOOTSTRAP_API_PUBLIC_ENDPOINT: "http://localhost:${VOXR_DEV_PROXY_PORT:-8088}/api"
     volumes:
-      - ..:/workspaces/fluxer:cached
+      - ..:/workspaces/voxr:cached
       - type: volume
         source: root-node-modules
-        target: /workspaces/fluxer/node_modules
+        target: /workspaces/voxr/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-node-modules
-        target: /workspaces/fluxer/fluxer_api/node_modules
+        source: voxr-api-node-modules
+        target: /workspaces/voxr/voxr_api/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-app-node-modules
-        target: /workspaces/fluxer/fluxer_app/node_modules
+        source: voxr-app-node-modules
+        target: /workspaces/voxr/voxr_app/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-desktop-node-modules
-        target: /workspaces/fluxer/fluxer_desktop/node_modules
+        source: voxr-desktop-node-modules
+        target: /workspaces/voxr/voxr_desktop/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-admin-node-modules
-        target: /workspaces/fluxer/fluxer_admin/node_modules
+        source: voxr-admin-node-modules
+        target: /workspaces/voxr/voxr_admin/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-config-node-modules
-        target: /workspaces/fluxer/packages/config/node_modules
+        target: /workspaces/voxr/packages/config/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-constants-node-modules
-        target: /workspaces/fluxer/packages/constants/node_modules
+        target: /workspaces/voxr/packages/constants/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-date-utils-node-modules
-        target: /workspaces/fluxer/packages/date_utils/node_modules
+        target: /workspaces/voxr/packages/date_utils/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-errors-node-modules
-        target: /workspaces/fluxer/packages/errors/node_modules
+        target: /workspaces/voxr/packages/errors/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-geo-utils-node-modules
-        target: /workspaces/fluxer/packages/geo_utils/node_modules
+        target: /workspaces/voxr/packages/geo_utils/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-hono-node-modules
-        target: /workspaces/fluxer/packages/hono/node_modules
+        target: /workspaces/voxr/packages/hono/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-hono-types-node-modules
-        target: /workspaces/fluxer/packages/hono_types/node_modules
+        target: /workspaces/voxr/packages/hono_types/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-i18n-node-modules
-        target: /workspaces/fluxer/packages/i18n/node_modules
+        target: /workspaces/voxr/packages/i18n/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-instance-bootstrap-node-modules
-        target: /workspaces/fluxer/packages/instance_bootstrap/node_modules
+        target: /workspaces/voxr/packages/instance_bootstrap/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-ip-utils-node-modules
-        target: /workspaces/fluxer/packages/ip_utils/node_modules
+        target: /workspaces/voxr/packages/ip_utils/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-limits-node-modules
-        target: /workspaces/fluxer/packages/limits/node_modules
+        target: /workspaces/voxr/packages/limits/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-logger-node-modules
-        target: /workspaces/fluxer/packages/logger/node_modules
+        target: /workspaces/voxr/packages/logger/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-openapi-node-modules
-        target: /workspaces/fluxer/packages/openapi/node_modules
+        target: /workspaces/voxr/packages/openapi/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-schema-node-modules
-        target: /workspaces/fluxer/packages/schema/node_modules
+        target: /workspaces/voxr/packages/schema/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-snowflake-node-modules
-        target: /workspaces/fluxer/packages/snowflake/node_modules
+        target: /workspaces/voxr/packages/snowflake/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-cache-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/cache/node_modules
+        source: voxr-api-cache-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/cache/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-captcha-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/captcha/node_modules
+        source: voxr-api-captcha-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/captcha/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-cassandra-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/cassandra/node_modules
+        source: voxr-api-cassandra-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/cassandra/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-elasticsearch-search-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/elasticsearch_search/node_modules
+        source: voxr-api-elasticsearch-search-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/elasticsearch_search/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-email-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/email/node_modules
+        source: voxr-api-email-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/email/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-geoip-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/geoip/node_modules
+        source: voxr-api-geoip-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/geoip/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-http-client-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/http_client/node_modules
+        source: voxr-api-http-client-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/http_client/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-initialization-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/initialization/node_modules
+        source: voxr-api-initialization-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/initialization/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-kv-client-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/kv_client/node_modules
+        source: voxr-api-kv-client-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/kv_client/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-locale-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/locale/node_modules
+        source: voxr-api-locale-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/locale/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-media-proxy-utils-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/media_proxy_utils/node_modules
+        source: voxr-api-media-proxy-utils-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/media_proxy_utils/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-mime-utils-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/mime_utils/node_modules
+        source: voxr-api-mime-utils-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/mime_utils/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-nats-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/nats/node_modules
+        source: voxr-api-nats-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/nats/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-rate-limit-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/rate_limit/node_modules
+        source: voxr-api-rate-limit-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/rate_limit/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-sms-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/sms/node_modules
+        source: voxr-api-sms-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/sms/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-virus-scan-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/virus_scan/node_modules
+        source: voxr-api-virus-scan-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/virus_scan/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-worker-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/worker/node_modules
+        source: voxr-api-worker-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/worker/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-app-list-utils-node-modules
-        target: /workspaces/fluxer/fluxer_app/pkgs/list_utils/node_modules
+        source: voxr-app-list-utils-node-modules
+        target: /workspaces/voxr/voxr_app/pkgs/list_utils/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-app-livekit-client-node-modules
-        target: /workspaces/fluxer/fluxer_app/pkgs/livekit-client/node_modules
+        source: voxr-app-livekit-client-node-modules
+        target: /workspaces/voxr/voxr_app/pkgs/livekit-client/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-app-number-utils-node-modules
-        target: /workspaces/fluxer/fluxer_app/pkgs/number_utils/node_modules
+        source: voxr-app-number-utils-node-modules
+        target: /workspaces/voxr/voxr_app/pkgs/number_utils/node_modules
         volume:
           nocopy: true
       - type: volume
         source: package-voice-engine-v2-node-modules
-        target: /workspaces/fluxer/packages/voice_engine_v2/node_modules
+        target: /workspaces/voxr/packages/voice_engine_v2/node_modules
         volume:
           nocopy: true
       - type: volume
-        source: fluxer-api-postgres-node-modules
-        target: /workspaces/fluxer/fluxer_api/pkgs/postgres/node_modules
+        source: voxr-api-postgres-node-modules
+        target: /workspaces/voxr/voxr_api/pkgs/postgres/node_modules
         volume:
           nocopy: true
       - pnpm-store:/home/vscode/.local/share/pnpm/store
       - cargo-registry:/home/vscode/.cargo/registry
       - cargo-git:/home/vscode/.cargo/git
-      - rust-target:/workspaces/fluxer/target
+      - rust-target:/workspaces/voxr/target
       - type: bind
-        source: ${FLUXER_DOCKER_SOCKET:-/var/run/docker.sock}
+        source: ${VOXR_DOCKER_SOCKET:-/var/run/docker.sock}
         target: /var/run/docker.sock
     ports:
-      - "127.0.0.1:${FLUXER_DEV_RSPACK_PORT:-3000}:3000"
-      - "127.0.0.1:${FLUXER_DEV_PROXY_PORT:-8088}:8088"
-      - "127.0.0.1:${FLUXER_DEV_API_PORT:-8080}:8080"
-      - "127.0.0.1:${FLUXER_DEV_GATEWAY_PORT:-8771}:8771"
-      - "127.0.0.1:${FLUXER_DEV_MEDIA_PROXY_PORT:-8082}:8082"
-      - "127.0.0.1:${FLUXER_DEV_APP_PROXY_PORT:-8773}:8773"
-      - "127.0.0.1:${FLUXER_DEV_MARKETING_PORT:-3010}:3010"
-      - "127.0.0.1:${FLUXER_DEV_ADMIN_PORT:-3020}:3020"
-      - "127.0.0.1:${FLUXER_DEV_SEAWEEDFS_S3_PORT:-3900}:8333"
+      - "127.0.0.1:${VOXR_DEV_RSPACK_PORT:-3000}:3000"
+      - "127.0.0.1:${VOXR_DEV_PROXY_PORT:-8088}:8088"
+      - "127.0.0.1:${VOXR_DEV_API_PORT:-8080}:8080"
+      - "127.0.0.1:${VOXR_DEV_GATEWAY_PORT:-8771}:8771"
+      - "127.0.0.1:${VOXR_DEV_MEDIA_PROXY_PORT:-8082}:8082"
+      - "127.0.0.1:${VOXR_DEV_APP_PROXY_PORT:-8773}:8773"
+      - "127.0.0.1:${VOXR_DEV_MARKETING_PORT:-3010}:3010"
+      - "127.0.0.1:${VOXR_DEV_ADMIN_PORT:-3020}:3020"
+      - "127.0.0.1:${VOXR_DEV_SEAWEEDFS_S3_PORT:-3900}:8333"
     depends_on:
       postgres:
         condition: service_healthy
@@ -278,15 +278,15 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: fluxer
-      POSTGRES_USER: fluxer
-      POSTGRES_PASSWORD: fluxer
+      POSTGRES_DB: voxr
+      POSTGRES_USER: voxr
+      POSTGRES_PASSWORD: voxr
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
-      - "127.0.0.1:${FLUXER_DEV_POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${VOXR_DEV_POSTGRES_PORT:-5432}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U fluxer -d fluxer"]
+      test: ["CMD-SHELL", "pg_isready -U voxr -d voxr"]
       interval: 2s
       timeout: 5s
       retries: 30
@@ -296,7 +296,7 @@ services:
     image: valkey/valkey:8.1.7-alpine
     command: ["valkey-server", "--save", "", "--appendonly", "no"]
     ports:
-      - "127.0.0.1:${FLUXER_DEV_VALKEY_PORT:-6379}:6379"
+      - "127.0.0.1:${VOXR_DEV_VALKEY_PORT:-6379}:6379"
 
   nats:
     image: nats:2.14.2-alpine
@@ -304,32 +304,32 @@ services:
     volumes:
       - nats-data:/data
     ports:
-      - "127.0.0.1:${FLUXER_DEV_NATS_PORT:-4222}:4222"
-      - "127.0.0.1:${FLUXER_DEV_NATS_MONITOR_PORT:-8222}:8222"
+      - "127.0.0.1:${VOXR_DEV_NATS_PORT:-4222}:4222"
+      - "127.0.0.1:${VOXR_DEV_NATS_MONITOR_PORT:-8222}:8222"
 
   livekit:
     image: livekit/livekit-server:v1.12.0
     command: ["--config", "/etc/livekit.yaml", "--bind", "0.0.0.0"]
     environment:
-      LIVEKIT_RTC_TCP_PORT: "${FLUXER_DEV_LIVEKIT_TCP_PORT:-7881}"
-      LIVEKIT_RTC_UDP_PORT_START: "${FLUXER_DEV_LIVEKIT_UDP_PORT:-7882}"
-      LIVEKIT_RTC_UDP_PORT_END: "${FLUXER_DEV_LIVEKIT_UDP_PORT:-7882}"
+      LIVEKIT_RTC_TCP_PORT: "${VOXR_DEV_LIVEKIT_TCP_PORT:-7881}"
+      LIVEKIT_RTC_UDP_PORT_START: "${VOXR_DEV_LIVEKIT_UDP_PORT:-7882}"
+      LIVEKIT_RTC_UDP_PORT_END: "${VOXR_DEV_LIVEKIT_UDP_PORT:-7882}"
     volumes:
       - ./livekit.yaml:/etc/livekit.yaml:ro
     ports:
-      - "127.0.0.1:${FLUXER_DEV_LIVEKIT_PORT:-7880}:7880"
-      - "127.0.0.1:${FLUXER_DEV_LIVEKIT_TCP_PORT:-7881}:${FLUXER_DEV_LIVEKIT_TCP_PORT:-7881}"
-      - "127.0.0.1:${FLUXER_DEV_LIVEKIT_UDP_PORT:-7882}:${FLUXER_DEV_LIVEKIT_UDP_PORT:-7882}/udp"
+      - "127.0.0.1:${VOXR_DEV_LIVEKIT_PORT:-7880}:7880"
+      - "127.0.0.1:${VOXR_DEV_LIVEKIT_TCP_PORT:-7881}:${VOXR_DEV_LIVEKIT_TCP_PORT:-7881}"
+      - "127.0.0.1:${VOXR_DEV_LIVEKIT_UDP_PORT:-7882}:${VOXR_DEV_LIVEKIT_UDP_PORT:-7882}/udp"
 
   meilisearch:
     image: getmeili/meilisearch:v1.12
     environment:
       MEILI_NO_ANALYTICS: "true"
-      MEILI_MASTER_KEY: fluxer-dev-meilisearch
+      MEILI_MASTER_KEY: voxr-dev-meilisearch
     volumes:
       - meilisearch-data:/meili_data
     ports:
-      - "127.0.0.1:${FLUXER_DEV_MEILISEARCH_PORT:-7700}:7700"
+      - "127.0.0.1:${VOXR_DEV_MEILISEARCH_PORT:-7700}:7700"
     healthcheck:
       test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:7700/health"]
       interval: 2s
@@ -351,10 +351,10 @@ services:
 volumes:
   pnpm-store:
   root-node-modules:
-  fluxer-api-node-modules:
-  fluxer-app-node-modules:
-  fluxer-desktop-node-modules:
-  fluxer-admin-node-modules:
+  voxr-api-node-modules:
+  voxr-app-node-modules:
+  voxr-desktop-node-modules:
+  voxr-admin-node-modules:
   package-config-node-modules:
   package-constants-node-modules:
   package-date-utils-node-modules:
@@ -370,28 +370,28 @@ volumes:
   package-openapi-node-modules:
   package-schema-node-modules:
   package-snowflake-node-modules:
-  fluxer-api-cache-node-modules:
-  fluxer-api-captcha-node-modules:
-  fluxer-api-cassandra-node-modules:
-  fluxer-api-elasticsearch-search-node-modules:
-  fluxer-api-email-node-modules:
-  fluxer-api-geoip-node-modules:
-  fluxer-api-http-client-node-modules:
-  fluxer-api-initialization-node-modules:
-  fluxer-api-kv-client-node-modules:
-  fluxer-api-locale-node-modules:
-  fluxer-api-media-proxy-utils-node-modules:
-  fluxer-api-mime-utils-node-modules:
-  fluxer-api-nats-node-modules:
-  fluxer-api-rate-limit-node-modules:
-  fluxer-api-sms-node-modules:
-  fluxer-api-virus-scan-node-modules:
-  fluxer-api-worker-node-modules:
-  fluxer-app-list-utils-node-modules:
-  fluxer-app-livekit-client-node-modules:
-  fluxer-app-number-utils-node-modules:
+  voxr-api-cache-node-modules:
+  voxr-api-captcha-node-modules:
+  voxr-api-cassandra-node-modules:
+  voxr-api-elasticsearch-search-node-modules:
+  voxr-api-email-node-modules:
+  voxr-api-geoip-node-modules:
+  voxr-api-http-client-node-modules:
+  voxr-api-initialization-node-modules:
+  voxr-api-kv-client-node-modules:
+  voxr-api-locale-node-modules:
+  voxr-api-media-proxy-utils-node-modules:
+  voxr-api-mime-utils-node-modules:
+  voxr-api-nats-node-modules:
+  voxr-api-rate-limit-node-modules:
+  voxr-api-sms-node-modules:
+  voxr-api-virus-scan-node-modules:
+  voxr-api-worker-node-modules:
+  voxr-app-list-utils-node-modules:
+  voxr-app-livekit-client-node-modules:
+  voxr-app-number-utils-node-modules:
   package-voice-engine-v2-node-modules:
-  fluxer-api-postgres-node-modules:
+  voxr-api-postgres-node-modules:
   cargo-registry:
   cargo-git:
   rust-target:

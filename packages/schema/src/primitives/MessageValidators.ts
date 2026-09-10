@@ -6,12 +6,12 @@ import {
 	MessageReferenceTypes,
 	MessageReferenceTypesDescriptions,
 	MessageTypes,
-} from '@fluxer/constants/src/ChannelConstants';
+} from '@voxr/constants/src/ChannelConstants';
 import {
 	createInt32EnumType,
 	createNamedStringLiteralUnion,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 
 export const MessageTypeSchema = withOpenApiType(
 	createInt32EnumType(

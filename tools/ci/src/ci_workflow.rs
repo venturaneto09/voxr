@@ -57,14 +57,14 @@ pub async fn run_ci(args: CiArgs) -> Result<()> {
             run_workspace_tests(&root)?;
             run_command(with_test_env(
                 CommandSpec::new("pnpm")
-                    .args(["--filter", "fluxer_api", "test"])
+                    .args(["--filter", "voxr_api", "test"])
                     .current_dir(root),
             ))
         }
         CiStep::Knip => {
             run_app_test_artifact_generators(&root, AppWasm::ReuseIfPresent)?;
             ensure_desktop_build_channel_file(&root)?;
-            run_fluxer_app_script(&root, "i18n:compile")?;
+            run_voxr_app_script(&root, "i18n:compile")?;
             run_command(
                 CommandSpec::new("pnpm")
                     .args(["exec", "knip"])
@@ -72,44 +72,44 @@ pub async fn run_ci(args: CiArgs) -> Result<()> {
             )
         }
         CiStep::GatewayFmt => {
-            run_gateway_step(&root.join("fluxer_gateway"), GatewayStep::FmtCheck, "test")
+            run_gateway_step(&root.join("voxr_gateway"), GatewayStep::FmtCheck, "test")
         }
         CiStep::GatewayCompile => {
-            run_gateway_step(&root.join("fluxer_gateway"), GatewayStep::Compile, "test")
+            run_gateway_step(&root.join("voxr_gateway"), GatewayStep::Compile, "test")
         }
         CiStep::GatewayDialyzer => {
-            run_gateway_step(&root.join("fluxer_gateway"), GatewayStep::Dialyzer, "test")
+            run_gateway_step(&root.join("voxr_gateway"), GatewayStep::Dialyzer, "test")
         }
         CiStep::GatewayEunit => {
-            run_gateway_step(&root.join("fluxer_gateway"), GatewayStep::Eunit, "test")
+            run_gateway_step(&root.join("voxr_gateway"), GatewayStep::Eunit, "test")
         }
     }
 }
 
 fn ensure_desktop_build_channel_file(root: &Path) -> Result<()> {
     let channel = env::var("BUILD_CHANNEL").unwrap_or_else(|_| "stable".to_string());
-    write_build_channel_file(&root.join("fluxer_desktop"), &channel)
+    write_build_channel_file(&root.join("voxr_desktop"), &channel)
 }
 
 fn run_app_test_artifact_generators(root: &Path, wasm: AppWasm) -> Result<()> {
     match (wasm, missing_app_wasm_artifact(root)) {
         (AppWasm::ReuseIfPresent, None) => {
-            println!("Reusing restored fluxer_app wasm artifacts");
+            println!("Reusing restored voxr_app wasm artifacts");
         }
         (AppWasm::ReuseIfPresent, Some(missing)) => {
             println!(
-                "Rebuilding fluxer_app wasm artifacts: {} is missing",
+                "Rebuilding voxr_app wasm artifacts: {} is missing",
                 missing.display()
             );
-            run_fluxer_app_script(root, "wasm:codegen")?;
+            run_voxr_app_script(root, "wasm:codegen")?;
         }
-        (AppWasm::Build, _) => run_fluxer_app_script(root, "wasm:codegen")?,
+        (AppWasm::Build, _) => run_voxr_app_script(root, "wasm:codegen")?,
     }
-    run_fluxer_app_script(root, "generate:masks")
+    run_voxr_app_script(root, "generate:masks")
 }
 
 fn app_wasm_artifacts(root: &Path) -> Vec<PathBuf> {
-    let app_dir = root.join("fluxer_app");
+    let app_dir = root.join("voxr_app");
     vec![
         app_dir.join("pkgs/libfluxcore/libfluxcore.js"),
         app_dir.join("pkgs/libfluxcore/libfluxcore.d.ts"),
@@ -128,10 +128,10 @@ fn missing_app_wasm_artifact(root: &Path) -> Option<PathBuf> {
         .find(|path| !path.exists())
 }
 
-fn run_fluxer_app_script(root: &Path, script: &str) -> Result<()> {
+fn run_voxr_app_script(root: &Path, script: &str) -> Result<()> {
     run_command(
         CommandSpec::new("pnpm")
-            .args(["--filter", "fluxer_app", script])
+            .args(["--filter", "voxr_app", script])
             .current_dir(root),
     )
 }
@@ -145,17 +145,17 @@ fn run_generators(root: &Path, for_typecheck: bool) -> Result<()> {
 
 fn generator_commands(for_typecheck: bool) -> Vec<CommandSpec> {
     let mut commands = vec![
-        CommandSpec::new("pnpm").args(["--filter", "@fluxer/config", "generate"]),
-        CommandSpec::new("pnpm").args(["--filter", "@fluxer/schema", "generate"]),
+        CommandSpec::new("pnpm").args(["--filter", "@voxr/config", "generate"]),
+        CommandSpec::new("pnpm").args(["--filter", "@voxr/schema", "generate"]),
     ];
     if for_typecheck {
         commands.push(CommandSpec::new("pnpm").args([
             "--filter",
-            "@fluxer/i18n",
+            "@voxr/i18n",
             "generate:types",
         ]));
     } else {
-        commands.push(CommandSpec::new("pnpm").args(["--filter", "fluxer_app", "i18n:compile"]));
+        commands.push(CommandSpec::new("pnpm").args(["--filter", "voxr_app", "i18n:compile"]));
     }
     commands
 }
@@ -170,11 +170,11 @@ fn workspace_test_args(concurrency: Option<&str>) -> Vec<OsString> {
     args.extend(
         [
             "--filter",
-            "!fluxer_api",
+            "!voxr_api",
             "--filter",
-            "!fluxer",
+            "!voxr",
             "--filter",
-            "!fluxer_desktop",
+            "!voxr_desktop",
             "--if-present",
             "test",
         ]
@@ -194,15 +194,15 @@ fn run_workspace_tests(root: &Path) -> Result<()> {
 }
 
 fn with_test_env(spec: CommandSpec) -> CommandSpec {
-    let nats_url = env::var("FLUXER_NATS_URL").unwrap_or_else(|_| default_test_nats_url());
-    spec.env("FLUXER_NATS_URL", &nats_url)
+    let nats_url = env::var("VOXR_NATS_URL").unwrap_or_else(|_| default_test_nats_url());
+    spec.env("VOXR_NATS_URL", &nats_url)
         .env(
-            "FLUXER_NATS_CORE_URL",
-            env::var("FLUXER_NATS_CORE_URL").unwrap_or_else(|_| nats_url.clone()),
+            "VOXR_NATS_CORE_URL",
+            env::var("VOXR_NATS_CORE_URL").unwrap_or_else(|_| nats_url.clone()),
         )
         .env(
-            "FLUXER_NATS_JETSTREAM_URL",
-            env::var("FLUXER_NATS_JETSTREAM_URL").unwrap_or_else(|_| nats_url.clone()),
+            "VOXR_NATS_JETSTREAM_URL",
+            env::var("VOXR_NATS_JETSTREAM_URL").unwrap_or_else(|_| nats_url.clone()),
         )
 }
 
@@ -238,22 +238,22 @@ mod tests {
 
         assert!(typecheck.contains(&vec![
             OsString::from("--filter"),
-            OsString::from("@fluxer/i18n"),
+            OsString::from("@voxr/i18n"),
             OsString::from("generate:types"),
         ]));
         assert!(!test.contains(&vec![
             OsString::from("--filter"),
-            OsString::from("@fluxer/i18n"),
+            OsString::from("@voxr/i18n"),
             OsString::from("generate:types"),
         ]));
         assert!(!typecheck.contains(&vec![
             OsString::from("--filter"),
-            OsString::from("fluxer_app"),
+            OsString::from("voxr_app"),
             OsString::from("i18n:compile"),
         ]));
         assert!(test.contains(&vec![
             OsString::from("--filter"),
-            OsString::from("fluxer_app"),
+            OsString::from("voxr_app"),
             OsString::from("i18n:compile"),
         ]));
     }
@@ -268,15 +268,15 @@ mod tests {
         let default_nats_url = OsString::from(default_test_nats_url());
 
         assert_eq!(
-            env.get(&OsString::from("FLUXER_NATS_URL")),
+            env.get(&OsString::from("VOXR_NATS_URL")),
             Some(&default_nats_url)
         );
         assert_eq!(
-            env.get(&OsString::from("FLUXER_NATS_CORE_URL")),
+            env.get(&OsString::from("VOXR_NATS_CORE_URL")),
             Some(&default_nats_url)
         );
         assert_eq!(
-            env.get(&OsString::from("FLUXER_NATS_JETSTREAM_URL")),
+            env.get(&OsString::from("VOXR_NATS_JETSTREAM_URL")),
             Some(&default_nats_url)
         );
         assert!(!env.contains_key(&OsString::from("API_TEST_MAX_WORKERS")));
@@ -296,7 +296,7 @@ mod tests {
         assert!(args.windows(2).any(|pair| pair
             == [
                 OsString::from("--filter"),
-                OsString::from("!fluxer_desktop")
+                OsString::from("!voxr_desktop")
             ]));
     }
 
@@ -314,7 +314,7 @@ mod tests {
 
         assert_eq!(
             missing_app_wasm_artifact(root),
-            Some(root.join("fluxer_app/pkgs/libfluxcore/libfluxcore.js"))
+            Some(root.join("voxr_app/pkgs/libfluxcore/libfluxcore.js"))
         );
 
         for path in app_wasm_artifacts(root) {
@@ -329,76 +329,76 @@ mod tests {
     fn image_dockerfiles_carry_the_release_label_block() {
         const REQUIRED: [&str; 9] = [
             "LABEL org.opencontainers.image.licenses=\"AGPL-3.0-or-later\"",
-            "LABEL org.opencontainers.image.vendor=\"Fluxer\"",
-            "LABEL org.opencontainers.image.url=\"https://fluxer.app\"",
-            "LABEL org.opencontainers.image.documentation=\"https://docs.fluxer.app\"",
-            "LABEL org.opencontainers.image.source=\"https://github.com/fluxerapp/fluxer\"",
+            "LABEL org.opencontainers.image.vendor=\"Voxr\"",
+            "LABEL org.opencontainers.image.url=\"https://voxr.app\"",
+            "LABEL org.opencontainers.image.documentation=\"https://docs.voxr.app\"",
+            "LABEL org.opencontainers.image.source=\"https://github.com/voxrapp/voxr\"",
             "LABEL org.opencontainers.image.version=\"${BUILD_VERSION}\"",
             "LABEL org.opencontainers.image.revision=\"${SOURCE_SHA}\"",
             "LABEL org.opencontainers.image.created=\"${SOURCE_DATE}\"",
-            "LABEL app.fluxer.build-version=\"${BUILD_VERSION}\"",
+            "LABEL app.voxr.build-version=\"${BUILD_VERSION}\"",
         ];
 
         for (name, title, dockerfile) in [
             (
-                "fluxer_admin",
-                "fluxer-admin",
-                include_str!("../../../fluxer_admin/Dockerfile"),
+                "voxr_admin",
+                "voxr-admin",
+                include_str!("../../../voxr_admin/Dockerfile"),
             ),
             (
-                "fluxer_api",
-                "fluxer-api",
-                include_str!("../../../fluxer_api/Dockerfile"),
+                "voxr_api",
+                "voxr-api",
+                include_str!("../../../voxr_api/Dockerfile"),
             ),
             (
-                "fluxer_app_proxy",
-                "fluxer-app-proxy",
-                include_str!("../../../fluxer_app_proxy/Dockerfile"),
+                "voxr_app_proxy",
+                "voxr-app-proxy",
+                include_str!("../../../voxr_app_proxy/Dockerfile"),
             ),
             (
-                "fluxer_docs",
-                "fluxer-docs",
-                include_str!("../../../fluxer_docs/Dockerfile"),
+                "voxr_docs",
+                "voxr-docs",
+                include_str!("../../../voxr_docs/Dockerfile"),
             ),
             (
-                "fluxer_gateway",
-                "fluxer-gateway",
-                include_str!("../../../fluxer_gateway/Dockerfile"),
+                "voxr_gateway",
+                "voxr-gateway",
+                include_str!("../../../voxr_gateway/Dockerfile"),
             ),
             (
-                "fluxer_gifs",
-                "fluxer-gifs",
-                include_str!("../../../fluxer_gifs/Dockerfile"),
+                "voxr_gifs",
+                "voxr-gifs",
+                include_str!("../../../voxr_gifs/Dockerfile"),
             ),
             (
-                "fluxer_media_proxy",
-                "fluxer-media-proxy",
-                include_str!("../../../fluxer_media_proxy/Dockerfile"),
+                "voxr_media_proxy",
+                "voxr-media-proxy",
+                include_str!("../../../voxr_media_proxy/Dockerfile"),
             ),
             (
-                "fluxer_messages",
-                "fluxer-messages",
-                include_str!("../../../fluxer_messages/Dockerfile"),
+                "voxr_messages",
+                "voxr-messages",
+                include_str!("../../../voxr_messages/Dockerfile"),
             ),
             (
-                "fluxer_snowflakes",
-                "fluxer-snowflakes",
-                include_str!("../../../fluxer_snowflakes/Dockerfile"),
+                "voxr_snowflakes",
+                "voxr-snowflakes",
+                include_str!("../../../voxr_snowflakes/Dockerfile"),
             ),
             (
-                "fluxer_static",
-                "fluxer-static",
-                include_str!("../../../fluxer_static/Dockerfile"),
+                "voxr_static",
+                "voxr-static",
+                include_str!("../../../voxr_static/Dockerfile"),
             ),
             (
-                "fluxer_unfurl",
-                "fluxer-unfurl",
-                include_str!("../../../fluxer_unfurl/Dockerfile"),
+                "voxr_unfurl",
+                "voxr-unfurl",
+                include_str!("../../../voxr_unfurl/Dockerfile"),
             ),
             (
-                "fluxer_users",
-                "fluxer-users",
-                include_str!("../../../fluxer_users/Dockerfile"),
+                "voxr_users",
+                "voxr-users",
+                include_str!("../../../voxr_users/Dockerfile"),
             ),
         ] {
             assert!(

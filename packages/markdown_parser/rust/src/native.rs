@@ -3,7 +3,7 @@
 #![cfg(not(target_arch = "wasm32"))]
 
 #[repr(C)]
-pub struct FluxerMdBuffer {
+pub struct VoxrMdBuffer {
     pub data: *mut u8,
     pub data_len: usize,
     pub error: *mut u8,
@@ -12,13 +12,13 @@ pub struct FluxerMdBuffer {
 
 #[allow(clippy::missing_safety_doc)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn fluxer_md_parse(
+pub unsafe extern "C" fn voxr_md_parse(
     input_ptr: *const u8,
     input_len: usize,
     flags: u32,
     tsv_ptr: *const u8,
     tsv_len: usize,
-    out: *mut FluxerMdBuffer,
+    out: *mut VoxrMdBuffer,
 ) -> u32 {
     let Ok(input) = std::str::from_utf8(unsafe { slice(input_ptr, input_len) }) else {
         return unsafe { write_error(out, "invalid markdown input") };
@@ -38,13 +38,13 @@ pub unsafe extern "C" fn fluxer_md_parse(
 
 #[allow(clippy::missing_safety_doc)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn fluxer_md_parse_binary(
+pub unsafe extern "C" fn voxr_md_parse_binary(
     input_ptr: *const u8,
     input_len: usize,
     flags: u32,
     tsv_ptr: *const u8,
     tsv_len: usize,
-    out: *mut FluxerMdBuffer,
+    out: *mut VoxrMdBuffer,
 ) -> u32 {
     let Ok(input) = std::str::from_utf8(unsafe { slice(input_ptr, input_len) }) else {
         return unsafe { write_error(out, "invalid markdown input") };
@@ -68,7 +68,7 @@ pub unsafe extern "C" fn fluxer_md_parse_binary(
 
 #[allow(clippy::missing_safety_doc)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn fluxer_md_buffer_free(out: *mut FluxerMdBuffer) {
+pub unsafe extern "C" fn voxr_md_buffer_free(out: *mut VoxrMdBuffer) {
     if out.is_null() {
         return;
     }
@@ -97,9 +97,9 @@ unsafe fn free_slice(ptr: *mut u8, len: usize) {
     }
 }
 
-unsafe fn write_data(out: *mut FluxerMdBuffer, bytes: Vec<u8>) -> u32 {
+unsafe fn write_data(out: *mut VoxrMdBuffer, bytes: Vec<u8>) -> u32 {
     unsafe {
-        *out = FluxerMdBuffer {
+        *out = VoxrMdBuffer {
             data_len: bytes.len(),
             data: leak(bytes),
             error: std::ptr::null_mut(),
@@ -109,10 +109,10 @@ unsafe fn write_data(out: *mut FluxerMdBuffer, bytes: Vec<u8>) -> u32 {
     0
 }
 
-unsafe fn write_error(out: *mut FluxerMdBuffer, message: &str) -> u32 {
+unsafe fn write_error(out: *mut VoxrMdBuffer, message: &str) -> u32 {
     let bytes = message.as_bytes().to_vec();
     unsafe {
-        *out = FluxerMdBuffer {
+        *out = VoxrMdBuffer {
             data: std::ptr::null_mut(),
             data_len: 0,
             error_len: bytes.len(),

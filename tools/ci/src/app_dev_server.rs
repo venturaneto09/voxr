@@ -533,7 +533,7 @@ async fn terminate_child(child: &mut Child) {
 
 async fn listen_for_shutdown(shutdown_tx: watch::Sender<bool>) {
     let signal = wait_for_shutdown_signal().await;
-    println!("\nReceived {signal}, shutting down fluxer app dev server...");
+    println!("\nReceived {signal}, shutting down voxr app dev server...");
     let _ = shutdown_tx.send(true);
 }
 

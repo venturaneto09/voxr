@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
-	buildNamedFluxerEnvOverrides,
+	buildNamedVoxrEnvOverrides,
 	parseEnvValue,
 	setNestedValue,
-} from '@fluxer/config/src/config_loader/EnvironmentOverrides';
+} from '@voxr/config/src/config_loader/EnvironmentOverrides';
 import {describe, expect, test} from 'vitest';
 
 describe('parseEnvValue', () => {
@@ -69,27 +69,27 @@ describe('setNestedValue', () => {
 	test('creates arrays for numeric path keys', () => {
 		const target: Record<string, unknown> = {};
 		setNestedValue(target, ['auth', 'bluesky', 'keys', 0, 'kid'], 'key-1');
-		setNestedValue(target, ['auth', 'bluesky', 'keys', 0, 'private_key_path'], '/etc/fluxer/keys/key.pem');
+		setNestedValue(target, ['auth', 'bluesky', 'keys', 0, 'private_key_path'], '/etc/voxr/keys/key.pem');
 		expect(target).toEqual({
 			auth: {
 				bluesky: {
-					keys: [{kid: 'key-1', private_key_path: '/etc/fluxer/keys/key.pem'}],
+					keys: [{kid: 'key-1', private_key_path: '/etc/voxr/keys/key.pem'}],
 				},
 			},
 		});
 	});
 });
 
-describe('buildNamedFluxerEnvOverrides', () => {
+describe('buildNamedVoxrEnvOverrides', () => {
 	test('builds canonical split env overrides and preserves empty strings', () => {
-		const overrides = buildNamedFluxerEnvOverrides({
-			FLUXER_BASE_DOMAIN: 'canonical.example',
-			FLUXER_API_ENDPOINT: 'https://canonical.example/api',
-			FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'https://a.example, https://b.example',
-			FLUXER_S3_FORCE_PATH_STYLE: 'true',
-			FLUXER_AUTH_BLUESKY_KEYS: '[{"kid":"key-1","private_key_path":"/etc/fluxer/keys/bluesky.pem"}]',
-			FLUXER_ADMIN_BASE_PATH: '',
-			FLUXER_STRIPE_PRICE_MONTHLY_USD: 'price_monthly_usd',
+		const overrides = buildNamedVoxrEnvOverrides({
+			VOXR_BASE_DOMAIN: 'canonical.example',
+			VOXR_API_ENDPOINT: 'https://canonical.example/api',
+			VOXR_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'https://a.example, https://b.example',
+			VOXR_S3_FORCE_PATH_STYLE: 'true',
+			VOXR_AUTH_BLUESKY_KEYS: '[{"kid":"key-1","private_key_path":"/etc/voxr/keys/bluesky.pem"}]',
+			VOXR_ADMIN_BASE_PATH: '',
+			VOXR_STRIPE_PRICE_MONTHLY_USD: 'price_monthly_usd',
 		});
 
 		expect(overrides).toMatchObject({
@@ -97,7 +97,7 @@ describe('buildNamedFluxerEnvOverrides', () => {
 			endpoint_overrides: {api: 'https://canonical.example/api'},
 			auth: {
 				passkeys: {additional_allowed_origins: ['https://a.example', 'https://b.example']},
-				bluesky: {keys: [{kid: 'key-1', private_key_path: '/etc/fluxer/keys/bluesky.pem'}]},
+				bluesky: {keys: [{kid: 'key-1', private_key_path: '/etc/voxr/keys/bluesky.pem'}]},
 			},
 			s3: {force_path_style: true},
 			services: {
@@ -108,29 +108,29 @@ describe('buildNamedFluxerEnvOverrides', () => {
 	});
 
 	test('maps the internal scheme and KV provider names', () => {
-		expect(buildNamedFluxerEnvOverrides({FLUXER_INTERNAL_SCHEME: 'https', FLUXER_KV_PROVIDER: 'redis'})).toMatchObject({
+		expect(buildNamedVoxrEnvOverrides({VOXR_INTERNAL_SCHEME: 'https', VOXR_KV_PROVIDER: 'redis'})).toMatchObject({
 			domain: {internal_scheme: 'https'},
 			internal: {kv_provider: 'redis'},
 		});
 	});
 
 	test('rejects a non-integer value for an integer override', () => {
-		expect(() => buildNamedFluxerEnvOverrides({FLUXER_API_PORT: '80a'})).toThrow(
-			'FLUXER_API_PORT must be an integer, got "80a"',
+		expect(() => buildNamedVoxrEnvOverrides({VOXR_API_PORT: '80a'})).toThrow(
+			'VOXR_API_PORT must be an integer, got "80a"',
 		);
 	});
 
 	test('leaves the default in place for a blank integer override', () => {
-		expect(buildNamedFluxerEnvOverrides({FLUXER_API_PORT: ''})).toEqual({});
+		expect(buildNamedVoxrEnvOverrides({VOXR_API_PORT: ''})).toEqual({});
 	});
 
 	test('the canonical name wins over its alias regardless of declaration order', () => {
 		expect(
-			buildNamedFluxerEnvOverrides({
-				FLUXER_MEDIA_PROXY_ENDPOINT: 'http://alias',
-				FLUXER_INTERNAL_MEDIA_PROXY_ENDPOINT: 'http://canonical',
-				FLUXER_NATS_CORE_URL: 'nats://alias',
-				FLUXER_NATS_URL: 'nats://canonical',
+			buildNamedVoxrEnvOverrides({
+				VOXR_MEDIA_PROXY_ENDPOINT: 'http://alias',
+				VOXR_INTERNAL_MEDIA_PROXY_ENDPOINT: 'http://canonical',
+				VOXR_NATS_CORE_URL: 'nats://alias',
+				VOXR_NATS_URL: 'nats://canonical',
 			}),
 		).toMatchObject({
 			internal: {media_proxy: 'http://canonical'},
@@ -140,9 +140,9 @@ describe('buildNamedFluxerEnvOverrides', () => {
 
 	test('an alias alone still applies', () => {
 		expect(
-			buildNamedFluxerEnvOverrides({
-				FLUXER_MEDIA_PROXY_ENDPOINT: 'http://alias',
-				FLUXER_NATS_CORE_URL: 'nats://alias',
+			buildNamedVoxrEnvOverrides({
+				VOXR_MEDIA_PROXY_ENDPOINT: 'http://alias',
+				VOXR_NATS_CORE_URL: 'nats://alias',
 			}),
 		).toMatchObject({
 			internal: {media_proxy: 'http://alias'},
@@ -151,8 +151,8 @@ describe('buildNamedFluxerEnvOverrides', () => {
 	});
 
 	test('rejects malformed JSON for a JSON-shaped override', () => {
-		expect(() => buildNamedFluxerEnvOverrides({FLUXER_LIVEKIT_DEFAULT_REGION: '{bad'})).toThrow(
-			'FLUXER_LIVEKIT_DEFAULT_REGION must be valid JSON',
+		expect(() => buildNamedVoxrEnvOverrides({VOXR_LIVEKIT_DEFAULT_REGION: '{bad'})).toThrow(
+			'VOXR_LIVEKIT_DEFAULT_REGION must be valid JSON',
 		);
 	});
 });

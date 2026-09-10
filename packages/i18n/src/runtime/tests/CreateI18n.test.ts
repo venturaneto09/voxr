@@ -3,8 +3,8 @@
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
-import {createI18n} from '@fluxer/i18n/src/runtime/CreateI18n';
-import type {I18nResult} from '@fluxer/i18n/src/runtime/I18nTypes';
+import {createI18n} from '@voxr/i18n/src/runtime/CreateI18n';
+import type {I18nResult} from '@voxr/i18n/src/runtime/I18nTypes';
 import {beforeEach, describe, expect, it} from 'vitest';
 
 type TestKey = 'greeting' | 'farewell' | 'with_vars';
@@ -27,7 +27,7 @@ describe('createI18n', () => {
 	let localesPath: string;
 	let messagesFile: string;
 	beforeEach(() => {
-		tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'fluxer-i18n-'));
+		tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'voxr-i18n-'));
 		localesPath = path.join(tempDir, 'locales');
 		messagesFile = path.join(localesPath, 'messages.yaml');
 		writeFile(

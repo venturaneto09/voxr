@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {createErrorHandler} from '@fluxer/hono/src/middleware/ErrorHandler';
+import {createErrorHandler} from '@voxr/hono/src/middleware/ErrorHandler';
 import {Hono} from 'hono';
 import {HTTPException} from 'hono/http-exception';
 import {describe, expect, test, vi} from 'vitest';

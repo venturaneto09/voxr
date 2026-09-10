@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {GuildSplashCardAlignmentValue} from '@fluxer/constants/src/GuildConstants';
+import type {GuildSplashCardAlignmentValue} from '@voxr/constants/src/GuildConstants';
 import {
 	GuildFeatures,
 	GuildOperations,
 	GuildOperationsDescriptions,
 	SystemChannelFlags,
 	SystemChannelFlagsDescriptions,
-} from '@fluxer/constants/src/GuildConstants';
-import {ChannelResponse} from '@fluxer/schema/src/domains/channel/ChannelSchemas';
-import {GuildEmojiResponse, GuildStickerResponse} from '@fluxer/schema/src/domains/guild/GuildEmojiSchemas';
-import {GuildRoleResponse} from '@fluxer/schema/src/domains/guild/GuildRoleSchemas';
+} from '@voxr/constants/src/GuildConstants';
+import {ChannelResponse} from '@voxr/schema/src/domains/channel/ChannelSchemas';
+import {GuildEmojiResponse, GuildStickerResponse} from '@voxr/schema/src/domains/guild/GuildEmojiSchemas';
+import {GuildRoleResponse} from '@voxr/schema/src/domains/guild/GuildRoleSchemas';
 import {
 	ContentWarningLevelSchema,
 	DefaultMessageNotificationsSchema,
@@ -19,8 +19,8 @@ import {
 	GuildVerificationLevelSchema,
 	NSFWLevelSchema,
 	SplashCardAlignmentSchema,
-} from '@fluxer/schema/src/primitives/GuildValidators';
-import {PermissionStringType} from '@fluxer/schema/src/primitives/PermissionValidators';
+} from '@voxr/schema/src/primitives/GuildValidators';
+import {PermissionStringType} from '@voxr/schema/src/primitives/PermissionValidators';
 import {
 	coerceNumberFromString,
 	createBitflagInt32Type,
@@ -29,7 +29,7 @@ import {
 	SnowflakeStringType,
 	withFieldDescription,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 function normalizeGuildFeatures(features: Array<string>): Array<string> {
@@ -157,7 +157,7 @@ export const GuildResponse = z.object({
 			'ISO8601 timestamp controlling how far back members without Read Message History can access messages. When null, no historical access is allowed.',
 		),
 	permissions: PermissionStringType.optional().describe(
-		'fluxer:PermissionStringType The current user permissions in this guild when available',
+		'voxr:PermissionStringType The current user permissions in this guild when available',
 	),
 	roles: z.array(GuildRoleResponse).optional().describe('Roles in the guild from gateway state'),
 	emojis: z.array(GuildEmojiResponse).optional().describe('Emojis in the guild from gateway state'),

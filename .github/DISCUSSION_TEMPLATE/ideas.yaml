@@ -6,7 +6,7 @@ body:
       value: |
         Search existing discussions before posting a feature proposal.
 
-        Report vulnerabilities through the [private form](https://github.com/fluxerapp/fluxer/security/advisories/new) or <security@fluxer.com>.
+        Report vulnerabilities through the [private form](https://github.com/voxrapp/voxr/security/advisories/new) or <security@voxr.com>.
 
   - type: textarea
     id: problem

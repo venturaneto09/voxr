@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {ValueOf} from '@fluxer/constants/src/ValueOf';
+import type {ValueOf} from '@voxr/constants/src/ValueOf';
 
 export const JumpTypes = {
 	ANIMATED: 'ANIMATED',

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {getBuildMetadata} from '@fluxer/config/src/BuildMetadata';
-import type {MasterConfig} from '@fluxer/config/src/MasterConfig';
+import {getBuildMetadata} from '@voxr/config/src/BuildMetadata';
+import type {MasterConfig} from '@voxr/config/src/MasterConfig';
 
 export function extractBaseServiceConfig(master: MasterConfig) {
 	return {

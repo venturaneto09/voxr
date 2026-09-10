@@ -493,7 +493,7 @@ importers:
         specifier: 'catalog:'
         version: 7.3.6(@types/node@25.3.0)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.21.0)(yaml@2.9.0)
 
-  fluxer_admin:
+  voxr_admin:
     devDependencies:
       '@tailwindcss/cli':
         specifier: 'catalog:'
@@ -502,7 +502,7 @@ importers:
         specifier: 'catalog:'
         version: 4.2.1
 
-  fluxer_api:
+  voxr_api:
     dependencies:
       '@atproto/api':
         specifier: 'catalog:'
@@ -528,40 +528,40 @@ importers:
       '@elastic/elasticsearch':
         specifier: 'catalog:'
         version: 9.3.2
-      '@fluxer/config':
+      '@voxr/config':
         specifier: workspace:*
         version: link:../packages/config
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../packages/constants
-      '@fluxer/date_utils':
+      '@voxr/date_utils':
         specifier: workspace:*
         version: link:../packages/date_utils
-      '@fluxer/errors':
+      '@voxr/errors':
         specifier: workspace:*
         version: link:../packages/errors
-      '@fluxer/hono':
+      '@voxr/hono':
         specifier: workspace:*
         version: link:../packages/hono
-      '@fluxer/i18n':
+      '@voxr/i18n':
         specifier: workspace:*
         version: link:../packages/i18n
-      '@fluxer/instance_bootstrap':
+      '@voxr/instance_bootstrap':
         specifier: workspace:*
         version: link:../packages/instance_bootstrap
-      '@fluxer/ip_utils':
+      '@voxr/ip_utils':
         specifier: workspace:*
         version: link:../packages/ip_utils
-      '@fluxer/limits':
+      '@voxr/limits':
         specifier: workspace:*
         version: link:../packages/limits
-      '@fluxer/logger':
+      '@voxr/logger':
         specifier: workspace:*
         version: link:../packages/logger
-      '@fluxer/schema':
+      '@voxr/schema':
         specifier: workspace:*
         version: link:../packages/schema
-      '@fluxer/snowflake':
+      '@voxr/snowflake':
         specifier: workspace:*
         version: link:../packages/snowflake
       '@hono/node-server':
@@ -749,7 +749,7 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/cache:
+  voxr_api/pkgs/cache:
     dependencies:
       '@pkgs/kv_client':
         specifier: workspace:*
@@ -768,9 +768,9 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/captcha:
+  voxr_api/pkgs/captcha:
     dependencies:
-      '@fluxer/logger':
+      '@voxr/logger':
         specifier: workspace:*
         version: link:../../../packages/logger
       itty-time:
@@ -784,7 +784,7 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/cassandra:
+  voxr_api/pkgs/cassandra:
     dependencies:
       cassandra-driver:
         specifier: 'catalog:'
@@ -797,12 +797,12 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/elasticsearch_search:
+  voxr_api/pkgs/elasticsearch_search:
     dependencies:
       '@elastic/elasticsearch':
         specifier: 'catalog:'
         version: 9.3.2
-      '@fluxer/schema':
+      '@voxr/schema':
         specifier: workspace:*
         version: link:../../../packages/schema
     devDependencies:
@@ -813,12 +813,12 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/email:
+  voxr_api/pkgs/email:
     dependencies:
-      '@fluxer/i18n':
+      '@voxr/i18n':
         specifier: workspace:*
         version: link:../../../packages/i18n
-      '@fluxer/logger':
+      '@voxr/logger':
         specifier: workspace:*
         version: link:../../../packages/logger
       itty-time:
@@ -844,18 +844,18 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/geoip:
+  voxr_api/pkgs/geoip:
     dependencies:
       '@aws-sdk/client-s3':
         specifier: 'catalog:'
         version: 3.1121.0
-      '@fluxer/geo_utils':
+      '@voxr/geo_utils':
         specifier: workspace:*
         version: link:../../../packages/geo_utils
-      '@fluxer/instance_bootstrap':
+      '@voxr/instance_bootstrap':
         specifier: workspace:*
         version: link:../../../packages/instance_bootstrap
-      '@fluxer/ip_utils':
+      '@voxr/ip_utils':
         specifier: workspace:*
         version: link:../../../packages/ip_utils
       '@pkgs/cassandra':
@@ -878,9 +878,9 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/http_client:
+  voxr_api/pkgs/http_client:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../../../packages/constants
       undici:
@@ -900,7 +900,7 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/initialization:
+  voxr_api/pkgs/initialization:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -909,12 +909,12 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/kv_client:
+  voxr_api/pkgs/kv_client:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../../../packages/constants
-      '@fluxer/errors':
+      '@voxr/errors':
         specifier: workspace:*
         version: link:../../../packages/errors
       ioredis:
@@ -934,9 +934,9 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/locale:
+  voxr_api/pkgs/locale:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../../../packages/constants
     devDependencies:
@@ -953,7 +953,7 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/media_proxy_utils:
+  voxr_api/pkgs/media_proxy_utils:
     dependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -969,7 +969,7 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/mime_utils:
+  voxr_api/pkgs/mime_utils:
     dependencies:
       mime:
         specifier: 'catalog:'
@@ -982,7 +982,7 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/nats:
+  voxr_api/pkgs/nats:
     dependencies:
       nats:
         specifier: 'catalog:'
@@ -995,7 +995,7 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/postgres:
+  voxr_api/pkgs/postgres:
     dependencies:
       pg:
         specifier: 'catalog:'
@@ -1011,7 +1011,7 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/rate_limit:
+  voxr_api/pkgs/rate_limit:
     dependencies:
       '@pkgs/kv_client':
         specifier: workspace:*
@@ -1030,15 +1030,15 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/sms:
+  voxr_api/pkgs/sms:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../../../packages/constants
-      '@fluxer/errors':
+      '@voxr/errors':
         specifier: workspace:*
         version: link:../../../packages/errors
-      '@fluxer/logger':
+      '@voxr/logger':
         specifier: workspace:*
         version: link:../../../packages/logger
     devDependencies:
@@ -1055,9 +1055,9 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_api/pkgs/virus_scan:
+  voxr_api/pkgs/virus_scan:
     dependencies:
-      '@fluxer/logger':
+      '@voxr/logger':
         specifier: workspace:*
         version: link:../../../packages/logger
       itty-time:
@@ -1071,12 +1071,12 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_api/pkgs/worker:
+  voxr_api/pkgs/worker:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../../../packages/constants
-      '@fluxer/logger':
+      '@voxr/logger':
         specifier: workspace:*
         version: link:../../../packages/logger
       itty-time:
@@ -1090,7 +1090,7 @@ importers:
         specifier: 'catalog:'
         version: 7.0.0-dev.20260224.1
 
-  fluxer_app:
+  voxr_app:
     dependencies:
       '@arborium/ada':
         specifier: 2.16.0
@@ -1434,28 +1434,28 @@ importers:
       '@floating-ui/react-dom':
         specifier: 'catalog:'
         version: 2.1.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../packages/constants
-      '@fluxer/date_utils':
+      '@voxr/date_utils':
         specifier: workspace:*
         version: link:../packages/date_utils
-      '@fluxer/geo_utils':
+      '@voxr/geo_utils':
         specifier: workspace:*
         version: link:../packages/geo_utils
-      '@fluxer/instance_bootstrap':
+      '@voxr/instance_bootstrap':
         specifier: workspace:*
         version: link:../packages/instance_bootstrap
-      '@fluxer/limits':
+      '@voxr/limits':
         specifier: workspace:*
         version: link:../packages/limits
-      '@fluxer/schema':
+      '@voxr/schema':
         specifier: workspace:*
         version: link:../packages/schema
-      '@fluxer/snowflake':
+      '@voxr/snowflake':
         specifier: workspace:*
         version: link:../packages/snowflake
-      '@fluxer/voice_engine_v2':
+      '@voxr/voice_engine_v2':
         specifier: workspace:*
         version: link:../packages/voice_engine_v2
       '@hcaptcha/react-hcaptcha':
@@ -1481,7 +1481,7 @@ importers:
         version: 5.9.2(@lingui/babel-plugin-lingui-macro@5.9.2(babel-plugin-macros@3.1.0)(typescript@5.9.3))(babel-plugin-macros@3.1.0)(react@19.2.4)
       '@livekit/components-react':
         specifier: 'catalog:'
-        version: 2.9.20(livekit-client@fluxer_app+pkgs+livekit-client)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tslib@2.8.1)
+        version: 2.9.20(livekit-client@voxr_app+pkgs+livekit-client)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tslib@2.8.1)
       '@marsidev/react-turnstile':
         specifier: 'catalog:'
         version: 1.4.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1529,7 +1529,7 @@ importers:
         version: 3.0.1
       deepfilternet3-noise-filter:
         specifier: 'catalog:'
-        version: 1.2.1(livekit-client@fluxer_app+pkgs+livekit-client)
+        version: 1.2.1(livekit-client@voxr_app+pkgs+livekit-client)
       eventemitter3:
         specifier: 'catalog:'
         version: 5.0.4
@@ -1742,13 +1742,13 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@5.9.3))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_app/pkgs/list_utils:
+  voxr_app/pkgs/list_utils:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../../../packages/constants
 
-  fluxer_app/pkgs/livekit-client:
+  voxr_app/pkgs/livekit-client:
     dependencies:
       '@livekit/mutex':
         specifier: 1.1.1
@@ -1788,15 +1788,15 @@ importers:
         specifier: 'catalog:'
         version: 4.1.11(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(@vitest/coverage-v8@4.1.11)(happy-dom@20.12.0)(jsdom@28.1.0(@noble/hashes@2.4.0))(msw@2.12.10(@types/node@25.3.0)(typescript@6.0.2))(vite@8.2.2(@types/node@25.3.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  fluxer_app/pkgs/number_utils:
+  voxr_app/pkgs/number_utils:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../../../packages/constants
 
-  fluxer_desktop:
+  voxr_desktop:
     dependencies:
-      '@fluxer/voice_engine_v2':
+      '@voxr/voice_engine_v2':
         specifier: workspace:*
         version: link:../packages/voice_engine_v2
       '@simplewebauthn/browser':
@@ -1837,77 +1837,77 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
     optionalDependencies:
-      '@fluxer/hardware-encoder':
+      '@voxr/hardware-encoder':
         specifier: file:./native/hardware-encoder
-        version: file:fluxer_desktop/native/hardware-encoder
-      '@fluxer/linux-audio-capture':
+        version: file:voxr_desktop/native/hardware-encoder
+      '@voxr/linux-audio-capture':
         specifier: file:./native/linux-audio-capture
-        version: file:fluxer_desktop/native/linux-audio-capture
-      '@fluxer/linux-evdev':
+        version: file:voxr_desktop/native/linux-audio-capture
+      '@voxr/linux-evdev':
         specifier: file:./native/linux-evdev
-        version: file:fluxer_desktop/native/linux-evdev
-      '@fluxer/linux-input-hook':
+        version: file:voxr_desktop/native/linux-evdev
+      '@voxr/linux-input-hook':
         specifier: file:./native/linux-input-hook
-        version: file:fluxer_desktop/native/linux-input-hook
-      '@fluxer/linux-notifications':
+        version: file:voxr_desktop/native/linux-input-hook
+      '@voxr/linux-notifications':
         specifier: file:./native/linux-notifications
-        version: file:fluxer_desktop/native/linux-notifications
-      '@fluxer/linux-portals':
+        version: file:voxr_desktop/native/linux-notifications
+      '@voxr/linux-portals':
         specifier: file:./native/linux-portals
-        version: file:fluxer_desktop/native/linux-portals
-      '@fluxer/linux-screen-capture':
+        version: file:voxr_desktop/native/linux-portals
+      '@voxr/linux-screen-capture':
         specifier: file:./native/linux-screen-capture
-        version: file:fluxer_desktop/native/linux-screen-capture
-      '@fluxer/mac-app-audio':
+        version: file:voxr_desktop/native/linux-screen-capture
+      '@voxr/mac-app-audio':
         specifier: file:./native/mac-app-audio
-        version: file:fluxer_desktop/native/mac-app-audio
-      '@fluxer/mac-clipboard':
+        version: file:voxr_desktop/native/mac-app-audio
+      '@voxr/mac-clipboard':
         specifier: file:./native/mac-clipboard
-        version: file:fluxer_desktop/native/mac-clipboard
-      '@fluxer/mac-screen-capture':
+        version: file:voxr_desktop/native/mac-clipboard
+      '@voxr/mac-screen-capture':
         specifier: file:./native/mac-screen-capture
-        version: file:fluxer_desktop/native/mac-screen-capture
-      '@fluxer/mac-sysctl':
+        version: file:voxr_desktop/native/mac-screen-capture
+      '@voxr/mac-sysctl':
         specifier: file:./native/mac-sysctl
-        version: file:fluxer_desktop/native/mac-sysctl
-      '@fluxer/mac-tcc':
+        version: file:voxr_desktop/native/mac-sysctl
+      '@voxr/mac-tcc':
         specifier: file:./native/mac-tcc
-        version: file:fluxer_desktop/native/mac-tcc
-      '@fluxer/macos-input-hook':
+        version: file:voxr_desktop/native/mac-tcc
+      '@voxr/macos-input-hook':
         specifier: file:./native/macos-input-hook
-        version: file:fluxer_desktop/native/macos-input-hook
-      '@fluxer/platform-info':
+        version: file:voxr_desktop/native/macos-input-hook
+      '@voxr/platform-info':
         specifier: file:./native/platform-info
-        version: file:fluxer_desktop/native/platform-info
-      '@fluxer/system-hunspell':
+        version: file:voxr_desktop/native/platform-info
+      '@voxr/system-hunspell':
         specifier: file:./native/system-hunspell
-        version: file:fluxer_desktop/native/system-hunspell
-      '@fluxer/webauthn':
+        version: file:voxr_desktop/native/system-hunspell
+      '@voxr/webauthn':
         specifier: file:./native/webauthn
-        version: file:fluxer_desktop/native/webauthn
-      '@fluxer/win-clipboard':
+        version: file:voxr_desktop/native/webauthn
+      '@voxr/win-clipboard':
         specifier: file:./native/win-clipboard
-        version: file:fluxer_desktop/native/win-clipboard
-      '@fluxer/win-game-capture':
+        version: file:voxr_desktop/native/win-clipboard
+      '@voxr/win-game-capture':
         specifier: file:./native/win-game-capture
-        version: file:fluxer_desktop/native/win-game-capture
-      '@fluxer/win-process-loopback':
+        version: file:voxr_desktop/native/win-game-capture
+      '@voxr/win-process-loopback':
         specifier: file:./native/win-process-loopback
-        version: file:fluxer_desktop/native/win-process-loopback
-      '@fluxer/win-shell':
+        version: file:voxr_desktop/native/win-process-loopback
+      '@voxr/win-shell':
         specifier: file:./native/win-shell
-        version: file:fluxer_desktop/native/win-shell
-      '@fluxer/win-toast':
+        version: file:voxr_desktop/native/win-shell
+      '@voxr/win-toast':
         specifier: file:./native/win-toast
-        version: file:fluxer_desktop/native/win-toast
-      '@fluxer/windows-input-hook':
+        version: file:voxr_desktop/native/win-toast
+      '@voxr/windows-input-hook':
         specifier: file:./native/windows-input-hook
-        version: file:fluxer_desktop/native/windows-input-hook
+        version: file:voxr_desktop/native/windows-input-hook
       electron-log:
         specifier: 5.4.3
         version: 5.4.3
 
-  fluxer_docs:
+  voxr_docs:
     dependencies:
       '@astrojs/markdown-remark':
         specifier: 'catalog:'
@@ -1921,7 +1921,7 @@ importers:
       '@astrojs/starlight':
         specifier: 'catalog:'
         version: 0.41.4(@astrojs/markdown-remark@7.2.1)(astro@7.1.3(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(@types/node@25.3.0)(ioredis@5.9.3)(jiti@2.7.0)(rollup@4.63.1)(tsx@4.21.0)(yaml@2.9.0))(typescript@6.0.2)
-      '@fluxer/config':
+      '@voxr/config':
         specifier: workspace:*
         version: link:../packages/config
       astro:
@@ -1940,7 +1940,7 @@ importers:
       '@astrojs/check':
         specifier: 'catalog:'
         version: 0.9.9(prettier@3.8.3)(typescript@6.0.2)
-      '@fluxer/openapi':
+      '@voxr/openapi':
         specifier: workspace:*
         version: link:../packages/openapi
       '@types/hast':
@@ -1991,7 +1991,7 @@ importers:
 
   packages/date_utils:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../constants
       '@vvo/tzdb':
@@ -2007,19 +2007,19 @@ importers:
 
   packages/errors:
     dependencies:
-      '@fluxer/config':
+      '@voxr/config':
         specifier: workspace:*
         version: link:../config
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../constants
-      '@fluxer/hono_types':
+      '@voxr/hono_types':
         specifier: workspace:*
         version: link:../hono_types
-      '@fluxer/i18n':
+      '@voxr/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@fluxer/logger':
+      '@voxr/logger':
         specifier: workspace:*
         version: link:../logger
       hono:
@@ -2044,7 +2044,7 @@ importers:
 
   packages/geo_utils:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../constants
     devDependencies:
@@ -2063,13 +2063,13 @@ importers:
 
   packages/hono:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../constants
-      '@fluxer/errors':
+      '@voxr/errors':
         specifier: workspace:*
         version: link:../errors
-      '@fluxer/ip_utils':
+      '@voxr/ip_utils':
         specifier: workspace:*
         version: link:../ip_utils
       '@hono/node-server':
@@ -2128,7 +2128,7 @@ importers:
 
   packages/instance_bootstrap:
     dependencies:
-      '@fluxer/limits':
+      '@voxr/limits':
         specifier: workspace:*
         version: link:../limits
     devDependencies:
@@ -2159,7 +2159,7 @@ importers:
 
   packages/limits:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../constants
     devDependencies:
@@ -2194,10 +2194,10 @@ importers:
 
   packages/openapi:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../constants
-      '@fluxer/errors':
+      '@voxr/errors':
         specifier: workspace:*
         version: link:../errors
       ts-morph:
@@ -2231,7 +2231,7 @@ importers:
       '@bufbuild/protobuf':
         specifier: ^2.12.0
         version: 2.12.0
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../constants
       '@simplewebauthn/server':
@@ -2274,7 +2274,7 @@ importers:
 
   packages/snowflake:
     dependencies:
-      '@fluxer/constants':
+      '@voxr/constants':
         specifier: workspace:*
         version: link:../constants
       itty-time:
@@ -4946,110 +4946,110 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
-  '@fluxer/hardware-encoder@file:fluxer_desktop/native/hardware-encoder':
-    resolution: {directory: fluxer_desktop/native/hardware-encoder, type: directory}
+  '@voxr/hardware-encoder@file:voxr_desktop/native/hardware-encoder':
+    resolution: {directory: voxr_desktop/native/hardware-encoder, type: directory}
     cpu: [x64, arm64]
 
-  '@fluxer/linux-audio-capture@file:fluxer_desktop/native/linux-audio-capture':
-    resolution: {directory: fluxer_desktop/native/linux-audio-capture, type: directory}
-    cpu: [x64, arm64]
-    os: [linux]
-
-  '@fluxer/linux-evdev@file:fluxer_desktop/native/linux-evdev':
-    resolution: {directory: fluxer_desktop/native/linux-evdev, type: directory}
+  '@voxr/linux-audio-capture@file:voxr_desktop/native/linux-audio-capture':
+    resolution: {directory: voxr_desktop/native/linux-audio-capture, type: directory}
     cpu: [x64, arm64]
     os: [linux]
 
-  '@fluxer/linux-input-hook@file:fluxer_desktop/native/linux-input-hook':
-    resolution: {directory: fluxer_desktop/native/linux-input-hook, type: directory}
+  '@voxr/linux-evdev@file:voxr_desktop/native/linux-evdev':
+    resolution: {directory: voxr_desktop/native/linux-evdev, type: directory}
     cpu: [x64, arm64]
     os: [linux]
 
-  '@fluxer/linux-notifications@file:fluxer_desktop/native/linux-notifications':
-    resolution: {directory: fluxer_desktop/native/linux-notifications, type: directory}
+  '@voxr/linux-input-hook@file:voxr_desktop/native/linux-input-hook':
+    resolution: {directory: voxr_desktop/native/linux-input-hook, type: directory}
     cpu: [x64, arm64]
     os: [linux]
 
-  '@fluxer/linux-portals@file:fluxer_desktop/native/linux-portals':
-    resolution: {directory: fluxer_desktop/native/linux-portals, type: directory}
+  '@voxr/linux-notifications@file:voxr_desktop/native/linux-notifications':
+    resolution: {directory: voxr_desktop/native/linux-notifications, type: directory}
     cpu: [x64, arm64]
     os: [linux]
 
-  '@fluxer/linux-screen-capture@file:fluxer_desktop/native/linux-screen-capture':
-    resolution: {directory: fluxer_desktop/native/linux-screen-capture, type: directory}
+  '@voxr/linux-portals@file:voxr_desktop/native/linux-portals':
+    resolution: {directory: voxr_desktop/native/linux-portals, type: directory}
     cpu: [x64, arm64]
     os: [linux]
 
-  '@fluxer/mac-app-audio@file:fluxer_desktop/native/mac-app-audio':
-    resolution: {directory: fluxer_desktop/native/mac-app-audio, type: directory}
+  '@voxr/linux-screen-capture@file:voxr_desktop/native/linux-screen-capture':
+    resolution: {directory: voxr_desktop/native/linux-screen-capture, type: directory}
+    cpu: [x64, arm64]
+    os: [linux]
+
+  '@voxr/mac-app-audio@file:voxr_desktop/native/mac-app-audio':
+    resolution: {directory: voxr_desktop/native/mac-app-audio, type: directory}
     cpu: [x64, arm64]
     os: [darwin]
 
-  '@fluxer/mac-clipboard@file:fluxer_desktop/native/mac-clipboard':
-    resolution: {directory: fluxer_desktop/native/mac-clipboard, type: directory}
+  '@voxr/mac-clipboard@file:voxr_desktop/native/mac-clipboard':
+    resolution: {directory: voxr_desktop/native/mac-clipboard, type: directory}
     cpu: [x64, arm64]
     os: [darwin]
 
-  '@fluxer/mac-screen-capture@file:fluxer_desktop/native/mac-screen-capture':
-    resolution: {directory: fluxer_desktop/native/mac-screen-capture, type: directory}
+  '@voxr/mac-screen-capture@file:voxr_desktop/native/mac-screen-capture':
+    resolution: {directory: voxr_desktop/native/mac-screen-capture, type: directory}
     cpu: [x64, arm64]
     os: [darwin]
 
-  '@fluxer/mac-sysctl@file:fluxer_desktop/native/mac-sysctl':
-    resolution: {directory: fluxer_desktop/native/mac-sysctl, type: directory}
+  '@voxr/mac-sysctl@file:voxr_desktop/native/mac-sysctl':
+    resolution: {directory: voxr_desktop/native/mac-sysctl, type: directory}
     cpu: [x64, arm64]
     os: [darwin]
 
-  '@fluxer/mac-tcc@file:fluxer_desktop/native/mac-tcc':
-    resolution: {directory: fluxer_desktop/native/mac-tcc, type: directory}
+  '@voxr/mac-tcc@file:voxr_desktop/native/mac-tcc':
+    resolution: {directory: voxr_desktop/native/mac-tcc, type: directory}
     cpu: [x64, arm64]
     os: [darwin]
 
-  '@fluxer/macos-input-hook@file:fluxer_desktop/native/macos-input-hook':
-    resolution: {directory: fluxer_desktop/native/macos-input-hook, type: directory}
+  '@voxr/macos-input-hook@file:voxr_desktop/native/macos-input-hook':
+    resolution: {directory: voxr_desktop/native/macos-input-hook, type: directory}
     cpu: [x64, arm64]
     os: [darwin]
 
-  '@fluxer/platform-info@file:fluxer_desktop/native/platform-info':
-    resolution: {directory: fluxer_desktop/native/platform-info, type: directory}
+  '@voxr/platform-info@file:voxr_desktop/native/platform-info':
+    resolution: {directory: voxr_desktop/native/platform-info, type: directory}
     cpu: [x64, arm64]
 
-  '@fluxer/system-hunspell@file:fluxer_desktop/native/system-hunspell':
-    resolution: {directory: fluxer_desktop/native/system-hunspell, type: directory}
+  '@voxr/system-hunspell@file:voxr_desktop/native/system-hunspell':
+    resolution: {directory: voxr_desktop/native/system-hunspell, type: directory}
     cpu: [x64, arm64]
     os: [linux]
 
-  '@fluxer/webauthn@file:fluxer_desktop/native/webauthn':
-    resolution: {directory: fluxer_desktop/native/webauthn, type: directory}
+  '@voxr/webauthn@file:voxr_desktop/native/webauthn':
+    resolution: {directory: voxr_desktop/native/webauthn, type: directory}
     cpu: [x64, arm64]
 
-  '@fluxer/win-clipboard@file:fluxer_desktop/native/win-clipboard':
-    resolution: {directory: fluxer_desktop/native/win-clipboard, type: directory}
+  '@voxr/win-clipboard@file:voxr_desktop/native/win-clipboard':
+    resolution: {directory: voxr_desktop/native/win-clipboard, type: directory}
     cpu: [x64, arm64]
     os: [win32]
 
-  '@fluxer/win-game-capture@file:fluxer_desktop/native/win-game-capture':
-    resolution: {directory: fluxer_desktop/native/win-game-capture, type: directory}
+  '@voxr/win-game-capture@file:voxr_desktop/native/win-game-capture':
+    resolution: {directory: voxr_desktop/native/win-game-capture, type: directory}
     cpu: [x64, arm64]
     os: [win32]
 
-  '@fluxer/win-process-loopback@file:fluxer_desktop/native/win-process-loopback':
-    resolution: {directory: fluxer_desktop/native/win-process-loopback, type: directory}
+  '@voxr/win-process-loopback@file:voxr_desktop/native/win-process-loopback':
+    resolution: {directory: voxr_desktop/native/win-process-loopback, type: directory}
     cpu: [x64, arm64]
     os: [win32]
 
-  '@fluxer/win-shell@file:fluxer_desktop/native/win-shell':
-    resolution: {directory: fluxer_desktop/native/win-shell, type: directory}
+  '@voxr/win-shell@file:voxr_desktop/native/win-shell':
+    resolution: {directory: voxr_desktop/native/win-shell, type: directory}
     cpu: [x64, arm64]
     os: [win32]
 
-  '@fluxer/win-toast@file:fluxer_desktop/native/win-toast':
-    resolution: {directory: fluxer_desktop/native/win-toast, type: directory}
+  '@voxr/win-toast@file:voxr_desktop/native/win-toast':
+    resolution: {directory: voxr_desktop/native/win-toast, type: directory}
     cpu: [x64, arm64]
     os: [win32]
 
-  '@fluxer/windows-input-hook@file:fluxer_desktop/native/windows-input-hook':
-    resolution: {directory: fluxer_desktop/native/windows-input-hook, type: directory}
+  '@voxr/windows-input-hook@file:voxr_desktop/native/windows-input-hook':
+    resolution: {directory: voxr_desktop/native/windows-input-hook, type: directory}
     cpu: [x64, arm64]
     os: [win32]
 
@@ -15840,70 +15840,70 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@fluxer/hardware-encoder@file:fluxer_desktop/native/hardware-encoder':
+  '@voxr/hardware-encoder@file:voxr_desktop/native/hardware-encoder':
     optional: true
 
-  '@fluxer/linux-audio-capture@file:fluxer_desktop/native/linux-audio-capture':
+  '@voxr/linux-audio-capture@file:voxr_desktop/native/linux-audio-capture':
     optional: true
 
-  '@fluxer/linux-evdev@file:fluxer_desktop/native/linux-evdev':
+  '@voxr/linux-evdev@file:voxr_desktop/native/linux-evdev':
     optional: true
 
-  '@fluxer/linux-input-hook@file:fluxer_desktop/native/linux-input-hook':
+  '@voxr/linux-input-hook@file:voxr_desktop/native/linux-input-hook':
     optional: true
 
-  '@fluxer/linux-notifications@file:fluxer_desktop/native/linux-notifications':
+  '@voxr/linux-notifications@file:voxr_desktop/native/linux-notifications':
     optional: true
 
-  '@fluxer/linux-portals@file:fluxer_desktop/native/linux-portals':
+  '@voxr/linux-portals@file:voxr_desktop/native/linux-portals':
     optional: true
 
-  '@fluxer/linux-screen-capture@file:fluxer_desktop/native/linux-screen-capture':
+  '@voxr/linux-screen-capture@file:voxr_desktop/native/linux-screen-capture':
     optional: true
 
-  '@fluxer/mac-app-audio@file:fluxer_desktop/native/mac-app-audio':
+  '@voxr/mac-app-audio@file:voxr_desktop/native/mac-app-audio':
     optional: true
 
-  '@fluxer/mac-clipboard@file:fluxer_desktop/native/mac-clipboard':
+  '@voxr/mac-clipboard@file:voxr_desktop/native/mac-clipboard':
     optional: true
 
-  '@fluxer/mac-screen-capture@file:fluxer_desktop/native/mac-screen-capture':
+  '@voxr/mac-screen-capture@file:voxr_desktop/native/mac-screen-capture':
     optional: true
 
-  '@fluxer/mac-sysctl@file:fluxer_desktop/native/mac-sysctl':
+  '@voxr/mac-sysctl@file:voxr_desktop/native/mac-sysctl':
     optional: true
 
-  '@fluxer/mac-tcc@file:fluxer_desktop/native/mac-tcc':
+  '@voxr/mac-tcc@file:voxr_desktop/native/mac-tcc':
     optional: true
 
-  '@fluxer/macos-input-hook@file:fluxer_desktop/native/macos-input-hook':
+  '@voxr/macos-input-hook@file:voxr_desktop/native/macos-input-hook':
     optional: true
 
-  '@fluxer/platform-info@file:fluxer_desktop/native/platform-info':
+  '@voxr/platform-info@file:voxr_desktop/native/platform-info':
     optional: true
 
-  '@fluxer/system-hunspell@file:fluxer_desktop/native/system-hunspell':
+  '@voxr/system-hunspell@file:voxr_desktop/native/system-hunspell':
     optional: true
 
-  '@fluxer/webauthn@file:fluxer_desktop/native/webauthn':
+  '@voxr/webauthn@file:voxr_desktop/native/webauthn':
     optional: true
 
-  '@fluxer/win-clipboard@file:fluxer_desktop/native/win-clipboard':
+  '@voxr/win-clipboard@file:voxr_desktop/native/win-clipboard':
     optional: true
 
-  '@fluxer/win-game-capture@file:fluxer_desktop/native/win-game-capture':
+  '@voxr/win-game-capture@file:voxr_desktop/native/win-game-capture':
     optional: true
 
-  '@fluxer/win-process-loopback@file:fluxer_desktop/native/win-process-loopback':
+  '@voxr/win-process-loopback@file:voxr_desktop/native/win-process-loopback':
     optional: true
 
-  '@fluxer/win-shell@file:fluxer_desktop/native/win-shell':
+  '@voxr/win-shell@file:voxr_desktop/native/win-shell':
     optional: true
 
-  '@fluxer/win-toast@file:fluxer_desktop/native/win-toast':
+  '@voxr/win-toast@file:voxr_desktop/native/win-toast':
     optional: true
 
-  '@fluxer/windows-input-hook@file:fluxer_desktop/native/windows-input-hook':
+  '@voxr/windows-input-hook@file:voxr_desktop/native/windows-input-hook':
     optional: true
 
   '@formatjs/ecma402-abstract@2.3.6':
@@ -16636,21 +16636,21 @@ snapshots:
     dependencies:
       '@lingui/core': 5.9.2(@lingui/babel-plugin-lingui-macro@5.9.2(babel-plugin-macros@3.1.0)(typescript@5.9.3))(babel-plugin-macros@3.1.0)
 
-  '@livekit/components-core@0.12.13(livekit-client@fluxer_app+pkgs+livekit-client)(tslib@2.8.1)':
+  '@livekit/components-core@0.12.13(livekit-client@voxr_app+pkgs+livekit-client)(tslib@2.8.1)':
     dependencies:
       '@floating-ui/dom': 1.7.5
-      livekit-client: link:fluxer_app/pkgs/livekit-client
+      livekit-client: link:voxr_app/pkgs/livekit-client
       loglevel: 1.9.1
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@livekit/components-react@2.9.20(livekit-client@fluxer_app+pkgs+livekit-client)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tslib@2.8.1)':
+  '@livekit/components-react@2.9.20(livekit-client@voxr_app+pkgs+livekit-client)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tslib@2.8.1)':
     dependencies:
-      '@livekit/components-core': 0.12.13(livekit-client@fluxer_app+pkgs+livekit-client)(tslib@2.8.1)
+      '@livekit/components-core': 0.12.13(livekit-client@voxr_app+pkgs+livekit-client)(tslib@2.8.1)
       clsx: 2.1.1
       events: 3.3.0
       jose: 6.1.3
-      livekit-client: link:fluxer_app/pkgs/livekit-client
+      livekit-client: link:voxr_app/pkgs/livekit-client
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
       tslib: 2.8.1
@@ -20293,9 +20293,9 @@ snapshots:
 
   deep-is@0.1.4: {}
 
-  deepfilternet3-noise-filter@1.2.1(livekit-client@fluxer_app+pkgs+livekit-client):
+  deepfilternet3-noise-filter@1.2.1(livekit-client@voxr_app+pkgs+livekit-client):
     dependencies:
-      livekit-client: link:fluxer_app/pkgs/livekit-client
+      livekit-client: link:voxr_app/pkgs/livekit-client
 
   deepmerge@4.3.1: {}
 

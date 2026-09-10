@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type {ZodTypeAny} from 'zod';
 
-const FLUXER_SCHEMA_NAME = Symbol('fluxer.openapi.schemaName');
-const FLUXER_CUSTOM_TYPE_KEY = '__fluxer_custom_type__';
+const VOXR_SCHEMA_NAME = Symbol('voxr.openapi.schemaName');
+const VOXR_CUSTOM_TYPE_KEY = '__voxr_custom_type__';
 
 export interface ZodCheckDefinition {
 	check?: unknown;
@@ -90,8 +90,8 @@ interface ZodInternalSchema {
 	maxLength?: number | null;
 	format?: string | null;
 	_regex?: RegExp;
-	[FLUXER_SCHEMA_NAME]?: string;
-	[FLUXER_CUSTOM_TYPE_KEY]?: string;
+	[VOXR_SCHEMA_NAME]?: string;
+	[VOXR_CUSTOM_TYPE_KEY]?: string;
 }
 
 interface ZodStringConstraintProperties {
@@ -133,15 +133,15 @@ export function getZodStringConstraintProperties(schema: ZodTypeAny): ZodStringC
 }
 
 export function setSchemaNameMetadata(schema: ZodTypeAny, name: string): void {
-	getInternalSchema(schema)[FLUXER_SCHEMA_NAME] = name;
+	getInternalSchema(schema)[VOXR_SCHEMA_NAME] = name;
 }
 
 export function getSchemaNameMetadata(schema: ZodTypeAny): string | undefined {
-	return getInternalSchema(schema)[FLUXER_SCHEMA_NAME];
+	return getInternalSchema(schema)[VOXR_SCHEMA_NAME];
 }
 
 export function getCustomTypeMetadata(schema: ZodTypeAny): string | undefined {
-	return getInternalSchema(schema)[FLUXER_CUSTOM_TYPE_KEY];
+	return getInternalSchema(schema)[VOXR_CUSTOM_TYPE_KEY];
 }
 
 export function getZodTypeFromUnknown(value: unknown): ZodTypeAny | undefined {

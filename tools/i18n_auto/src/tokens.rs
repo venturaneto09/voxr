@@ -51,7 +51,7 @@ pub fn is_preserved_artifact(source: &str) -> bool {
     let trimmed = source.trim();
     if [
         r"(?i)^https?://\S+$",
-        r"(?i)^(?:mailto:|tel:|file:|app://|fluxer://)\S+$",
+        r"(?i)^(?:mailto:|tel:|file:|app://|voxr://)\S+$",
         r"^[@#][\w-]+$",
         r"^\{[^{}]+\}$",
         r"^<[^>]+>$",
@@ -284,7 +284,7 @@ pub fn build_masked_source(entry: &Entry) -> (String, Vec<TokenAlias>) {
         .enumerate()
         .map(|(index, token)| TokenAlias {
             token,
-            alias: format!("{{FLUXER_TOKEN_{index}}}"),
+            alias: format!("{{VOXR_TOKEN_{index}}}"),
         })
         .collect::<Vec<_>>();
     (
@@ -344,7 +344,7 @@ mod tests {
     #[test]
     fn detects_sources_that_should_stay_unchanged() {
         assert!(should_keep_unchanged("", "de"));
-        assert!(should_keep_unchanged("https://fluxer.app/docs", "de"));
+        assert!(should_keep_unchanged("https://voxr.app/docs", "de"));
         assert!(should_keep_unchanged("{productName}", "de"));
         assert!(should_keep_unchanged("{authorName} {description}", "de"));
         assert!(should_keep_unchanged(
@@ -374,7 +374,7 @@ mod tests {
             ]
         );
         let (masked, aliases) = build_masked_source(&entry);
-        assert!(masked.contains("{FLUXER_TOKEN_0}"));
+        assert!(masked.contains("{VOXR_TOKEN_0}"));
         assert_eq!(
             restore_masked_tokens(&masked, &aliases),
             "{productName} needs <0>{permission}</0> %@ $1 :wave:"

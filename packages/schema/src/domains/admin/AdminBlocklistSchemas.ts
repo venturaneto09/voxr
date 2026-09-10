@@ -11,9 +11,9 @@ import {
 	BanUrlRequest,
 	CheckAvatarHashRequest,
 	SuspiciousEmailDomainRequest,
-} from '@fluxer/schema/src/domains/admin/AdminSchemas';
-import {createQueryIntegerType} from '@fluxer/schema/src/primitives/QueryValidators';
-import {createStringType, Int32Type, SnowflakeStringType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/domains/admin/AdminSchemas';
+import {createQueryIntegerType} from '@voxr/schema/src/primitives/QueryValidators';
+import {createStringType, Int32Type, SnowflakeStringType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 export const AdminBlocklistListType = z

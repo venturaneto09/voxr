@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {Locales} from '@fluxer/constants/src/Locales';
-import {BadRequestError} from '@fluxer/errors/src/domains/core/BadRequestError';
-import {AppErrorHandler} from '@fluxer/errors/src/domains/core/ErrorHandlers';
-import {getErrorMessage} from '@fluxer/errors/src/i18n/ErrorI18n';
-import type {BaseHonoEnv} from '@fluxer/hono_types/src/HonoTypes';
-import {Logger} from '@fluxer/logger/src/Logger';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {Locales} from '@voxr/constants/src/Locales';
+import {BadRequestError} from '@voxr/errors/src/domains/core/BadRequestError';
+import {AppErrorHandler} from '@voxr/errors/src/domains/core/ErrorHandlers';
+import {getErrorMessage} from '@voxr/errors/src/i18n/ErrorI18n';
+import type {BaseHonoEnv} from '@voxr/hono_types/src/HonoTypes';
+import {Logger} from '@voxr/logger/src/Logger';
 import {Hono} from 'hono';
 import {describe, expect, it, vi} from 'vitest';
 
@@ -48,7 +48,7 @@ describe('AppErrorHandler i18n fallbacks', () => {
 			errorLoggerSpy.mockRestore();
 		}
 	});
-	it('localizes FluxerError responses without errorI18nService in context', async () => {
+	it('localizes VoxrError responses without errorI18nService in context', async () => {
 		const app = createApp();
 		app.get('/test', () => {
 			throw new BadRequestError({code: APIErrorCodes.BAD_REQUEST});

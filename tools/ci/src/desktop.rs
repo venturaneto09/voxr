@@ -34,7 +34,7 @@ use tempfile::TempDir;
 use walkdir::WalkDir;
 use zip::write::SimpleFileOptions;
 
-const PUBLIC_DL_BASE: &str = "https://api.fluxer.app/dl";
+const PUBLIC_DL_BASE: &str = "https://api.voxr.app/dl";
 const PNPM_VERSION: &str = "10.29.3";
 const RUST_TOOLCHAIN: &str = "1.93.0";
 const DEFAULT_DESKTOP_VARIANT: &str = "default";
@@ -152,7 +152,7 @@ const PLATFORMS: &[Platform] = &[
         platform: "macos",
         arch: MACOS_UNIVERSAL_ARCH,
         desktop_variant: DEFAULT_DESKTOP_VARIANT,
-        os: "fluxer-desktop-macos-arm64",
+        os: "voxr-desktop-macos-arm64",
         electron_arch: MACOS_UNIVERSAL_ARCH,
     },
     Platform {
@@ -258,8 +258,8 @@ pub async fn run(args: BuildDesktopArgs) -> Result<()> {
 fn calver_env_from_process() -> CalverEnv {
     CalverEnv {
         build_version: trim_option(env::var("BUILD_VERSION").ok()),
-        fluxer_build_version: trim_option(env::var("FLUXER_BUILD_VERSION").ok()),
-        fluxer_build_date: trim_option(env::var("FLUXER_BUILD_DATE").ok()),
+        voxr_build_version: trim_option(env::var("VOXR_BUILD_VERSION").ok()),
+        voxr_build_date: trim_option(env::var("VOXR_BUILD_DATE").ok()),
     }
 }
 
@@ -296,14 +296,14 @@ fn set_build_channel_step() -> Result<()> {
 
 fn resolve_desktop_dir() -> Result<PathBuf> {
     let cwd = env::current_dir().context("Failed to resolve current directory")?;
-    if cwd.file_name().and_then(|value| value.to_str()) == Some("fluxer_desktop") {
+    if cwd.file_name().and_then(|value| value.to_str()) == Some("voxr_desktop") {
         return Ok(cwd);
     }
-    if cwd.join("fluxer_desktop").is_dir() {
-        return Ok(cwd.join("fluxer_desktop"));
+    if cwd.join("voxr_desktop").is_dir() {
+        return Ok(cwd.join("voxr_desktop"));
     }
     Err(anyhow!(
-        "Could not resolve fluxer_desktop directory from {}",
+        "Could not resolve voxr_desktop directory from {}",
         cwd.display()
     ))
 }
@@ -506,7 +506,7 @@ fn workdir() -> PathBuf {
 }
 
 fn desktop_dist_dir() -> PathBuf {
-    workdir().join("fluxer_desktop").join("dist-electron")
+    workdir().join("voxr_desktop").join("dist-electron")
 }
 
 async fn windows_paths_step() -> Result<()> {
@@ -795,7 +795,7 @@ fn install_setuptools_macos_step() -> Result<()> {
 }
 
 async fn install_linux_deps_step() -> Result<()> {
-    let apt_conf = runner_temp().join("99fluxer-ci-network");
+    let apt_conf = runner_temp().join("99voxr-ci-network");
     fs::write(
         &apt_conf,
         r#"Acquire::Retries "6";
@@ -809,7 +809,7 @@ DPkg::Lock::Timeout "120";
     run_command(CommandSpec::new("sudo").args([
         "cp",
         apt_conf.to_string_lossy().as_ref(),
-        "/etc/apt/apt.conf.d/99fluxer-ci-network",
+        "/etc/apt/apt.conf.d/99voxr-ci-network",
     ]))?;
 
     rewrite_ubuntu_ports_sources()?;
@@ -1430,7 +1430,7 @@ fn build_electron_main_step() -> Result<()> {
         pnpm_command()?
             .arg("build")
             .env("NODE_ENV", "production")
-            .env("FLUXER_DESKTOP_PRODUCTION", "true"),
+            .env("VOXR_DESKTOP_PRODUCTION", "true"),
     )
 }
 
@@ -1575,7 +1575,7 @@ fn validate_macos_signing_env() -> Result<PathBuf> {
         missing.join(" ")
     );
 
-    let keychain = require_home()?.join("Library/Keychains/fluxer-build.keychain-db");
+    let keychain = require_home()?.join("Library/Keychains/voxr-build.keychain-db");
     ensure!(
         keychain.exists(),
         "Signing keychain {} not found on runner host. Run the runner's keychain bootstrap to import the Developer ID cert.",
@@ -1683,14 +1683,14 @@ fn verify_bundle_id_step() -> Result<()> {
     ]))?;
 
     let expected = if build_channel == "canary" {
-        "app.fluxer.canary"
+        "app.voxr.canary"
     } else {
-        "app.fluxer"
+        "app.voxr"
     };
     let expected_profile = if build_channel == "canary" {
-        "3G5837T29K.app.fluxer.canary"
+        "3G5837T29K.app.voxr.canary"
     } else {
-        "3G5837T29K.app.fluxer"
+        "3G5837T29K.app.voxr"
     };
     println!("Bundle id in zip: {bid} (expected: {expected})");
     ensure!(bid == expected, "Unexpected bundle id: {bid}");
@@ -1769,13 +1769,13 @@ fn macos_native_runtime_targets(electron_arch: &str) -> Vec<(String, &'static st
         "x86_64"
     };
     [
-        "@fluxer/webauthn/webauthn",
-        "@fluxer/mac-app-audio/mac-app-audio",
-        "@fluxer/mac-clipboard/mac-clipboard",
-        "@fluxer/mac-sysctl/mac-sysctl",
-        "@fluxer/mac-tcc/mac-tcc",
-        "@fluxer/macos-input-hook/macos-input-hook",
-        "@fluxer/platform-info/platform-info",
+        "@voxr/webauthn/webauthn",
+        "@voxr/mac-app-audio/mac-app-audio",
+        "@voxr/mac-clipboard/mac-clipboard",
+        "@voxr/mac-sysctl/mac-sysctl",
+        "@voxr/mac-tcc/mac-tcc",
+        "@voxr/macos-input-hook/macos-input-hook",
+        "@voxr/platform-info/platform-info",
     ]
     .into_iter()
     .map(|prefix| {
@@ -1928,15 +1928,15 @@ struct VelopackAssetIndexEntry {
 
 fn windows_package_config(build_channel: &str, arch: &str) -> WindowsPackageConfig {
     let canary = build_channel == "canary";
-    let pack_title = if canary { "Fluxer Canary" } else { "Fluxer" };
+    let pack_title = if canary { "Voxr Canary" } else { "Voxr" };
     WindowsPackageConfig {
         pack_id: if canary {
-            "fluxer_desktop_canary"
+            "voxr_desktop_canary"
         } else {
-            "fluxer_desktop"
+            "voxr_desktop"
         },
         pack_title,
-        artifact_prefix: if canary { "Fluxer-Canary" } else { "Fluxer" },
+        artifact_prefix: if canary { "Voxr-Canary" } else { "Voxr" },
         icon_dir: if canary {
             "icons-canary"
         } else {
@@ -2012,7 +2012,7 @@ fn pack_and_validate_windows_velopack(
         "--packTitle",
         config.pack_title,
         "--packAuthors",
-        "Fluxer Platform AB",
+        "Voxr Platform AB",
         "--shortcuts",
         "Desktop,StartMenu",
         "--runtime",
@@ -2038,7 +2038,7 @@ fn remove_velopack_portable_archives(output_dir: &Path) -> Result<()> {
         }
         fs::remove_file(&path).with_context(|| format!("Failed to remove {}", path.display()))?;
         println!(
-            "Removed Velopack portable archive {}. Fluxer publishes its own portable ZIP built from the signed application tree.",
+            "Removed Velopack portable archive {}. Voxr publishes its own portable ZIP built from the signed application tree.",
             path.display()
         );
     }
@@ -2378,7 +2378,7 @@ fn create_portable_zip_windows_step() -> Result<()> {
     Ok(())
 }
 
-const FLUXER_WINDOWS_SIGNER_COMMON_NAME: &str = "Fluxer Platform AB";
+const VOXR_WINDOWS_SIGNER_COMMON_NAME: &str = "Voxr Platform AB";
 const THIRD_PARTY_WINDOWS_SIGNATURE_ALLOWLIST: &[(&str, &str)] = &[
     (
         "d3dcompiler_47.dll",
@@ -2391,12 +2391,12 @@ const THIRD_PARTY_WINDOWS_SIGNATURE_ALLOWLIST: &[(&str, &str)] = &[
 ];
 const KNOWN_OPTIONAL_WINDOWS_PE_INVENTORY: &[&str] = &[];
 const FORBIDDEN_WINDOWS_GAME_CAPTURE_ARTIFACT_PREFIXES: &[&str] = &[
-    "fluxer-game-hook.",
-    "fluxer-inject-helper.",
-    "fluxer-vulkan-layer.",
-    "fluxer_game_hook.",
-    "fluxer_inject_helper.",
-    "fluxer_vulkan_layer.",
+    "voxr-game-hook.",
+    "voxr-inject-helper.",
+    "voxr-vulkan-layer.",
+    "voxr_game_hook.",
+    "voxr_inject_helper.",
+    "voxr_vulkan_layer.",
 ];
 const WINDOWS_NATIVE_ADDON_STEMS: &[&str] = &[
     "hardware-encoder",
@@ -2987,7 +2987,7 @@ fn certificate_common_name(subject: &str) -> Option<&str> {
         .find_map(|component| component.strip_prefix("CN="))
 }
 
-fn assert_fluxer_signed(row: &SignatureRow) -> Result<()> {
+fn assert_voxr_signed(row: &SignatureRow) -> Result<()> {
     ensure!(
         row.status == "Valid",
         "Authenticode status is {} (expected Valid)",
@@ -3004,9 +3004,9 @@ fn assert_fluxer_signed(row: &SignatureRow) -> Result<()> {
     let common_name = certificate_common_name(subject)
         .ok_or_else(|| anyhow!("Signer subject has no CN= component: {subject}"))?;
     ensure!(
-        common_name == FLUXER_WINDOWS_SIGNER_COMMON_NAME,
+        common_name == VOXR_WINDOWS_SIGNER_COMMON_NAME,
         "Signer CN is '{common_name}', expected '{}' (thumbprint {})",
-        FLUXER_WINDOWS_SIGNER_COMMON_NAME,
+        VOXR_WINDOWS_SIGNER_COMMON_NAME,
         row.thumbprint.as_deref().unwrap_or("unknown")
     );
     Ok(())
@@ -3038,10 +3038,10 @@ fn assert_third_party_signed(row: &SignatureRow, relative: &str) -> Result<()> {
 }
 
 fn assert_signed_by_known_publisher(row: &SignatureRow, relative: &str) -> Result<()> {
-    match assert_fluxer_signed(row) {
+    match assert_voxr_signed(row) {
         Ok(()) => Ok(()),
-        Err(fluxer_error) => assert_third_party_signed(row, relative)
-            .map_err(|third_party_error| anyhow!("{fluxer_error}; {third_party_error}")),
+        Err(voxr_error) => assert_third_party_signed(row, relative)
+            .map_err(|third_party_error| anyhow!("{voxr_error}; {third_party_error}")),
     }
 }
 
@@ -3568,7 +3568,7 @@ fn handoff_artifact_name(
     } else {
         ""
     };
-    format!("fluxer-desktop-{build_channel}-{platform}-{arch}{variant_suffix}{signed_suffix}")
+    format!("voxr-desktop-{build_channel}-{platform}-{arch}{variant_suffix}{signed_suffix}")
 }
 
 async fn download_handoff_step() -> Result<()> {
@@ -3722,7 +3722,7 @@ fn prepare_release_assets_step() -> Result<()> {
         schema_version: DESKTOP_RELEASE_DESCRIPTOR_SCHEMA_VERSION,
         channel: channel.clone(),
         version: version.clone(),
-        release_tag: format!("fluxer-desktop-{channel}@{version}"),
+        release_tag: format!("voxr-desktop-{channel}@{version}"),
         source_sha,
         assets: descriptor_assets,
     };
@@ -3931,7 +3931,7 @@ struct ArtifactIdentity {
 }
 
 fn parse_artifact_dir_name(base: &str, channel: &str) -> Option<ArtifactIdentity> {
-    let prefix = format!("fluxer-desktop-{channel}-");
+    let prefix = format!("voxr-desktop-{channel}-");
     let rest = base.strip_prefix(&prefix)?;
     let (rest, signed) = rest
         .strip_suffix("-signed")
@@ -4571,7 +4571,7 @@ mod tests {
         let temp = tempfile::tempdir().unwrap();
         let root = temp.path().join("desktop").join("stable").join("darwin");
         fs::create_dir_all(root.join("arm64")).unwrap();
-        fs::write(root.join("arm64").join("Fluxer-1.2.3-arm64.dmg"), "dmg").unwrap();
+        fs::write(root.join("arm64").join("Voxr-1.2.3-arm64.dmg"), "dmg").unwrap();
         fs::write(root.join("arm64").join("manifest.json"), "{}").unwrap();
         fs::write(root.join("arm64").join("latest-mac.yml"), "version: 1").unwrap();
 
@@ -4595,12 +4595,12 @@ mod tests {
     #[test]
     fn the_stored_lifetime_follows_the_key_not_the_upload_batch() {
         assert_eq!(
-            desktop_object_cache_control("desktop/stable/darwin/arm64/Fluxer-1.2.3-arm64.dmg"),
+            desktop_object_cache_control("desktop/stable/darwin/arm64/Voxr-1.2.3-arm64.dmg"),
             VERSIONED_ARTIFACT_CACHE_CONTROL
         );
         assert_eq!(
             desktop_object_cache_control(
-                "desktop/stable/darwin/arm64/Fluxer-1.2.3-arm64.dmg.sha256"
+                "desktop/stable/darwin/arm64/Voxr-1.2.3-arm64.dmg.sha256"
             ),
             VERSIONED_ARTIFACT_CACHE_CONTROL
         );
@@ -4618,7 +4618,7 @@ mod tests {
             MUTABLE_DOWNLOAD_CACHE_CONTROL
         );
         assert_eq!(
-            desktop_object_cache_control("desktop-test/canary/linux/x64/Fluxer-1.2.3.AppImage"),
+            desktop_object_cache_control("desktop-test/canary/linux/x64/Voxr-1.2.3.AppImage"),
             MUTABLE_DOWNLOAD_CACHE_CONTROL,
             "test artifacts are overwritten in place, so they are not immutable"
         );
@@ -4668,8 +4668,8 @@ mod tests {
     fn resolves_explicit_calver_with_precedence() {
         let calver_env = CalverEnv {
             build_version: Some("2026.520.1".to_string()),
-            fluxer_build_version: Some("2026.521.2".to_string()),
-            fluxer_build_date: Some("2026-05-22T03:04:05Z".to_string()),
+            voxr_build_version: Some("2026.521.2".to_string()),
+            voxr_build_date: Some("2026-05-22T03:04:05Z".to_string()),
         };
         assert_eq!(
             resolve_calver(&calver_env, dt(2026, 5, 1, 0, 0, 0)).unwrap(),
@@ -4680,7 +4680,7 @@ mod tests {
     #[test]
     fn resolves_generated_calver_from_date_override() {
         let calver_env = CalverEnv {
-            fluxer_build_date: Some("2026-05-20T01:02:03Z".to_string()),
+            voxr_build_date: Some("2026-05-20T01:02:03Z".to_string()),
             ..CalverEnv::default()
         };
         assert_eq!(
@@ -4825,7 +4825,7 @@ mod tests {
     fn upload_plan_splits_payload_metadata_without_s3() {
         let temp = tempfile::tempdir().unwrap();
         let root = temp.path();
-        write_file(&root.join("canary/linux/x64/Fluxer.AppImage"), "app");
+        write_file(&root.join("canary/linux/x64/Voxr.AppImage"), "app");
         write_file(&root.join("canary/linux/x64/manifest.json"), "{}");
         write_file(&root.join("canary/darwin/x64/releases.json"), "{}");
 
@@ -4842,7 +4842,7 @@ mod tests {
             .map(|item| item.key)
             .collect::<Vec<_>>();
 
-        assert_eq!(binaries, vec!["desktop/canary/linux/x64/Fluxer.AppImage"]);
+        assert_eq!(binaries, vec!["desktop/canary/linux/x64/Voxr.AppImage"]);
         assert_eq!(
             metadata,
             vec![
@@ -4855,7 +4855,7 @@ mod tests {
     #[test]
     fn parses_handoff_artifact_dir_names() {
         assert_eq!(
-            parse_artifact_dir_name("fluxer-desktop-canary-windows-arm64", "canary").unwrap(),
+            parse_artifact_dir_name("voxr-desktop-canary-windows-arm64", "canary").unwrap(),
             ArtifactIdentity {
                 platform: "windows".to_string(),
                 arch: "arm64".to_string(),
@@ -4865,7 +4865,7 @@ mod tests {
         );
         assert_eq!(
             parse_artifact_dir_name(
-                "fluxer-desktop-canary-windows-x64-windows-game-capture-signed",
+                "voxr-desktop-canary-windows-x64-windows-game-capture-signed",
                 "canary",
             )
             .unwrap(),
@@ -4876,9 +4876,9 @@ mod tests {
                 signed: true,
             }
         );
-        assert!(parse_artifact_dir_name("fluxer-desktop-stable-linux-x64", "canary").is_none());
+        assert!(parse_artifact_dir_name("voxr-desktop-stable-linux-x64", "canary").is_none());
         assert_eq!(
-            parse_artifact_dir_name("fluxer-desktop-canary-windows-x64-signed", "canary").unwrap(),
+            parse_artifact_dir_name("voxr-desktop-canary-windows-x64-signed", "canary").unwrap(),
             ArtifactIdentity {
                 platform: "windows".to_string(),
                 arch: "x64".to_string(),
@@ -4892,11 +4892,11 @@ mod tests {
     fn handoff_artifact_name_only_marks_signed_windows_uploads() {
         assert_eq!(
             handoff_artifact_name("canary", "windows", "x64", DEFAULT_DESKTOP_VARIANT, true),
-            "fluxer-desktop-canary-windows-x64-signed"
+            "voxr-desktop-canary-windows-x64-signed"
         );
         assert_eq!(
             handoff_artifact_name("canary", "linux", "x64", DEFAULT_DESKTOP_VARIANT, true),
-            "fluxer-desktop-canary-linux-x64"
+            "voxr-desktop-canary-linux-x64"
         );
         assert_eq!(
             handoff_artifact_name(
@@ -4906,11 +4906,11 @@ mod tests {
                 WINDOWS_GAME_CAPTURE_DESKTOP_VARIANT,
                 false,
             ),
-            "fluxer-desktop-stable-windows-arm64-windows-game-capture"
+            "voxr-desktop-stable-windows-arm64-windows-game-capture"
         );
         assert_eq!(
             handoff_artifact_name("stable", "windows", "arm64", DEFAULT_DESKTOP_VARIANT, false),
-            "fluxer-desktop-stable-windows-arm64"
+            "voxr-desktop-stable-windows-arm64"
         );
     }
 
@@ -4958,17 +4958,17 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
     fn payload_artifact_dirs_prefer_signed_windows_artifacts() {
         let temp = tempfile::tempdir().unwrap();
         let artifacts = temp.path();
-        fs::create_dir_all(artifacts.join("fluxer-desktop-canary-windows-x64")).unwrap();
-        fs::create_dir_all(artifacts.join("fluxer-desktop-canary-windows-x64-signed")).unwrap();
+        fs::create_dir_all(artifacts.join("voxr-desktop-canary-windows-x64")).unwrap();
+        fs::create_dir_all(artifacts.join("voxr-desktop-canary-windows-x64-signed")).unwrap();
         fs::create_dir_all(
-            artifacts.join("fluxer-desktop-canary-windows-x64-windows-game-capture"),
+            artifacts.join("voxr-desktop-canary-windows-x64-windows-game-capture"),
         )
         .unwrap();
         fs::create_dir_all(
-            artifacts.join("fluxer-desktop-canary-windows-x64-windows-game-capture-signed"),
+            artifacts.join("voxr-desktop-canary-windows-x64-windows-game-capture-signed"),
         )
         .unwrap();
-        fs::create_dir_all(artifacts.join("fluxer-desktop-canary-linux-x64")).unwrap();
+        fs::create_dir_all(artifacts.join("voxr-desktop-canary-linux-x64")).unwrap();
         fs::create_dir_all(artifacts.join("unrelated")).unwrap();
 
         let selected = payload_artifact_dirs(artifacts, "canary")
@@ -4986,7 +4986,7 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
             selected,
             vec![
                 (
-                    "fluxer-desktop-canary-linux-x64".to_string(),
+                    "voxr-desktop-canary-linux-x64".to_string(),
                     ArtifactIdentity {
                         platform: "linux".to_string(),
                         arch: "x64".to_string(),
@@ -4995,7 +4995,7 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
                     },
                 ),
                 (
-                    "fluxer-desktop-canary-windows-x64-signed".to_string(),
+                    "voxr-desktop-canary-windows-x64-signed".to_string(),
                     ArtifactIdentity {
                         platform: "windows".to_string(),
                         arch: "x64".to_string(),
@@ -5004,7 +5004,7 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
                     },
                 ),
                 (
-                    "fluxer-desktop-canary-windows-x64-windows-game-capture-signed".to_string(),
+                    "voxr-desktop-canary-windows-x64-windows-game-capture-signed".to_string(),
                     ArtifactIdentity {
                         platform: "windows".to_string(),
                         arch: "x64".to_string(),
@@ -5020,12 +5020,12 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
     fn desktop_manifest_uses_checksum_detail_when_present() {
         let temp = tempfile::tempdir().unwrap();
         let root = temp.path();
-        write_file(&root.join("Fluxer-2026.520.1-x64.AppImage"), "app");
+        write_file(&root.join("Voxr-2026.520.1-x64.AppImage"), "app");
         write_file(
-            &root.join("Fluxer-2026.520.1-x64.AppImage.sha256"),
+            &root.join("Voxr-2026.520.1-x64.AppImage.sha256"),
             "abc123\n",
         );
-        write_file(&root.join("Fluxer-2026.520.1-x64.deb"), "deb");
+        write_file(&root.join("Voxr-2026.520.1-x64.deb"), "deb");
 
         let manifest = build_desktop_manifest(
             root,
@@ -5043,14 +5043,14 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
         assert_eq!(
             manifest.files.get("appimage"),
             Some(&DesktopManifestFile::Detail {
-                filename: "Fluxer-2026.520.1-x64.AppImage".to_string(),
+                filename: "Voxr-2026.520.1-x64.AppImage".to_string(),
                 sha256: "abc123".to_string(),
             })
         );
         assert_eq!(
             manifest.files.get("deb"),
             Some(&DesktopManifestFile::Name(
-                "Fluxer-2026.520.1-x64.deb".to_string()
+                "Voxr-2026.520.1-x64.deb".to_string()
             ))
         );
     }
@@ -5068,7 +5068,7 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
             minimum_system_version: Some("12.0".to_string()),
             files: BTreeMap::from([(
                 "zip".to_string(),
-                DesktopManifestFile::Name("Fluxer-2026.520.1-arm64.zip".to_string()),
+                DesktopManifestFile::Name("Voxr-2026.520.1-arm64.zip".to_string()),
             )]),
         };
 
@@ -5079,7 +5079,7 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
 
         assert_eq!(
             releases["releases"][0]["updateTo"]["url"],
-            "https://api.fluxer.app/dl/desktop-test/canary/darwin/arm64/Fluxer-2026.520.1-arm64.zip"
+            "https://api.voxr.app/dl/desktop-test/canary/darwin/arm64/Voxr-2026.520.1-arm64.zip"
         );
         assert!(temp.path().join("releases.json").exists());
     }
@@ -5101,7 +5101,7 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
         }
 
         let entries =
-            velopack_path_lengths(&archive_path, Path::new(r"C:\Users\a\AppData\Local\Fluxer"))
+            velopack_path_lengths(&archive_path, Path::new(r"C:\Users\a\AppData\Local\Voxr"))
                 .unwrap();
 
         assert_eq!(entries[0].name, "deep/path/with/long/file.txt");
@@ -5111,14 +5111,14 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
     #[test]
     fn windows_package_config_tracks_channel_and_arch() {
         let stable = windows_package_config("stable", "x64");
-        assert_eq!(stable.pack_id, "fluxer_desktop");
+        assert_eq!(stable.pack_id, "voxr_desktop");
         assert_eq!(stable.runtime, "win-x64");
-        assert_eq!(stable.main_exe, "Fluxer.exe");
+        assert_eq!(stable.main_exe, "Voxr.exe");
 
         let canary = windows_package_config("canary", "arm64");
-        assert_eq!(canary.pack_id, "fluxer_desktop_canary");
+        assert_eq!(canary.pack_id, "voxr_desktop_canary");
         assert_eq!(canary.runtime, "win-arm64");
-        assert_eq!(canary.main_exe, "Fluxer Canary.exe");
+        assert_eq!(canary.main_exe, "Voxr Canary.exe");
     }
 
     #[test]
@@ -5142,15 +5142,15 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
         let temp = tempfile::tempdir().unwrap();
         let output_dir = temp.path();
         write_file(
-            &output_dir.join("fluxer_desktop_canary-2026.810.1-Portable.zip"),
+            &output_dir.join("voxr_desktop_canary-2026.810.1-Portable.zip"),
             "velopack",
         );
         write_file(
-            &output_dir.join("fluxer_desktop_canary-2026.810.1-full.nupkg"),
+            &output_dir.join("voxr_desktop_canary-2026.810.1-full.nupkg"),
             "payload",
         );
         write_file(
-            &output_dir.join("Fluxer Canary-2026.810.1-win-arm64.exe"),
+            &output_dir.join("Voxr Canary-2026.810.1-win-arm64.exe"),
             "setup",
         );
         write_file(&output_dir.join("RELEASES"), "feed");
@@ -5163,18 +5163,18 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
             .filter_map(|path| file_name_string(&path).ok())
             .collect::<BTreeSet<_>>();
         assert!(!remaining.iter().any(|name| name.ends_with(".zip")));
-        assert!(remaining.contains("fluxer_desktop_canary-2026.810.1-full.nupkg"));
-        assert!(remaining.contains("Fluxer Canary-2026.810.1-win-arm64.exe"));
+        assert!(remaining.contains("voxr_desktop_canary-2026.810.1-full.nupkg"));
+        assert!(remaining.contains("Voxr Canary-2026.810.1-win-arm64.exe"));
         assert!(remaining.contains("RELEASES"));
     }
 
     #[test]
     fn percent_encoded_archive_names_match_their_decoded_inventory_entry() {
         assert_eq!(
-            percent_decode_archive_name("Fluxer%20Canary.exe"),
-            "Fluxer Canary.exe"
+            percent_decode_archive_name("Voxr%20Canary.exe"),
+            "Voxr Canary.exe"
         );
-        assert_eq!(percent_decode_archive_name("Fluxer.exe"), "Fluxer.exe");
+        assert_eq!(percent_decode_archive_name("Voxr.exe"), "Voxr.exe");
         assert_eq!(
             percent_decode_archive_name("win-game-capture.win32-arm64-msvc.node"),
             "win-game-capture.win32-arm64-msvc.node"
@@ -5186,22 +5186,22 @@ export const CHANNEL_DISPLAY_NAME = BUILD_CHANNEL;\n"
     #[test]
     fn canary_nupkg_inventory_accepts_percent_encoded_main_executable() {
         let root = Path::new("lib").join("app");
-        let files = expected_windows_pe_inventory("arm64", "Fluxer Canary.exe")
+        let files = expected_windows_pe_inventory("arm64", "Voxr Canary.exe")
             .into_iter()
             .map(|name| {
-                if name == "Fluxer Canary.exe" {
-                    return root.join("Fluxer%20Canary.exe");
+                if name == "Voxr Canary.exe" {
+                    return root.join("Voxr%20Canary.exe");
                 }
                 root.join(name)
             })
             .collect::<Vec<_>>();
-        assert_expected_windows_pe_inventory(&root, &files, "arm64", "Fluxer Canary.exe").unwrap();
+        assert_expected_windows_pe_inventory(&root, &files, "arm64", "Voxr Canary.exe").unwrap();
     }
 
     #[test]
     fn known_optional_windows_pe_inventory_never_repeats_a_required_binary() {
         for arch in ["x64", "arm64"] {
-            for main_exe in ["Fluxer.exe", "Fluxer Canary.exe"] {
+            for main_exe in ["Voxr.exe", "Voxr Canary.exe"] {
                 assert_eq!(
                     contradictory_optional_windows_pe_inventory(arch, main_exe),
                     Vec::<String>::new(),

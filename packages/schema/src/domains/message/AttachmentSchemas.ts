@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {MessageAttachmentFlags, MessageAttachmentFlagsDescriptions} from '@fluxer/constants/src/ChannelConstants';
-import {FilenameType} from '@fluxer/schema/src/primitives/FileValidators';
+import {MessageAttachmentFlags, MessageAttachmentFlagsDescriptions} from '@voxr/constants/src/ChannelConstants';
+import {FilenameType} from '@voxr/schema/src/primitives/FileValidators';
 import {
 	coerceNumberFromString,
 	createBitflagInt32Type,
@@ -9,7 +9,7 @@ import {
 	Int32Type,
 	NonNegativeSafeIntegerType,
 	SnowflakeType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const ClientAttachmentBase = z.object({

@@ -4,23 +4,23 @@ import {
 	GIFT_CODE_DURATION_TYPE_DEFINITIONS,
 	MAX_GIFT_CODES_PER_REQUEST,
 	MAX_GIFT_DURATION_QUANTITY,
-} from '@fluxer/constants/src/GiftCodeConstants';
+} from '@voxr/constants/src/GiftCodeConstants';
 import {
 	CONTENT_WARNING_TEXT_MAX_LENGTH,
 	SystemChannelFlags,
 	SystemChannelFlagsDescriptions,
-} from '@fluxer/constants/src/GuildConstants';
-import {LIMIT_KEYS} from '@fluxer/constants/src/LimitConfigMetadata';
-import {ADMIN_ACL_COUNT, AdminAclType} from '@fluxer/schema/src/domains/admin/AdminAclType';
-import {GuildAdminResponse} from '@fluxer/schema/src/domains/admin/AdminGuildSchemas';
-import {UserAdminResponseSchema} from '@fluxer/schema/src/domains/admin/AdminUserSchemas';
+} from '@voxr/constants/src/GuildConstants';
+import {LIMIT_KEYS} from '@voxr/constants/src/LimitConfigMetadata';
+import {ADMIN_ACL_COUNT, AdminAclType} from '@voxr/schema/src/domains/admin/AdminAclType';
+import {GuildAdminResponse} from '@voxr/schema/src/domains/admin/AdminGuildSchemas';
+import {UserAdminResponseSchema} from '@voxr/schema/src/domains/admin/AdminUserSchemas';
 import {
 	GatewayRolloutConfigResponse,
 	GatewayRolloutConfigUpdateRequest,
-} from '@fluxer/schema/src/domains/admin/GatewayRolloutSchemas';
-import {GuildMemberResponse} from '@fluxer/schema/src/domains/guild/GuildMemberSchemas';
-import {MessageResponseSchema} from '@fluxer/schema/src/domains/message/MessageResponseSchemas';
-import {ChannelTypeSchema} from '@fluxer/schema/src/primitives/ChannelValidators';
+} from '@voxr/schema/src/domains/admin/GatewayRolloutSchemas';
+import {GuildMemberResponse} from '@voxr/schema/src/domains/guild/GuildMemberSchemas';
+import {MessageResponseSchema} from '@voxr/schema/src/domains/message/MessageResponseSchemas';
+import {ChannelTypeSchema} from '@voxr/schema/src/primitives/ChannelValidators';
 import {
 	ContentWarningLevelSchema,
 	DefaultMessageNotificationsSchema,
@@ -28,9 +28,9 @@ import {
 	GuildMFALevelSchema,
 	GuildVerificationLevelSchema,
 	NSFWLevelSchema,
-} from '@fluxer/schema/src/primitives/GuildValidators';
-import {PermissionStringType} from '@fluxer/schema/src/primitives/PermissionValidators';
-import {createQueryIntegerType, QueryBooleanType} from '@fluxer/schema/src/primitives/QueryValidators';
+} from '@voxr/schema/src/primitives/GuildValidators';
+import {PermissionStringType} from '@voxr/schema/src/primitives/PermissionValidators';
+import {createQueryIntegerType, QueryBooleanType} from '@voxr/schema/src/primitives/QueryValidators';
 import {
 	createBitflagInt32Type,
 	createInt32EnumType,
@@ -42,8 +42,8 @@ import {
 	SnowflakeStringType,
 	SnowflakeType,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {EmailType} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {EmailType} from '@voxr/schema/src/primitives/UserValidators';
 import {z} from 'zod';
 
 const ReportStatusSchema = withOpenApiType(
@@ -1232,7 +1232,7 @@ const AdminGuildRoleSummarySchema = z.object({
 	name: createStringType(1, 100),
 	color: Int32Type,
 	position: Int32Type,
-	permissions: PermissionStringType.describe('fluxer:PermissionStringType The role permissions bitfield'),
+	permissions: PermissionStringType.describe('voxr:PermissionStringType The role permissions bitfield'),
 	hoist: z.boolean(),
 	mentionable: z.boolean(),
 });

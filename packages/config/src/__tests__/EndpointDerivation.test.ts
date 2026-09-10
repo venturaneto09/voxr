@@ -8,7 +8,7 @@ import {
 	deriveEndpointsFromDomain,
 	normalizePublicEndpoint,
 	parsePublicOrigin,
-} from '@fluxer/config/src/EndpointDerivation';
+} from '@voxr/config/src/EndpointDerivation';
 import {describe, expect, test} from 'vitest';
 
 describe('buildUrl', () => {
@@ -46,42 +46,42 @@ describe('buildUrl', () => {
 
 describe('deriveDomain', () => {
 	const baseConfig: DomainConfig = {
-		base_domain: 'fluxer.dev',
+		base_domain: 'voxr.dev',
 		public_scheme: 'https',
 		internal_scheme: 'http',
 	};
 	test('uses base domain for api endpoint', () => {
-		expect(deriveDomain('api', baseConfig)).toBe('fluxer.dev');
+		expect(deriveDomain('api', baseConfig)).toBe('voxr.dev');
 	});
 	test('uses base domain for app endpoint', () => {
-		expect(deriveDomain('app', baseConfig)).toBe('fluxer.dev');
+		expect(deriveDomain('app', baseConfig)).toBe('voxr.dev');
 	});
 	test('uses base domain for gateway endpoint', () => {
-		expect(deriveDomain('gateway', baseConfig)).toBe('fluxer.dev');
+		expect(deriveDomain('gateway', baseConfig)).toBe('voxr.dev');
 	});
 	test('uses base domain for media endpoint', () => {
-		expect(deriveDomain('media', baseConfig)).toBe('fluxer.dev');
+		expect(deriveDomain('media', baseConfig)).toBe('voxr.dev');
 	});
 	test('uses custom static CDN domain when specified', () => {
-		const config = {...baseConfig, static_cdn_domain: 'cdn.fluxer.dev'};
-		expect(deriveDomain('static_cdn', config)).toBe('cdn.fluxer.dev');
+		const config = {...baseConfig, static_cdn_domain: 'cdn.voxr.dev'};
+		expect(deriveDomain('static_cdn', config)).toBe('cdn.voxr.dev');
 	});
 	test('uses base domain for static CDN when custom domain not specified', () => {
-		expect(deriveDomain('static_cdn', baseConfig)).toBe('fluxer.dev');
+		expect(deriveDomain('static_cdn', baseConfig)).toBe('voxr.dev');
 	});
 	test('uses custom invite domain when specified', () => {
-		const config = {...baseConfig, invite_domain: 'fluxer.gg'};
-		expect(deriveDomain('invite', config)).toBe('fluxer.gg');
+		const config = {...baseConfig, invite_domain: 'voxr.gg'};
+		expect(deriveDomain('invite', config)).toBe('voxr.gg');
 	});
 	test('uses base domain for invite when custom domain not specified', () => {
-		expect(deriveDomain('invite', baseConfig)).toBe('fluxer.dev');
+		expect(deriveDomain('invite', baseConfig)).toBe('voxr.dev');
 	});
 	test('uses custom gift domain when specified', () => {
-		const config = {...baseConfig, gift_domain: 'fluxer.gift'};
-		expect(deriveDomain('gift', config)).toBe('fluxer.gift');
+		const config = {...baseConfig, gift_domain: 'voxr.gift'};
+		expect(deriveDomain('gift', config)).toBe('voxr.gift');
 	});
 	test('uses base domain for gift when custom domain not specified', () => {
-		expect(deriveDomain('gift', baseConfig)).toBe('fluxer.dev');
+		expect(deriveDomain('gift', baseConfig)).toBe('voxr.dev');
 	});
 });
 
@@ -128,7 +128,7 @@ describe('deriveEndpointsFromDomain', () => {
 	});
 	describe('production environment (standard HTTPS port)', () => {
 		const prodConfig: DomainConfig = {
-			base_domain: 'fluxer.app',
+			base_domain: 'voxr.app',
 			public_scheme: 'https',
 			internal_scheme: 'http',
 			public_port: 443,
@@ -136,39 +136,39 @@ describe('deriveEndpointsFromDomain', () => {
 		};
 		const endpoints = deriveEndpointsFromDomain(prodConfig);
 		test('derives api endpoint without port', () => {
-			expect(endpoints.api).toBe('https://fluxer.app/api');
+			expect(endpoints.api).toBe('https://voxr.app/api');
 		});
 		test('derives api client endpoint without port', () => {
-			expect(endpoints.api_client).toBe('https://fluxer.app/api');
+			expect(endpoints.api_client).toBe('https://voxr.app/api');
 		});
 		test('derives app endpoint without port', () => {
-			expect(endpoints.app).toBe('https://fluxer.app');
+			expect(endpoints.app).toBe('https://voxr.app');
 		});
 		test('derives gateway endpoint with wss scheme without port', () => {
-			expect(endpoints.gateway).toBe('wss://fluxer.app/gateway');
+			expect(endpoints.gateway).toBe('wss://voxr.app/gateway');
 		});
 		test('derives media endpoint without port', () => {
-			expect(endpoints.media).toBe('https://fluxer.app/media');
+			expect(endpoints.media).toBe('https://voxr.app/media');
 		});
 		test('derives static CDN endpoint without port', () => {
-			expect(endpoints.static_cdn).toBe('https://fluxer.app');
+			expect(endpoints.static_cdn).toBe('https://voxr.app');
 		});
 		test('derives admin endpoint without port', () => {
-			expect(endpoints.admin).toBe('https://fluxer.app/admin');
+			expect(endpoints.admin).toBe('https://voxr.app/admin');
 		});
 		test('derives marketing endpoint without port', () => {
-			expect(endpoints.marketing).toBe('https://fluxer.app/marketing');
+			expect(endpoints.marketing).toBe('https://voxr.app/marketing');
 		});
 		test('derives invite endpoint without port', () => {
-			expect(endpoints.invite).toBe('https://fluxer.app/invite');
+			expect(endpoints.invite).toBe('https://voxr.app/invite');
 		});
 		test('derives gift endpoint without port', () => {
-			expect(endpoints.gift).toBe('https://fluxer.app/gift');
+			expect(endpoints.gift).toBe('https://voxr.app/gift');
 		});
 	});
 	describe('staging environment (custom port)', () => {
 		const stagingConfig: DomainConfig = {
-			base_domain: 'staging.fluxer.dev',
+			base_domain: 'staging.voxr.dev',
 			public_scheme: 'https',
 			internal_scheme: 'http',
 			public_port: 8443,
@@ -176,54 +176,54 @@ describe('deriveEndpointsFromDomain', () => {
 		};
 		const endpoints = deriveEndpointsFromDomain(stagingConfig);
 		test('derives api endpoint with custom port', () => {
-			expect(endpoints.api).toBe('https://staging.fluxer.dev:8443/api');
+			expect(endpoints.api).toBe('https://staging.voxr.dev:8443/api');
 		});
 		test('derives api client endpoint with custom port', () => {
-			expect(endpoints.api_client).toBe('https://staging.fluxer.dev:8443/api');
+			expect(endpoints.api_client).toBe('https://staging.voxr.dev:8443/api');
 		});
 		test('derives app endpoint with custom port', () => {
-			expect(endpoints.app).toBe('https://staging.fluxer.dev:8443');
+			expect(endpoints.app).toBe('https://staging.voxr.dev:8443');
 		});
 		test('derives gateway endpoint with wss and custom port', () => {
-			expect(endpoints.gateway).toBe('wss://staging.fluxer.dev:8443/gateway');
+			expect(endpoints.gateway).toBe('wss://staging.voxr.dev:8443/gateway');
 		});
 	});
 	describe('custom CDN domain', () => {
 		const staticCdnConfig: DomainConfig = {
-			base_domain: 'fluxer.app',
+			base_domain: 'voxr.app',
 			public_scheme: 'https',
 			internal_scheme: 'http',
 			public_port: 443,
-			static_cdn_domain: 'cdn.fluxer.app',
+			static_cdn_domain: 'cdn.voxr.app',
 		};
 		const endpoints = deriveEndpointsFromDomain(staticCdnConfig);
 		test('uses custom CDN domain', () => {
-			expect(endpoints.static_cdn).toBe('https://cdn.fluxer.app');
+			expect(endpoints.static_cdn).toBe('https://cdn.voxr.app');
 		});
 		test('other endpoints use base domain', () => {
-			expect(endpoints.api).toBe('https://fluxer.app/api');
-			expect(endpoints.app).toBe('https://fluxer.app');
+			expect(endpoints.api).toBe('https://voxr.app/api');
+			expect(endpoints.app).toBe('https://voxr.app');
 		});
 	});
 	describe('custom invite and gift domains', () => {
 		const customConfig: DomainConfig = {
-			base_domain: 'fluxer.app',
+			base_domain: 'voxr.app',
 			public_scheme: 'https',
 			internal_scheme: 'http',
 			public_port: 443,
-			invite_domain: 'fluxer.gg',
-			gift_domain: 'fluxer.gift',
+			invite_domain: 'voxr.gg',
+			gift_domain: 'voxr.gift',
 		};
 		const endpoints = deriveEndpointsFromDomain(customConfig);
 		test('uses custom invite domain', () => {
-			expect(endpoints.invite).toBe('https://fluxer.gg/invite');
+			expect(endpoints.invite).toBe('https://voxr.gg/invite');
 		});
 		test('uses custom gift domain', () => {
-			expect(endpoints.gift).toBe('https://fluxer.gift/gift');
+			expect(endpoints.gift).toBe('https://voxr.gift/gift');
 		});
 		test('other endpoints use base domain', () => {
-			expect(endpoints.api).toBe('https://fluxer.app/api');
-			expect(endpoints.app).toBe('https://fluxer.app');
+			expect(endpoints.api).toBe('https://voxr.app/api');
+			expect(endpoints.app).toBe('https://voxr.app');
 		});
 	});
 	describe('WebSocket scheme derivation', () => {
@@ -239,35 +239,35 @@ describe('deriveEndpointsFromDomain', () => {
 		});
 		test('derives wss from https', () => {
 			const config: DomainConfig = {
-				base_domain: 'fluxer.app',
+				base_domain: 'voxr.app',
 				public_scheme: 'https',
 				internal_scheme: 'http',
 				public_port: 443,
 			};
 			const endpoints = deriveEndpointsFromDomain(config);
-			expect(endpoints.gateway).toBe('wss://fluxer.app/gateway');
+			expect(endpoints.gateway).toBe('wss://voxr.app/gateway');
 		});
 	});
 	describe('canary environment', () => {
 		const canaryConfig: DomainConfig = {
-			base_domain: 'canary.fluxer.app',
+			base_domain: 'canary.voxr.app',
 			public_scheme: 'https',
 			internal_scheme: 'http',
 			public_port: 443,
-			static_cdn_domain: 'cdn-canary.fluxer.app',
+			static_cdn_domain: 'cdn-canary.voxr.app',
 		};
 		const endpoints = deriveEndpointsFromDomain(canaryConfig);
 		test('derives api endpoint for canary', () => {
-			expect(endpoints.api).toBe('https://canary.fluxer.app/api');
+			expect(endpoints.api).toBe('https://canary.voxr.app/api');
 		});
 		test('derives app endpoint for canary', () => {
-			expect(endpoints.app).toBe('https://canary.fluxer.app');
+			expect(endpoints.app).toBe('https://canary.voxr.app');
 		});
 		test('derives gateway endpoint for canary', () => {
-			expect(endpoints.gateway).toBe('wss://canary.fluxer.app/gateway');
+			expect(endpoints.gateway).toBe('wss://canary.voxr.app/gateway');
 		});
 		test('uses custom CDN domain for canary', () => {
-			expect(endpoints.static_cdn).toBe('https://cdn-canary.fluxer.app');
+			expect(endpoints.static_cdn).toBe('https://cdn-canary.voxr.app');
 		});
 	});
 	describe('edge cases', () => {
@@ -307,93 +307,93 @@ describe('deriveEndpointsFromDomain', () => {
 
 describe('normalizePublicEndpoint', () => {
 	test('leaves a default https install untouched', () => {
-		expect(normalizePublicEndpoint('https://fluxer.dev', 'fluxer.dev', 443)).toBe('https://fluxer.dev');
-		expect(normalizePublicEndpoint('https://fluxer.dev/media', 'fluxer.dev', 443)).toBe('https://fluxer.dev/media');
-		expect(normalizePublicEndpoint('wss://fluxer.dev/gateway', 'fluxer.dev', 443)).toBe('wss://fluxer.dev/gateway');
+		expect(normalizePublicEndpoint('https://voxr.dev', 'voxr.dev', 443)).toBe('https://voxr.dev');
+		expect(normalizePublicEndpoint('https://voxr.dev/media', 'voxr.dev', 443)).toBe('https://voxr.dev/media');
+		expect(normalizePublicEndpoint('wss://voxr.dev/gateway', 'voxr.dev', 443)).toBe('wss://voxr.dev/gateway');
 	});
 	test('leaves a default http install untouched', () => {
-		expect(normalizePublicEndpoint('http://fluxer.dev', 'fluxer.dev', 80)).toBe('http://fluxer.dev');
-		expect(normalizePublicEndpoint('http://fluxer.dev/media', 'fluxer.dev', 80)).toBe('http://fluxer.dev/media');
-		expect(normalizePublicEndpoint('ws://fluxer.dev/gateway', 'fluxer.dev', 80)).toBe('ws://fluxer.dev/gateway');
+		expect(normalizePublicEndpoint('http://voxr.dev', 'voxr.dev', 80)).toBe('http://voxr.dev');
+		expect(normalizePublicEndpoint('http://voxr.dev/media', 'voxr.dev', 80)).toBe('http://voxr.dev/media');
+		expect(normalizePublicEndpoint('ws://voxr.dev/gateway', 'voxr.dev', 80)).toBe('ws://voxr.dev/gateway');
 	});
 	test('inserts a non-standard port', () => {
-		expect(normalizePublicEndpoint('https://fluxer.dev', 'fluxer.dev', 8443)).toBe('https://fluxer.dev:8443');
-		expect(normalizePublicEndpoint('https://fluxer.dev/media', 'fluxer.dev', 8443)).toBe(
-			'https://fluxer.dev:8443/media',
+		expect(normalizePublicEndpoint('https://voxr.dev', 'voxr.dev', 8443)).toBe('https://voxr.dev:8443');
+		expect(normalizePublicEndpoint('https://voxr.dev/media', 'voxr.dev', 8443)).toBe(
+			'https://voxr.dev:8443/media',
 		);
-		expect(normalizePublicEndpoint('wss://fluxer.dev/gateway', 'fluxer.dev', 8443)).toBe(
-			'wss://fluxer.dev:8443/gateway',
+		expect(normalizePublicEndpoint('wss://voxr.dev/gateway', 'voxr.dev', 8443)).toBe(
+			'wss://voxr.dev:8443/gateway',
 		);
 	});
 	test('judges standard ports against the url scheme, not the public scheme', () => {
-		expect(normalizePublicEndpoint('http://fluxer.dev/media', 'fluxer.dev', 443)).toBe('http://fluxer.dev:443/media');
-		expect(normalizePublicEndpoint('https://fluxer.dev/media', 'fluxer.dev', 80)).toBe('https://fluxer.dev:80/media');
+		expect(normalizePublicEndpoint('http://voxr.dev/media', 'voxr.dev', 443)).toBe('http://voxr.dev:443/media');
+		expect(normalizePublicEndpoint('https://voxr.dev/media', 'voxr.dev', 80)).toBe('https://voxr.dev:80/media');
 	});
 	test('leaves a foreign host untouched', () => {
-		expect(normalizePublicEndpoint('https://cdn.example.net/media', 'fluxer.dev', 8443)).toBe(
+		expect(normalizePublicEndpoint('https://cdn.example.net/media', 'voxr.dev', 8443)).toBe(
 			'https://cdn.example.net/media',
 		);
-		expect(normalizePublicEndpoint('https://sub.fluxer.dev', 'fluxer.dev', 8443)).toBe('https://sub.fluxer.dev');
+		expect(normalizePublicEndpoint('https://sub.voxr.dev', 'voxr.dev', 8443)).toBe('https://sub.voxr.dev');
 	});
 	test('leaves an already ported url untouched', () => {
-		expect(normalizePublicEndpoint('https://fluxer.dev:8443/media', 'fluxer.dev', 8443)).toBe(
-			'https://fluxer.dev:8443/media',
+		expect(normalizePublicEndpoint('https://voxr.dev:8443/media', 'voxr.dev', 8443)).toBe(
+			'https://voxr.dev:8443/media',
 		);
-		expect(normalizePublicEndpoint('https://fluxer.dev:9000/media', 'fluxer.dev', 8443)).toBe(
-			'https://fluxer.dev:9000/media',
+		expect(normalizePublicEndpoint('https://voxr.dev:9000/media', 'voxr.dev', 8443)).toBe(
+			'https://voxr.dev:9000/media',
 		);
-		expect(normalizePublicEndpoint('https://fluxer.dev:443/media', 'fluxer.dev', 8443)).toBe(
-			'https://fluxer.dev:443/media',
+		expect(normalizePublicEndpoint('https://voxr.dev:443/media', 'voxr.dev', 8443)).toBe(
+			'https://voxr.dev:443/media',
 		);
 	});
 	test('is idempotent', () => {
-		const once = normalizePublicEndpoint('https://fluxer.dev/media', 'fluxer.dev', 8443);
-		expect(normalizePublicEndpoint(once, 'fluxer.dev', 8443)).toBe(once);
+		const once = normalizePublicEndpoint('https://voxr.dev/media', 'voxr.dev', 8443);
+		expect(normalizePublicEndpoint(once, 'voxr.dev', 8443)).toBe(once);
 	});
 	test('preserves path, query, fragment, trailing slash, and case', () => {
-		expect(normalizePublicEndpoint('https://fluxer.dev/Media/', 'fluxer.dev', 8443)).toBe(
-			'https://fluxer.dev:8443/Media/',
+		expect(normalizePublicEndpoint('https://voxr.dev/Media/', 'voxr.dev', 8443)).toBe(
+			'https://voxr.dev:8443/Media/',
 		);
-		expect(normalizePublicEndpoint('https://fluxer.dev/media?a=B#Frag', 'fluxer.dev', 8443)).toBe(
-			'https://fluxer.dev:8443/media?a=B#Frag',
+		expect(normalizePublicEndpoint('https://voxr.dev/media?a=B#Frag', 'voxr.dev', 8443)).toBe(
+			'https://voxr.dev:8443/media?a=B#Frag',
 		);
-		expect(normalizePublicEndpoint('https://fluxer.dev?a=B', 'fluxer.dev', 8443)).toBe('https://fluxer.dev:8443?a=B');
-		expect(normalizePublicEndpoint('https://fluxer.dev#Frag', 'fluxer.dev', 8443)).toBe('https://fluxer.dev:8443#Frag');
-		expect(normalizePublicEndpoint('https://user:pw@fluxer.dev/media', 'fluxer.dev', 8443)).toBe(
-			'https://user:pw@fluxer.dev:8443/media',
+		expect(normalizePublicEndpoint('https://voxr.dev?a=B', 'voxr.dev', 8443)).toBe('https://voxr.dev:8443?a=B');
+		expect(normalizePublicEndpoint('https://voxr.dev#Frag', 'voxr.dev', 8443)).toBe('https://voxr.dev:8443#Frag');
+		expect(normalizePublicEndpoint('https://user:pw@voxr.dev/media', 'voxr.dev', 8443)).toBe(
+			'https://user:pw@voxr.dev:8443/media',
 		);
 	});
 	test('matches the host case-insensitively and ignores a trailing dot', () => {
-		expect(normalizePublicEndpoint('https://FLUXER.dev/media', 'fluxer.dev', 8443)).toBe(
-			'https://FLUXER.dev:8443/media',
+		expect(normalizePublicEndpoint('https://VOXR.dev/media', 'voxr.dev', 8443)).toBe(
+			'https://VOXR.dev:8443/media',
 		);
-		expect(normalizePublicEndpoint('https://fluxer.dev./media', 'fluxer.dev', 8443)).toBe(
-			'https://fluxer.dev.:8443/media',
+		expect(normalizePublicEndpoint('https://voxr.dev./media', 'voxr.dev', 8443)).toBe(
+			'https://voxr.dev.:8443/media',
 		);
-		expect(normalizePublicEndpoint('https://fluxer.dev/media', 'FLUXER.dev.', 8443)).toBe(
-			'https://fluxer.dev:8443/media',
+		expect(normalizePublicEndpoint('https://voxr.dev/media', 'VOXR.dev.', 8443)).toBe(
+			'https://voxr.dev:8443/media',
 		);
 	});
 	test('leaves unparseable and non-http values untouched', () => {
-		expect(normalizePublicEndpoint('not a url', 'fluxer.dev', 8443)).toBe('not a url');
-		expect(normalizePublicEndpoint('', 'fluxer.dev', 8443)).toBe('');
-		expect(normalizePublicEndpoint('android:apk-key-hash:abc', 'fluxer.dev', 8443)).toBe('android:apk-key-hash:abc');
-		expect(normalizePublicEndpoint('https://fluxer.dev:/media', 'fluxer.dev', 8443)).toBe('https://fluxer.dev:/media');
+		expect(normalizePublicEndpoint('not a url', 'voxr.dev', 8443)).toBe('not a url');
+		expect(normalizePublicEndpoint('', 'voxr.dev', 8443)).toBe('');
+		expect(normalizePublicEndpoint('android:apk-key-hash:abc', 'voxr.dev', 8443)).toBe('android:apk-key-hash:abc');
+		expect(normalizePublicEndpoint('https://voxr.dev:/media', 'voxr.dev', 8443)).toBe('https://voxr.dev:/media');
 	});
 	test('leaves malformed authorities untouched', () => {
-		expect(normalizePublicEndpoint('https:fluxer.dev/media', 'fluxer.dev', 8443)).toBe('https:fluxer.dev/media');
-		expect(normalizePublicEndpoint('https:/fluxer.dev/media', 'fluxer.dev', 8443)).toBe('https:/fluxer.dev/media');
-		expect(normalizePublicEndpoint('https:////fluxer.dev/media', 'fluxer.dev', 8443)).toBe(
-			'https:////fluxer.dev/media',
+		expect(normalizePublicEndpoint('https:voxr.dev/media', 'voxr.dev', 8443)).toBe('https:voxr.dev/media');
+		expect(normalizePublicEndpoint('https:/voxr.dev/media', 'voxr.dev', 8443)).toBe('https:/voxr.dev/media');
+		expect(normalizePublicEndpoint('https:////voxr.dev/media', 'voxr.dev', 8443)).toBe(
+			'https:////voxr.dev/media',
 		);
-		expect(normalizePublicEndpoint('https://fluxer.dev\\media', 'fluxer.dev', 8443)).toBe(
-			'https://fluxer.dev:8443\\media',
+		expect(normalizePublicEndpoint('https://voxr.dev\\media', 'voxr.dev', 8443)).toBe(
+			'https://voxr.dev:8443\\media',
 		);
 	});
 	test('leaves everything untouched without a usable port or base domain', () => {
-		expect(normalizePublicEndpoint('https://fluxer.dev/media', 'fluxer.dev')).toBe('https://fluxer.dev/media');
-		expect(normalizePublicEndpoint('https://fluxer.dev/media', '', 8443)).toBe('https://fluxer.dev/media');
-		expect(normalizePublicEndpoint('https://fluxer.dev/media', '   ', 8443)).toBe('https://fluxer.dev/media');
+		expect(normalizePublicEndpoint('https://voxr.dev/media', 'voxr.dev')).toBe('https://voxr.dev/media');
+		expect(normalizePublicEndpoint('https://voxr.dev/media', '', 8443)).toBe('https://voxr.dev/media');
+		expect(normalizePublicEndpoint('https://voxr.dev/media', '   ', 8443)).toBe('https://voxr.dev/media');
 	});
 });
 

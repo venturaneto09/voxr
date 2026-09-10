@@ -5,8 +5,8 @@ import {
 	getErrorMessageResult,
 	getErrorMessageUnsafe,
 	hasErrorLocale,
-} from '@fluxer/errors/src/i18n/ErrorI18n';
-import type {ErrorI18nKey} from '@fluxer/errors/src/i18n/ErrorI18nTypes.generated';
+} from '@voxr/errors/src/i18n/ErrorI18n';
+import type {ErrorI18nKey} from '@voxr/errors/src/i18n/ErrorI18nTypes.generated';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 
 describe('ErrorI18n', () => {
@@ -144,7 +144,7 @@ describe('ErrorI18n', () => {
 		it.each([
 			[
 				'PHONE_COUNTRY_NOT_SUPPORTED',
-				"We don't send verification texts to this country. Use a mobile number from another country, or email support@fluxer.app and a person will review your account.",
+				"We don't send verification texts to this country. Use a mobile number from another country, or email support@voxr.app and a person will review your account.",
 			],
 			[
 				'PHONE_INBOUND_VERIFICATION_REQUIRED',
@@ -156,15 +156,15 @@ describe('ErrorI18n', () => {
 			],
 			[
 				'PHONE_NUMBER_NOT_IN_SERVICE',
-				"Your carrier says this number isn't in service. Check the number and try again, or email support@fluxer.app if it's correct.",
+				"Your carrier says this number isn't in service. Check the number and try again, or email support@voxr.app if it's correct.",
 			],
 			[
 				'PHONE_NUMBER_NOT_MOBILE',
-				"This isn't a mobile number, so it can't receive our text. Use a mobile number, or email support@fluxer.app if you think that's wrong.",
+				"This isn't a mobile number, so it can't receive our text. Use a mobile number, or email support@voxr.app if you think that's wrong.",
 			],
 			[
 				'PHONE_VERIFICATION_NEEDS_REVIEW',
-				"We couldn't verify this number automatically. Email support@fluxer.app and a person will review your account.",
+				"We couldn't verify this number automatically. Email support@voxr.app and a person will review your account.",
 			],
 		])('resolves %s to its own message', (code, expected) => {
 			const message = getErrorMessageUnsafe(code, 'en-US');
@@ -177,7 +177,7 @@ describe('ErrorI18n', () => {
 			'PHONE_NUMBER_NOT_MOBILE',
 			'PHONE_VERIFICATION_NEEDS_REVIEW',
 		])('routes %s to support', (code) => {
-			expect(getErrorMessageUnsafe(code, 'en-US')).toContain('support@fluxer.app');
+			expect(getErrorMessageUnsafe(code, 'en-US')).toContain('support@voxr.app');
 		});
 		it('blames us for a lookup outage and invites the same number again', () => {
 			const message = getErrorMessage('phone.lookup_unavailable', 'en-US');

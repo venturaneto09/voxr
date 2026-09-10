@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import {SnowflakeTypeRef} from '@fluxer/openapi/src/converters/BuiltInSchemas';
-import type {OpenAPIParameter} from '@fluxer/openapi/src/Types';
+import {SnowflakeTypeRef} from '@voxr/openapi/src/converters/BuiltInSchemas';
+import type {OpenAPIParameter} from '@voxr/openapi/src/Types';
 
 const COMMON_PATH_PARAMETERS: Record<string, OpenAPIParameter> = {
 	guild_id: {

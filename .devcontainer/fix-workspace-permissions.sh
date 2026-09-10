@@ -24,7 +24,7 @@ repair_tree() {
 }
 
 for path in \
-	/workspaces/fluxer/target \
+	/workspaces/voxr/target \
 	/home/vscode/.cargo/registry \
 	/home/vscode/.cargo/git \
 	/home/vscode/.local \
@@ -36,4 +36,4 @@ while IFS= read -r -d '' path; do
 	if mountpoint -q "$path"; then
 		repair_tree "$path"
 	fi
-done < <(find /workspaces/fluxer -maxdepth 4 -type d -name node_modules -prune -print0)
+done < <(find /workspaces/voxr -maxdepth 4 -type d -name node_modules -prune -print0)

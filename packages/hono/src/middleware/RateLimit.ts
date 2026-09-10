@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {matchesAnyPathPattern} from '@fluxer/hono/src/middleware/utils/PathMatchers';
-import {extractClientIp} from '@fluxer/ip_utils/src/ClientIp';
+import {matchesAnyPathPattern} from '@voxr/hono/src/middleware/utils/PathMatchers';
+import {extractClientIp} from '@voxr/ip_utils/src/ClientIp';
 import type {MiddlewareHandler} from 'hono';
 
 export interface RateLimitResult {

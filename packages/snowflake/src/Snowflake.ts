@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {FLUXER_EPOCH as FLUXER_EPOCH_NUMBER} from '@fluxer/constants/src/Core';
+import {VOXR_EPOCH as VOXR_EPOCH_NUMBER} from '@voxr/constants/src/Core';
 
-export const FLUXER_EPOCH = BigInt(FLUXER_EPOCH_NUMBER);
+export const VOXR_EPOCH = BigInt(VOXR_EPOCH_NUMBER);
 export const WORKER_ID_BITS = 10n;
 export const SEQUENCE_BITS = 12n;
 const WORKER_ID_SHIFT = SEQUENCE_BITS;
@@ -84,15 +84,15 @@ function assertValidSequence(sequence: number): bigint {
 
 function toRelativeTimestamp(timestamp: number | bigint): bigint {
 	const timestampBigInt = BigInt(timestamp);
-	const relativeTimestamp = timestampBigInt - FLUXER_EPOCH;
+	const relativeTimestamp = timestampBigInt - VOXR_EPOCH;
 	if (relativeTimestamp < 0n) {
-		throw new Error('Timestamp must be on or after the Fluxer epoch');
+		throw new Error('Timestamp must be on or after the Voxr epoch');
 	}
 	return relativeTimestamp;
 }
 
 function toEpochTimestamp(relativeTimestamp: bigint): bigint {
-	return relativeTimestamp + FLUXER_EPOCH;
+	return relativeTimestamp + VOXR_EPOCH;
 }
 
 function toSnowflakeBitParts(snowflake: bigint): SnowflakeBitParts {
@@ -108,7 +108,7 @@ function createSnowflakeBigInt(relativeTimestamp: bigint, workerId: bigint, sequ
 }
 
 function getTimestampFromNow(now: () => number): bigint {
-	return BigInt(now()) - FLUXER_EPOCH;
+	return BigInt(now()) - VOXR_EPOCH;
 }
 
 export class SnowflakeGenerator {
@@ -212,7 +212,7 @@ export function isValidSnowflake(value: unknown): value is bigint {
 	const bitParts = toSnowflakeBitParts(value);
 	const timestamp = toEpochTimestamp(bitParts.relativeTimestamp);
 	const timestampNumber = Number(timestamp);
-	if (timestampNumber < Number(FLUXER_EPOCH)) {
+	if (timestampNumber < Number(VOXR_EPOCH)) {
 		return false;
 	}
 	if (timestampNumber > Date.now() + MAX_FUTURE_DRIFT_MS) {

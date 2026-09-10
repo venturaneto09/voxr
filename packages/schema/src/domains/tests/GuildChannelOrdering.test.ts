@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ChannelTypes} from '@fluxer/constants/src/ChannelConstants';
+import {ChannelTypes} from '@voxr/constants/src/ChannelConstants';
 import {
 	type ChannelOrderingChannel,
 	computeGuildChannelReorderPlan,
 	computePositionFromPrecedingSiblingId,
 	computePrecedingSiblingIdFromPosition,
-} from '@fluxer/schema/src/domains/channel/GuildChannelOrdering';
+} from '@voxr/schema/src/domains/channel/GuildChannelOrdering';
 import {describe, expect, it} from 'vitest';
 
 type Ch = ChannelOrderingChannel<string>;

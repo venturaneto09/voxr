@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {MAX_GROUP_DM_RECIPIENTS} from '@fluxer/constants/src/LimitConstants';
+import {MAX_GROUP_DM_RECIPIENTS} from '@voxr/constants/src/LimitConstants';
 import {
 	ChannelOverwriteResponse,
 	ChannelPartialResponse,
 	ChannelResponse,
-} from '@fluxer/schema/src/domains/channel/ChannelSchemas';
+} from '@voxr/schema/src/domains/channel/ChannelSchemas';
 import {describe, expect, it} from 'vitest';
 
 describe('ChannelOverwriteResponse', () => {

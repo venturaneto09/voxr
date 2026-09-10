@@ -9,7 +9,7 @@ import {
 	getUploadExtensions,
 	isExtensionAllowed,
 	isMimeAllowed,
-} from '@fluxer/constants/src/AssetFormatPolicy';
+} from '@voxr/constants/src/AssetFormatPolicy';
 import {describe, expect, it} from 'vitest';
 
 describe('AssetFormatPolicy', () => {

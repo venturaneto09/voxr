@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {createLogger, Logger} from '@fluxer/logger/src/Logger';
+import {createLogger, Logger} from '@voxr/logger/src/Logger';
 import pino, {type Logger as PinoLogger} from 'pino';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 
@@ -22,7 +22,7 @@ describe('Logger.child', () => {
 	});
 
 	it('does not construct a throwaway pino root logger', () => {
-		vi.stubEnv('FLUXER_ENV', 'production');
+		vi.stubEnv('VOXR_ENV', 'production');
 		const parent = createLogger('logger-test', {environment: 'production'});
 		const destinationSpy = vi.spyOn(pino, 'destination');
 		const child = parent.child({logger: 'ChildService'});

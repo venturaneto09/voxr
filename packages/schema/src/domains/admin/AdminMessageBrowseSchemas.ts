@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {AdminMessageSchema, LookupMessageResponse} from '@fluxer/schema/src/domains/admin/AdminSchemas';
-import {MessageResponseSchema} from '@fluxer/schema/src/domains/message/MessageResponseSchemas';
-import {FilenameType} from '@fluxer/schema/src/primitives/FileValidators';
-import {createQueryIntegerType} from '@fluxer/schema/src/primitives/QueryValidators';
-import {createStringType, SnowflakeType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {AdminMessageSchema, LookupMessageResponse} from '@voxr/schema/src/domains/admin/AdminSchemas';
+import {MessageResponseSchema} from '@voxr/schema/src/domains/message/MessageResponseSchemas';
+import {FilenameType} from '@voxr/schema/src/primitives/FileValidators';
+import {createQueryIntegerType} from '@voxr/schema/src/primitives/QueryValidators';
+import {createStringType, SnowflakeType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 export const BrowseChannelRequest = z.object({

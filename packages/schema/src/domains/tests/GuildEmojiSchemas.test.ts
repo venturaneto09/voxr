@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {MAX_GUILD_STICKER_TAGS} from '@fluxer/constants/src/LimitConstants';
-import {GuildStickerResponse} from '@fluxer/schema/src/domains/guild/GuildEmojiSchemas';
+import {MAX_GUILD_STICKER_TAGS} from '@voxr/constants/src/LimitConstants';
+import {GuildStickerResponse} from '@voxr/schema/src/domains/guild/GuildEmojiSchemas';
 import {describe, expect, it} from 'vitest';
 
 const buildSticker = (tagCount: number) => ({

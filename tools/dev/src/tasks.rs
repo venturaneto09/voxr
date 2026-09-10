@@ -18,16 +18,16 @@ fn task_run(args: &[&str]) -> Result<()> {
 }
 
 fn test_env() -> Vec<(String, Option<String>)> {
-    let nats_url = env::var("FLUXER_NATS_URL").unwrap_or_else(|_| default_test_nats_url());
+    let nats_url = env::var("VOXR_NATS_URL").unwrap_or_else(|_| default_test_nats_url());
     vec![
-        ("FLUXER_NATS_URL".to_owned(), Some(nats_url.clone())),
+        ("VOXR_NATS_URL".to_owned(), Some(nats_url.clone())),
         (
-            "FLUXER_NATS_CORE_URL".to_owned(),
-            Some(env::var("FLUXER_NATS_CORE_URL").unwrap_or_else(|_| nats_url.clone())),
+            "VOXR_NATS_CORE_URL".to_owned(),
+            Some(env::var("VOXR_NATS_CORE_URL").unwrap_or_else(|_| nats_url.clone())),
         ),
         (
-            "FLUXER_NATS_JETSTREAM_URL".to_owned(),
-            Some(env::var("FLUXER_NATS_JETSTREAM_URL").unwrap_or(nats_url)),
+            "VOXR_NATS_JETSTREAM_URL".to_owned(),
+            Some(env::var("VOXR_NATS_JETSTREAM_URL").unwrap_or(nats_url)),
         ),
     ]
 }
@@ -42,12 +42,12 @@ fn default_test_nats_url() -> String {
 }
 
 fn run_generators(for_typecheck: bool) -> Result<()> {
-    task_run(&["pnpm", "--filter", "@fluxer/config", "generate"])?;
-    task_run(&["pnpm", "--filter", "@fluxer/schema", "generate"])?;
+    task_run(&["pnpm", "--filter", "@voxr/config", "generate"])?;
+    task_run(&["pnpm", "--filter", "@voxr/schema", "generate"])?;
     if for_typecheck {
-        return task_run(&["pnpm", "--filter", "@fluxer/i18n", "generate:types"]);
+        return task_run(&["pnpm", "--filter", "@voxr/i18n", "generate:types"]);
     }
-    task_run(&["pnpm", "--filter", "fluxer_app", "i18n:compile"])
+    task_run(&["pnpm", "--filter", "voxr_app", "i18n:compile"])
 }
 
 pub fn run_typecheck() -> Result<i32> {
@@ -65,11 +65,11 @@ pub fn run_test() -> Result<i32> {
     args.extend(
         [
             "--filter",
-            "!fluxer_api",
+            "!voxr_api",
             "--filter",
-            "!fluxer",
+            "!voxr",
             "--filter",
-            "!fluxer_desktop",
+            "!voxr_desktop",
             "--if-present",
             "test",
         ]
@@ -89,10 +89,10 @@ pub fn run_test() -> Result<i32> {
         "cargo",
         "test",
         "--manifest-path",
-        "fluxer_desktop/native/rust/Cargo.toml",
+        "voxr_desktop/native/rust/Cargo.toml",
     ])?;
     run_command(
-        &["pnpm", "--filter", "fluxer_api", "test"],
+        &["pnpm", "--filter", "voxr_api", "test"],
         RunOptions {
             env,
             load_default_env: false,
@@ -104,7 +104,7 @@ pub fn run_test() -> Result<i32> {
 
 pub fn run_build() -> Result<i32> {
     run_generators(false)?;
-    task_run(&["pnpm", "--filter", "fluxer_app", "build"])?;
+    task_run(&["pnpm", "--filter", "voxr_app", "build"])?;
     build_desktop(false)?;
     Ok(0)
 }
@@ -116,7 +116,7 @@ pub fn run_lint() -> Result<i32> {
 }
 
 pub fn run_knip() -> Result<i32> {
-    task_run(&["pnpm", "--filter", "fluxer_app", "i18n:compile"])?;
+    task_run(&["pnpm", "--filter", "voxr_app", "i18n:compile"])?;
     task_run(&["pnpm", "exec", "knip"])?;
     Ok(0)
 }

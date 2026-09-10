@@ -8,7 +8,7 @@ import {
 	MissingClientIpError,
 	requireClientIp,
 	resolveClientIpHeaderName,
-} from '@fluxer/ip_utils/src/ClientIp';
+} from '@voxr/ip_utils/src/ClientIp';
 import {describe, expect, it} from 'vitest';
 
 describe('extractClientIp', () => {

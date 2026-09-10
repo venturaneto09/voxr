@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {isRegionCode, normalizeRegionCode} from '@fluxer/geo_utils/src/RegionCodeValidation';
+import {isRegionCode, normalizeRegionCode} from '@voxr/geo_utils/src/RegionCodeValidation';
 import {describe, expect, it} from 'vitest';
 
 describe('normalizeRegionCode', () => {

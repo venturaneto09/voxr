@@ -5,18 +5,18 @@ import {
 	MessageAttachmentFlagsDescriptions,
 	MessageFlags,
 	MessageFlagsDescriptions,
-} from '@fluxer/constants/src/ChannelConstants';
-import {ChannelResponse} from '@fluxer/schema/src/domains/channel/ChannelSchemas';
-import type {GuildMemberData} from '@fluxer/schema/src/domains/guild/GuildMemberSchemas';
-import {type MessageEmbed, MessageEmbedResponse} from '@fluxer/schema/src/domains/message/EmbedSchemas';
-import {type UserPartial, UserPartialResponse} from '@fluxer/schema/src/domains/user/UserResponseSchemas';
-import {MessageReferenceTypeSchema, MessageTypeSchema} from '@fluxer/schema/src/primitives/MessageValidators';
+} from '@voxr/constants/src/ChannelConstants';
+import {ChannelResponse} from '@voxr/schema/src/domains/channel/ChannelSchemas';
+import type {GuildMemberData} from '@voxr/schema/src/domains/guild/GuildMemberSchemas';
+import {type MessageEmbed, MessageEmbedResponse} from '@voxr/schema/src/domains/message/EmbedSchemas';
+import {type UserPartial, UserPartialResponse} from '@voxr/schema/src/domains/user/UserResponseSchemas';
+import {MessageReferenceTypeSchema, MessageTypeSchema} from '@voxr/schema/src/primitives/MessageValidators';
 import {
 	createBitflagInt32Type,
 	Int32Type,
 	NonNegativeSafeIntegerType,
 	SnowflakeStringType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 export const MessageAttachmentResponse = z.object({

@@ -147,7 +147,7 @@ pub(crate) fn run_gateway_step(
 
 fn build_gateway_nifs(gateway_dir: &Path) -> Result<()> {
     let profile =
-        NifBuildProfile::from_env_value(env::var("FLUXER_GATEWAY_NIF_PROFILE").ok().as_deref());
+        NifBuildProfile::from_env_value(env::var("VOXR_GATEWAY_NIF_PROFILE").ok().as_deref());
     let builds = gateway_nif_builds(
         gateway_dir,
         profile,
@@ -399,15 +399,15 @@ fn gateway_nif_build(
 fn resolve_gateway_dir() -> Result<PathBuf> {
     let cwd = env::current_dir().context("Failed to resolve current directory")?;
     if cwd.join("rebar.config").is_file()
-        && cwd.file_name().and_then(|value| value.to_str()) == Some("fluxer_gateway")
+        && cwd.file_name().and_then(|value| value.to_str()) == Some("voxr_gateway")
     {
         return Ok(cwd);
     }
-    if cwd.join("fluxer_gateway/rebar.config").is_file() {
-        return Ok(cwd.join("fluxer_gateway"));
+    if cwd.join("voxr_gateway/rebar.config").is_file() {
+        return Ok(cwd.join("voxr_gateway"));
     }
     Err(anyhow!(
-        "Could not resolve fluxer_gateway directory from {}",
+        "Could not resolve voxr_gateway directory from {}",
         cwd.display()
     ))
 }
@@ -438,7 +438,7 @@ mod tests {
 
     #[test]
     fn gateway_nif_build_plan_matches_legacy_artifact_layout() {
-        let gateway_dir = Path::new("/repo/fluxer_gateway");
+        let gateway_dir = Path::new("/repo/voxr_gateway");
         let builds = gateway_nif_builds(gateway_dir, NifBuildProfile::Release, "lib", "so");
 
         assert_eq!(builds.len(), 2);
@@ -447,14 +447,14 @@ mod tests {
             GatewayNifBuild {
                 crate_name: "push_markdown_plaintext_nif".to_string(),
                 native_dir: PathBuf::from(
-                    "/repo/fluxer_gateway/native/push_markdown_plaintext_nif"
+                    "/repo/voxr_gateway/native/push_markdown_plaintext_nif"
                 ),
                 cargo_args: vec![OsString::from("build"), OsString::from("--release")],
                 artifact_path: PathBuf::from(
-                    "/repo/fluxer_gateway/native/push_markdown_plaintext_nif/target/release/libpush_markdown_plaintext_nif.so"
+                    "/repo/voxr_gateway/native/push_markdown_plaintext_nif/target/release/libpush_markdown_plaintext_nif.so"
                 ),
                 output_path: PathBuf::from(
-                    "/repo/fluxer_gateway/priv/push_markdown_plaintext_nif.so"
+                    "/repo/voxr_gateway/priv/push_markdown_plaintext_nif.so"
                 ),
             }
         );
@@ -463,7 +463,7 @@ mod tests {
     #[test]
     fn debug_build_plan_omits_release_arg_and_uses_debug_target_dir() {
         let build = gateway_nif_build(
-            Path::new("/repo/fluxer_gateway"),
+            Path::new("/repo/voxr_gateway"),
             NifBuildProfile::Debug,
             "lib",
             "dylib",
@@ -474,12 +474,12 @@ mod tests {
         assert_eq!(
             build.artifact_path,
             PathBuf::from(
-                "/repo/fluxer_gateway/native/guild_member_list_oset_nif/target/debug/libguild_member_list_oset_nif.dylib"
+                "/repo/voxr_gateway/native/guild_member_list_oset_nif/target/debug/libguild_member_list_oset_nif.dylib"
             )
         );
         assert_eq!(
             build.output_path,
-            PathBuf::from("/repo/fluxer_gateway/priv/guild_member_list_oset_nif.so")
+            PathBuf::from("/repo/voxr_gateway/priv/guild_member_list_oset_nif.so")
         );
     }
 
@@ -504,11 +504,11 @@ mod tests {
 
     #[test]
     fn rebar_command_runs_in_gateway_dir_and_sets_skip_env_for_compile() {
-        let command = rebar_command(Path::new("/repo/fluxer_gateway"), ["compile"]);
+        let command = rebar_command(Path::new("/repo/voxr_gateway"), ["compile"]);
 
         assert_eq!(command.program, OsString::from("rebar3"));
         assert_eq!(command.args, vec![OsString::from("compile")]);
-        assert_eq!(command.cwd, Some(PathBuf::from("/repo/fluxer_gateway")));
+        assert_eq!(command.cwd, Some(PathBuf::from("/repo/voxr_gateway")));
         assert!(command.env.contains(&(
             OsString::from("REBAR_SKIP_PROJECT_PLUGINS"),
             OsString::from("1")
@@ -517,7 +517,7 @@ mod tests {
 
     #[test]
     fn rebar_command_keeps_project_plugins_for_fmt() {
-        let command = rebar_command(Path::new("/repo/fluxer_gateway"), ["fmt", "--check"]);
+        let command = rebar_command(Path::new("/repo/voxr_gateway"), ["fmt", "--check"]);
 
         assert_eq!(
             command.args,

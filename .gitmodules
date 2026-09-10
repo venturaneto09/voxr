@@ -1,4 +1,4 @@
-[submodule "fluxer_marketing"]
-	path = fluxer_marketing
-	url = https://github.com/fluxerapp/marketing.git
+[submodule "voxr_marketing"]
+	path = voxr_marketing
+	url = https://github.com/voxrapp/marketing.git
 	update = none

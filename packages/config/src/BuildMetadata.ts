@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {getConfig} from '@fluxer/config/src/ConfigLoader';
+import {getConfig} from '@voxr/config/src/ConfigLoader';
 
 type ReleaseChannel = 'stable' | 'canary';
 

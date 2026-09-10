@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {sanitizeRetryAfterSeconds} from '@fluxer/errors/src/domains/core/RetryAfterSeconds';
-import {FluxerError, type FluxerErrorData} from '@fluxer/errors/src/FluxerError';
+import {sanitizeRetryAfterSeconds} from '@voxr/errors/src/domains/core/RetryAfterSeconds';
+import {VoxrError, type VoxrErrorData} from '@voxr/errors/src/VoxrError';
 
-export class ThrottledError extends FluxerError {
+export class ThrottledError extends VoxrError {
 	constructor({
 		code,
 		message,
@@ -15,7 +15,7 @@ export class ThrottledError extends FluxerError {
 		code: string;
 		message?: string;
 		retryAfterSeconds: number;
-		data?: FluxerErrorData;
+		data?: VoxrErrorData;
 		headers?: Record<string, string>;
 		messageVariables?: Record<string, unknown>;
 	}) {

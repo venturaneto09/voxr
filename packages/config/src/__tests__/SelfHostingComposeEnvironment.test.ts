@@ -19,20 +19,20 @@ const serviceBlock = (name: string): string => {
 	return next === -1 ? rest : rest.slice(0, next + 1);
 };
 
-const sharedEnv = compose.slice(compose.indexOf('x-fluxer-env: &fluxer-env'), compose.indexOf('\nx-fluxer-service:'));
+const sharedEnv = compose.slice(compose.indexOf('x-voxr-env: &voxr-env'), compose.indexOf('\nx-voxr-service:'));
 
 describe('the shipped compose stack wires every service it starts', () => {
 	test('no service sizes a pool for a connection it cannot make', () => {
 		for (const [, name] of compose.matchAll(/\n {2}([a-z][a-z0-9_-]*):\n/gu)) {
 			const block = serviceBlock(name);
-			if (block.includes('FLUXER_POSTGRES_MAX_CONNECTIONS')) {
-				expect(block).toMatch(/<<: \*fluxer-(postgres-)?env/u);
+			if (block.includes('VOXR_POSTGRES_MAX_CONNECTIONS')) {
+				expect(block).toMatch(/<<: \*voxr-(postgres-)?env/u);
 			}
 		}
 	});
 
 	test('the shared block sets the client-IP trust the merged services read', () => {
-		expect(sharedEnv).toContain('FLUXER_TRUST_CLIENT_IP_HEADER: "${FLUXER_TRUST_CLIENT_IP_HEADER:-true}"');
-		expect(sharedEnv).toContain('FLUXER_CLIENT_IP_HEADER_NAME: ${FLUXER_CLIENT_IP_HEADER_NAME:-x-forwarded-for}');
+		expect(sharedEnv).toContain('VOXR_TRUST_CLIENT_IP_HEADER: "${VOXR_TRUST_CLIENT_IP_HEADER:-true}"');
+		expect(sharedEnv).toContain('VOXR_CLIENT_IP_HEADER_NAME: ${VOXR_CLIENT_IP_HEADER_NAME:-x-forwarded-for}');
 	});
 });

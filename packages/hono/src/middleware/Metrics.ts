@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {isLoopbackIpAddress} from '@fluxer/ip_utils/src/IpAddress';
+import {isLoopbackIpAddress} from '@voxr/ip_utils/src/IpAddress';
 import type {HttpBindings} from '@hono/node-server';
 import type {Handler, MiddlewareHandler} from 'hono';
 
@@ -117,7 +117,7 @@ interface MetricsResult {
 }
 
 export function createMetricsMiddleware(serviceName: string): MetricsResult {
-	const prefix = `fluxer_${serviceName}`;
+	const prefix = `voxr_${serviceName}`;
 	const startTime = Date.now();
 
 	const requestsTotal = new Counter();

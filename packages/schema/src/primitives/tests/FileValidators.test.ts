@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {AVATAR_MAX_SIZE, EMOJI_MAX_SIZE, STICKER_MAX_SIZE} from '@fluxer/constants/src/LimitConstants';
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
-import {base64LengthForBytes, createBase64StringType, FilenameType} from '@fluxer/schema/src/primitives/FileValidators';
+import {AVATAR_MAX_SIZE, EMOJI_MAX_SIZE, STICKER_MAX_SIZE} from '@voxr/constants/src/LimitConstants';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
+import {base64LengthForBytes, createBase64StringType, FilenameType} from '@voxr/schema/src/primitives/FileValidators';
 import {describe, expect, it} from 'vitest';
 
 describe('FilenameType', () => {

@@ -1,35 +1,35 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {generateKeyPairSync} from 'node:crypto';
-import {getConfig, loadConfig, resetConfig} from '@fluxer/config/src/ConfigLoader';
+import {getConfig, loadConfig, resetConfig} from '@voxr/config/src/ConfigLoader';
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
 
 const MINIMAL_ENV: Record<string, string> = {
-	FLUXER_ENV: 'test',
-	FLUXER_BASE_DOMAIN: 'localhost',
-	FLUXER_PUBLIC_SCHEME: 'http',
-	FLUXER_PUBLIC_PORT: '8088',
-	FLUXER_CASSANDRA_HOSTS: '127.0.0.1',
-	FLUXER_CASSANDRA_PORT: '9042',
-	FLUXER_CASSANDRA_KEYSPACE: 'fluxer_test',
-	FLUXER_CASSANDRA_LOCAL_DC: 'datacenter1',
-	FLUXER_CASSANDRA_USERNAME: 'test-user',
-	FLUXER_CASSANDRA_PASSWORD: 'test-password',
-	FLUXER_S3_ENDPOINT: 'http://127.0.0.1:3900',
-	FLUXER_S3_ACCESS_KEY_ID: 'test-key',
-	FLUXER_S3_SECRET_ACCESS_KEY: 'test-secret',
-	FLUXER_MEDIA_PROXY_SECRET_KEY: 'test-media-secret',
-	FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=',
-	FLUXER_ADMIN_SECRET_KEY_BASE: 'test-admin-secret',
-	FLUXER_ADMIN_OAUTH_CLIENT_SECRET: 'test-admin-oauth-secret',
-	FLUXER_MARKETING_SECRET_KEY_BASE: 'test-marketing-secret',
-	FLUXER_APP_PROXY_PORT: '8773',
-	FLUXER_GATEWAY_MEDIA_PROXY_ENDPOINT: 'http://127.0.0.1:8088/media',
-	FLUXER_GATEWAY_RPC_AUTH_TOKEN: 'test-gateway-token',
-	FLUXER_SUDO_MODE_SECRET: 'test-sudo-secret',
-	FLUXER_CONNECTION_INITIATION_SECRET: 'test-connection-secret',
-	FLUXER_VAPID_PUBLIC_KEY: 'BB76bTFIuoqmxJtTfZX0yGTn1f_qu9H03B_nkj8OyExJFkN7Y-HBZZzShnHZoEhXKc5ZRy3jFu7OkBbnaQG-4aw',
-	FLUXER_VAPID_PRIVATE_KEY: 'Xgi-3P8J-I3Q6U1HlCcXMuc_tKLGAM9nIfznX3Hz68o',
+	VOXR_ENV: 'test',
+	VOXR_BASE_DOMAIN: 'localhost',
+	VOXR_PUBLIC_SCHEME: 'http',
+	VOXR_PUBLIC_PORT: '8088',
+	VOXR_CASSANDRA_HOSTS: '127.0.0.1',
+	VOXR_CASSANDRA_PORT: '9042',
+	VOXR_CASSANDRA_KEYSPACE: 'voxr_test',
+	VOXR_CASSANDRA_LOCAL_DC: 'datacenter1',
+	VOXR_CASSANDRA_USERNAME: 'test-user',
+	VOXR_CASSANDRA_PASSWORD: 'test-password',
+	VOXR_S3_ENDPOINT: 'http://127.0.0.1:3900',
+	VOXR_S3_ACCESS_KEY_ID: 'test-key',
+	VOXR_S3_SECRET_ACCESS_KEY: 'test-secret',
+	VOXR_MEDIA_PROXY_SECRET_KEY: 'test-media-secret',
+	VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=',
+	VOXR_ADMIN_SECRET_KEY_BASE: 'test-admin-secret',
+	VOXR_ADMIN_OAUTH_CLIENT_SECRET: 'test-admin-oauth-secret',
+	VOXR_MARKETING_SECRET_KEY_BASE: 'test-marketing-secret',
+	VOXR_APP_PROXY_PORT: '8773',
+	VOXR_GATEWAY_MEDIA_PROXY_ENDPOINT: 'http://127.0.0.1:8088/media',
+	VOXR_GATEWAY_RPC_AUTH_TOKEN: 'test-gateway-token',
+	VOXR_SUDO_MODE_SECRET: 'test-sudo-secret',
+	VOXR_CONNECTION_INITIATION_SECRET: 'test-connection-secret',
+	VOXR_VAPID_PUBLIC_KEY: 'BB76bTFIuoqmxJtTfZX0yGTn1f_qu9H03B_nkj8OyExJFkN7Y-HBZZzShnHZoEhXKc5ZRy3jFu7OkBbnaQG-4aw',
+	VOXR_VAPID_PRIVATE_KEY: 'Xgi-3P8J-I3Q6U1HlCcXMuc_tKLGAM9nIfznX3Hz68o',
 };
 
 function generateVapidPair(): {publicKey: string; privateKey: string} {
@@ -50,9 +50,9 @@ function stubMinimalEnv(overrides: Record<string, string> = {}): void {
 	}
 }
 
-function clearFluxerEnv(): void {
+function clearVoxrEnv(): void {
 	for (const key of Object.keys(process.env)) {
-		if (key.startsWith('FLUXER_')) {
+		if (key.startsWith('VOXR_')) {
 			vi.stubEnv(key, undefined);
 		}
 	}
@@ -61,7 +61,7 @@ function clearFluxerEnv(): void {
 describe('ConfigLoader', () => {
 	beforeEach(() => {
 		resetConfig();
-		clearFluxerEnv();
+		clearVoxrEnv();
 	});
 
 	afterEach(() => {
@@ -69,16 +69,16 @@ describe('ConfigLoader', () => {
 		vi.unstubAllEnvs();
 	});
 
-	test('loadConfig builds and caches config from FLUXER environment variables', async () => {
+	test('loadConfig builds and caches config from VOXR environment variables', async () => {
 		stubMinimalEnv();
 		const config = await loadConfig();
 		expect(config.env).toBe('test');
 		expect(config.domain.base_domain).toBe('localhost');
 		expect(config.database.backend).toBe('postgres');
-		expect(config.database.postgres.database).toBe('fluxer');
+		expect(config.database.postgres.database).toBe('voxr');
 		expect(config.database.cassandra.hosts).toEqual(['127.0.0.1']);
 
-		vi.stubEnv('FLUXER_BASE_DOMAIN', 'changed.example');
+		vi.stubEnv('VOXR_BASE_DOMAIN', 'changed.example');
 		expect((await loadConfig()).domain.base_domain).toBe('localhost');
 	});
 
@@ -103,9 +103,9 @@ describe('ConfigLoader', () => {
 
 	test('endpoint overrides take precedence over derived endpoints', async () => {
 		stubMinimalEnv({
-			FLUXER_API_ENDPOINT: 'https://custom-api.example.com',
-			FLUXER_API_CLIENT_ENDPOINT: 'https://custom-api-client.example.com',
-			FLUXER_GATEWAY_ENDPOINT: 'wss://custom-gw.example.com',
+			VOXR_API_ENDPOINT: 'https://custom-api.example.com',
+			VOXR_API_CLIENT_ENDPOINT: 'https://custom-api-client.example.com',
+			VOXR_GATEWAY_ENDPOINT: 'wss://custom-gw.example.com',
 		});
 
 		const config = await loadConfig();
@@ -118,10 +118,10 @@ describe('ConfigLoader', () => {
 
 	test('inserts the public port into portless endpoints on a non-standard port', async () => {
 		stubMinimalEnv({
-			FLUXER_MARKETING_ENDPOINT: 'http://localhost',
-			FLUXER_MEDIA_ENDPOINT: 'http://localhost/media',
-			FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'http://localhost/media',
-			FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'http://localhost',
+			VOXR_MARKETING_ENDPOINT: 'http://localhost',
+			VOXR_MEDIA_ENDPOINT: 'http://localhost/media',
+			VOXR_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'http://localhost/media',
+			VOXR_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'http://localhost',
 		});
 
 		const config = await loadConfig();
@@ -134,13 +134,13 @@ describe('ConfigLoader', () => {
 
 	test('leaves a default https install untouched', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '443',
-			FLUXER_MARKETING_ENDPOINT: 'https://chat.example',
-			FLUXER_MEDIA_ENDPOINT: 'https://chat.example/media',
-			FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'https://chat.example/media',
-			FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'https://chat.example',
+			VOXR_BASE_DOMAIN: 'chat.example',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '443',
+			VOXR_MARKETING_ENDPOINT: 'https://chat.example',
+			VOXR_MEDIA_ENDPOINT: 'https://chat.example/media',
+			VOXR_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'https://chat.example/media',
+			VOXR_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'https://chat.example',
 		});
 
 		const config = await loadConfig();
@@ -155,12 +155,12 @@ describe('ConfigLoader', () => {
 
 	test('leaves a default http install untouched', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example',
-			FLUXER_PUBLIC_SCHEME: 'http',
-			FLUXER_PUBLIC_PORT: '80',
-			FLUXER_MARKETING_ENDPOINT: 'http://chat.example',
-			FLUXER_MEDIA_ENDPOINT: 'http://chat.example/media',
-			FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'http://chat.example/media',
+			VOXR_BASE_DOMAIN: 'chat.example',
+			VOXR_PUBLIC_SCHEME: 'http',
+			VOXR_PUBLIC_PORT: '80',
+			VOXR_MARKETING_ENDPOINT: 'http://chat.example',
+			VOXR_MEDIA_ENDPOINT: 'http://chat.example/media',
+			VOXR_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'http://chat.example/media',
 		});
 
 		const config = await loadConfig();
@@ -173,10 +173,10 @@ describe('ConfigLoader', () => {
 
 	test('leaves foreign hosts and already ported endpoints untouched', async () => {
 		stubMinimalEnv({
-			FLUXER_STATIC_CDN_ENDPOINT: 'https://cdn.example.net',
-			FLUXER_MEDIA_ENDPOINT: 'https://media.example.net/media',
-			FLUXER_MARKETING_ENDPOINT: 'http://localhost:9999',
-			FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'http://localhost:8088/media',
+			VOXR_STATIC_CDN_ENDPOINT: 'https://cdn.example.net',
+			VOXR_MEDIA_ENDPOINT: 'https://media.example.net/media',
+			VOXR_MARKETING_ENDPOINT: 'http://localhost:9999',
+			VOXR_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'http://localhost:8088/media',
 		});
 
 		const config = await loadConfig();
@@ -189,7 +189,7 @@ describe('ConfigLoader', () => {
 
 	test('normalizes each passkey origin independently', async () => {
 		stubMinimalEnv({
-			FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS:
+			VOXR_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS:
 				'http://localhost,http://localhost:3000,https://desktop.example.net,android:apk-key-hash:abc',
 		});
 
@@ -207,24 +207,24 @@ describe('ConfigLoader', () => {
 		stubMinimalEnv();
 		const config = await loadConfig();
 		expect(config.auth.passkeys.additional_allowed_origins).toEqual([
-			'https://fluxer.app',
-			'https://web.fluxer.app',
-			'https://web.canary.fluxer.app',
+			'https://voxr.app',
+			'https://web.voxr.app',
+			'https://web.canary.voxr.app',
 			'android:apk-key-hash:keSY4bimyLqZQV7bKXgpa2xYuqXi0qZJzsYtp6gpx7w',
 			'android:apk-key-hash:zRmCKDKo3uCX2GDZISjJx8Rzo3J-Y3Gbp7s7mAaUH28',
 		]);
 	});
 
 	test('rejects an empty client API endpoint override', async () => {
-		stubMinimalEnv({FLUXER_API_CLIENT_ENDPOINT: ''});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_API_CLIENT_ENDPOINT is required');
+		stubMinimalEnv({VOXR_API_CLIENT_ENDPOINT: ''});
+		await expect(loadConfig()).rejects.toThrow('VOXR_API_CLIENT_ENDPOINT is required');
 	});
 
 	test('defaults the passkey relying party to the deployment domain', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '443',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '443',
 		});
 
 		const config = await loadConfig();
@@ -234,10 +234,10 @@ describe('ConfigLoader', () => {
 
 	test('derives the passkey origin only when the operator clears the default list', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '443',
-			FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: '',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '443',
+			VOXR_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: '',
 		});
 
 		const config = await loadConfig();
@@ -247,11 +247,11 @@ describe('ConfigLoader', () => {
 
 	test('keeps explicit passkey relying party values', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '443',
-			FLUXER_PASSKEY_RP_ID: 'example.com',
-			FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'https://example.com,https://app.example.com',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '443',
+			VOXR_PASSKEY_RP_ID: 'example.com',
+			VOXR_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'https://example.com,https://app.example.com',
 		});
 
 		const config = await loadConfig();
@@ -262,18 +262,18 @@ describe('ConfigLoader', () => {
 
 	test('parses typed named environment variables', async () => {
 		stubMinimalEnv({
-			FLUXER_API_PORT: '9090',
-			FLUXER_CASSANDRA_HOSTS: 'db1,db2',
-			FLUXER_POSTGRES_HOST: 'pg1',
-			FLUXER_POSTGRES_PORT: '5544',
-			FLUXER_POSTGRES_MAX_CONNECTIONS: '7',
-			FLUXER_POSTGRES_SSL_CA: '-----BEGIN CERTIFICATE-----\\n-----END CERTIFICATE-----',
-			FLUXER_POSTGRES_PREPARED_STATEMENTS: 'false',
-			FLUXER_API_WORKER_MODE: 'single_task',
-			FLUXER_API_WORKER_TASK: 'processStripeWebhook',
-			FLUXER_ACCOUNT_POLICY_DSL: '{"version":1,"id":"env_policy","rules":[]}',
-			FLUXER_LIVEKIT_ENABLED: 'true',
-			FLUXER_LIVEKIT_DEFAULT_REGION:
+			VOXR_API_PORT: '9090',
+			VOXR_CASSANDRA_HOSTS: 'db1,db2',
+			VOXR_POSTGRES_HOST: 'pg1',
+			VOXR_POSTGRES_PORT: '5544',
+			VOXR_POSTGRES_MAX_CONNECTIONS: '7',
+			VOXR_POSTGRES_SSL_CA: '-----BEGIN CERTIFICATE-----\\n-----END CERTIFICATE-----',
+			VOXR_POSTGRES_PREPARED_STATEMENTS: 'false',
+			VOXR_API_WORKER_MODE: 'single_task',
+			VOXR_API_WORKER_TASK: 'processStripeWebhook',
+			VOXR_ACCOUNT_POLICY_DSL: '{"version":1,"id":"env_policy","rules":[]}',
+			VOXR_LIVEKIT_ENABLED: 'true',
+			VOXR_LIVEKIT_DEFAULT_REGION:
 				'{"id":"local","name":"Local","emoji":"LC","latitude":59.3293,"longitude":18.0686}',
 		});
 
@@ -296,8 +296,8 @@ describe('ConfigLoader', () => {
 		expect(config.integrations.voice.default_region?.id).toBe('local');
 	});
 
-	test('ignores FLUXER_GATEWAY_PUSH_ENABLED, which only the gateway reads', async () => {
-		stubMinimalEnv({FLUXER_GATEWAY_PUSH_ENABLED: 'false'});
+	test('ignores VOXR_GATEWAY_PUSH_ENABLED, which only the gateway reads', async () => {
+		stubMinimalEnv({VOXR_GATEWAY_PUSH_ENABLED: 'false'});
 
 		const config = await loadConfig();
 
@@ -305,23 +305,23 @@ describe('ConfigLoader', () => {
 	});
 
 	test('rejects single task worker mode without task env', async () => {
-		stubMinimalEnv({FLUXER_API_WORKER_MODE: 'single_task'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_API_WORKER_TASK');
+		stubMinimalEnv({VOXR_API_WORKER_MODE: 'single_task'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_API_WORKER_TASK');
 	});
 
 	test('rejects invalid Postgres typed environment values', async () => {
-		stubMinimalEnv({FLUXER_POSTGRES_PORT: 'abc'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_POSTGRES_PORT');
+		stubMinimalEnv({VOXR_POSTGRES_PORT: 'abc'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_POSTGRES_PORT');
 	});
 
 	test('rejects a non-integer port', async () => {
-		stubMinimalEnv({FLUXER_API_PORT: '80a'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_API_PORT must be an integer, got "80a"');
+		stubMinimalEnv({VOXR_API_PORT: '80a'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_API_PORT must be an integer, got "80a"');
 	});
 
 	test('rejects malformed JSON for a JSON-shaped variable', async () => {
-		stubMinimalEnv({FLUXER_LIVEKIT_DEFAULT_REGION: '{bad'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_LIVEKIT_DEFAULT_REGION must be valid JSON');
+		stubMinimalEnv({VOXR_LIVEKIT_DEFAULT_REGION: '{bad'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_LIVEKIT_DEFAULT_REGION must be valid JSON');
 	});
 
 	test('keeps Postgres prepared statements on by default', async () => {
@@ -330,8 +330,8 @@ describe('ConfigLoader', () => {
 	});
 
 	test('rejects a non-boolean Postgres prepared statements value', async () => {
-		stubMinimalEnv({FLUXER_POSTGRES_PREPARED_STATEMENTS: 'maybe'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_POSTGRES_PREPARED_STATEMENTS');
+		stubMinimalEnv({VOXR_POSTGRES_PREPARED_STATEMENTS: 'maybe'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_POSTGRES_PREPARED_STATEMENTS');
 	});
 
 	test('keeps the api http timeouts at their defaults', async () => {
@@ -342,45 +342,45 @@ describe('ConfigLoader', () => {
 	});
 
 	test('reads the api http timeouts from the environment', async () => {
-		stubMinimalEnv({FLUXER_API_HEADERS_TIMEOUT_MS: '45000', FLUXER_API_REQUEST_TIMEOUT_MS: '600000'});
+		stubMinimalEnv({VOXR_API_HEADERS_TIMEOUT_MS: '45000', VOXR_API_REQUEST_TIMEOUT_MS: '600000'});
 		const config = await loadConfig();
 		expect(config.services.api.headers_timeout_ms).toBe(45_000);
 		expect(config.services.api.request_timeout_ms).toBe(600_000);
 	});
 
 	test('rejects a non-numeric api header timeout', async () => {
-		stubMinimalEnv({FLUXER_API_HEADERS_TIMEOUT_MS: 'soon'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_API_HEADERS_TIMEOUT_MS');
+		stubMinimalEnv({VOXR_API_HEADERS_TIMEOUT_MS: 'soon'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_API_HEADERS_TIMEOUT_MS');
 	});
 
 	test('rejects a non-numeric api request timeout', async () => {
-		stubMinimalEnv({FLUXER_API_REQUEST_TIMEOUT_MS: 'soon'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_API_REQUEST_TIMEOUT_MS');
+		stubMinimalEnv({VOXR_API_REQUEST_TIMEOUT_MS: 'soon'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_API_REQUEST_TIMEOUT_MS');
 	});
 
 	test('applies the KV mode from the environment', async () => {
-		stubMinimalEnv({FLUXER_KV_MODE: 'cluster'});
+		stubMinimalEnv({VOXR_KV_MODE: 'cluster'});
 		expect((await loadConfig()).internal.kv_mode).toBe('cluster');
 	});
 
 	test('rejects an unknown KV mode', async () => {
-		stubMinimalEnv({FLUXER_KV_MODE: 'sentinel'});
-		await expect(loadConfig()).rejects.toThrow('Invalid FLUXER_KV_MODE: sentinel');
+		stubMinimalEnv({VOXR_KV_MODE: 'sentinel'});
+		await expect(loadConfig()).rejects.toThrow('Invalid VOXR_KV_MODE: sentinel');
 	});
 
 	test('rejects unsafe production Postgres defaults', async () => {
-		stubMinimalEnv({FLUXER_ENV: 'production'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_POSTGRES_HOST');
+		stubMinimalEnv({VOXR_ENV: 'production'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_POSTGRES_HOST');
 	});
 
 	test('accepts explicitly configured production Postgres with TLS', async () => {
 		stubMinimalEnv({
-			FLUXER_ENV: 'production',
-			FLUXER_POSTGRES_HOST: 'postgres.internal',
-			FLUXER_POSTGRES_DATABASE: 'fluxer_prod',
-			FLUXER_POSTGRES_USERNAME: 'fluxer_app',
-			FLUXER_POSTGRES_PASSWORD: 'prod-postgres-secret',
-			FLUXER_POSTGRES_SSL: 'true',
+			VOXR_ENV: 'production',
+			VOXR_POSTGRES_HOST: 'postgres.internal',
+			VOXR_POSTGRES_DATABASE: 'voxr_prod',
+			VOXR_POSTGRES_USERNAME: 'voxr_app',
+			VOXR_POSTGRES_PASSWORD: 'prod-postgres-secret',
+			VOXR_POSTGRES_SSL: 'true',
 		});
 
 		const config = await loadConfig();
@@ -391,13 +391,13 @@ describe('ConfigLoader', () => {
 
 	test('allows self-hosted production Postgres without TLS', async () => {
 		stubMinimalEnv({
-			FLUXER_ENV: 'production',
-			FLUXER_SELF_HOSTED: 'true',
-			FLUXER_POSTGRES_HOST: 'postgres',
-			FLUXER_POSTGRES_DATABASE: 'fluxer',
-			FLUXER_POSTGRES_USERNAME: 'fluxer',
-			FLUXER_POSTGRES_PASSWORD: 'self-hosted-postgres-secret',
-			FLUXER_POSTGRES_SSL: 'false',
+			VOXR_ENV: 'production',
+			VOXR_SELF_HOSTED: 'true',
+			VOXR_POSTGRES_HOST: 'postgres',
+			VOXR_POSTGRES_DATABASE: 'voxr',
+			VOXR_POSTGRES_USERNAME: 'voxr',
+			VOXR_POSTGRES_PASSWORD: 'self-hosted-postgres-secret',
+			VOXR_POSTGRES_SSL: 'false',
 		});
 
 		const config = await loadConfig();
@@ -407,8 +407,8 @@ describe('ConfigLoader', () => {
 	});
 
 	test('does not require a marketing secret for self-hosted instances', async () => {
-		stubMinimalEnv({FLUXER_SELF_HOSTED: 'true'});
-		vi.stubEnv('FLUXER_MARKETING_SECRET_KEY_BASE', undefined);
+		stubMinimalEnv({VOXR_SELF_HOSTED: 'true'});
+		vi.stubEnv('VOXR_MARKETING_SECRET_KEY_BASE', undefined);
 
 		const config = await loadConfig();
 
@@ -418,45 +418,45 @@ describe('ConfigLoader', () => {
 
 	test('requires a marketing secret for hosted instances', async () => {
 		stubMinimalEnv();
-		vi.stubEnv('FLUXER_MARKETING_SECRET_KEY_BASE', undefined);
+		vi.stubEnv('VOXR_MARKETING_SECRET_KEY_BASE', undefined);
 
-		await expect(loadConfig()).rejects.toThrow('FLUXER_MARKETING_SECRET_KEY_BASE');
+		await expect(loadConfig()).rejects.toThrow('VOXR_MARKETING_SECRET_KEY_BASE');
 	});
 
 	test('still requires TLS for non-self-hosted production Postgres', async () => {
 		stubMinimalEnv({
-			FLUXER_ENV: 'production',
-			FLUXER_POSTGRES_HOST: 'postgres.internal',
-			FLUXER_POSTGRES_DATABASE: 'fluxer_prod',
-			FLUXER_POSTGRES_USERNAME: 'fluxer_app',
-			FLUXER_POSTGRES_PASSWORD: 'prod-postgres-secret',
-			FLUXER_POSTGRES_SSL: 'false',
+			VOXR_ENV: 'production',
+			VOXR_POSTGRES_HOST: 'postgres.internal',
+			VOXR_POSTGRES_DATABASE: 'voxr_prod',
+			VOXR_POSTGRES_USERNAME: 'voxr_app',
+			VOXR_POSTGRES_PASSWORD: 'prod-postgres-secret',
+			VOXR_POSTGRES_SSL: 'false',
 		});
 
-		await expect(loadConfig()).rejects.toThrow('FLUXER_POSTGRES_SSL must be true');
+		await expect(loadConfig()).rejects.toThrow('VOXR_POSTGRES_SSL must be true');
 	});
 
 	test('parses self-host branding, setup, abuse policy, and search engine environment variables', async () => {
 		stubMinimalEnv({
-			FLUXER_SEARCH_ENGINE: 'meilisearch',
-			FLUXER_SEARCH_URL: 'http://meilisearch:7700',
-			FLUXER_SEARCH_API_KEY: 'meili-key',
-			FLUXER_SELF_HOSTED: 'true',
-			FLUXER_APP_PRODUCT_NAME: 'Example Chat',
-			FLUXER_APP_ICON_URL: 'https://assets.example/icon.png',
-			FLUXER_APP_SYMBOL_URL: 'https://assets.example/symbol.png',
-			FLUXER_APP_LOGO_URL: 'https://assets.example/logo.png',
-			FLUXER_APP_WORDMARK_URL: 'https://assets.example/wordmark.png',
-			FLUXER_APP_FAVICON_URL: 'https://assets.example/favicon.png',
-			FLUXER_APP_THEME_COLOR: '#123456',
-			FLUXER_INSTANCE_SETUP_CONFIGURED: 'true',
-			FLUXER_ABUSE_INBOUND_PHONE_COUNTRY_CODES: 'AA,BB',
-			FLUXER_ABUSE_PHONE_INBOUND_REQUIRED_PREFIXES: '+101,+202',
-			FLUXER_ABUSE_DIRECT_CONTACT_SPAM_ENABLED: 'true',
-			FLUXER_ABUSE_DIRECT_CONTACT_SPAM_COUNTRY_CODES: 'AA,BB',
-			FLUXER_ABUSE_DIRECT_CONTACT_SPAM_DISTINCT_TARGET_THRESHOLD: '9',
-			FLUXER_ABUSE_DIRECT_CONTACT_SPAM_TARGET_WINDOW_MS: '12345',
-			FLUXER_ABUSE_DIRECT_CONTACT_SPAM_ACTION: 'suppress_delivery',
+			VOXR_SEARCH_ENGINE: 'meilisearch',
+			VOXR_SEARCH_URL: 'http://meilisearch:7700',
+			VOXR_SEARCH_API_KEY: 'meili-key',
+			VOXR_SELF_HOSTED: 'true',
+			VOXR_APP_PRODUCT_NAME: 'Example Chat',
+			VOXR_APP_ICON_URL: 'https://assets.example/icon.png',
+			VOXR_APP_SYMBOL_URL: 'https://assets.example/symbol.png',
+			VOXR_APP_LOGO_URL: 'https://assets.example/logo.png',
+			VOXR_APP_WORDMARK_URL: 'https://assets.example/wordmark.png',
+			VOXR_APP_FAVICON_URL: 'https://assets.example/favicon.png',
+			VOXR_APP_THEME_COLOR: '#123456',
+			VOXR_INSTANCE_SETUP_CONFIGURED: 'true',
+			VOXR_ABUSE_INBOUND_PHONE_COUNTRY_CODES: 'AA,BB',
+			VOXR_ABUSE_PHONE_INBOUND_REQUIRED_PREFIXES: '+101,+202',
+			VOXR_ABUSE_DIRECT_CONTACT_SPAM_ENABLED: 'true',
+			VOXR_ABUSE_DIRECT_CONTACT_SPAM_COUNTRY_CODES: 'AA,BB',
+			VOXR_ABUSE_DIRECT_CONTACT_SPAM_DISTINCT_TARGET_THRESHOLD: '9',
+			VOXR_ABUSE_DIRECT_CONTACT_SPAM_TARGET_WINDOW_MS: '12345',
+			VOXR_ABUSE_DIRECT_CONTACT_SPAM_ACTION: 'suppress_delivery',
 		});
 
 		const config = await loadConfig();
@@ -491,32 +491,32 @@ describe('ConfigLoader', () => {
 	});
 
 	test('rejects an enabled captcha with no keys for the selected provider', async () => {
-		stubMinimalEnv({FLUXER_CAPTCHA_ENABLED: 'true', FLUXER_CAPTCHA_PROVIDER: 'hcaptcha'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_CAPTCHA_HCAPTCHA_SITE_KEY is required');
+		stubMinimalEnv({VOXR_CAPTCHA_ENABLED: 'true', VOXR_CAPTCHA_PROVIDER: 'hcaptcha'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_CAPTCHA_HCAPTCHA_SITE_KEY is required');
 	});
 
 	test('rejects an enabled captcha with a site key but no secret key', async () => {
 		stubMinimalEnv({
-			FLUXER_CAPTCHA_ENABLED: 'true',
-			FLUXER_CAPTCHA_PROVIDER: 'turnstile',
-			FLUXER_CAPTCHA_TURNSTILE_SITE_KEY: 'turnstile-site-key',
+			VOXR_CAPTCHA_ENABLED: 'true',
+			VOXR_CAPTCHA_PROVIDER: 'turnstile',
+			VOXR_CAPTCHA_TURNSTILE_SITE_KEY: 'turnstile-site-key',
 		});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_CAPTCHA_TURNSTILE_SECRET_KEY is required');
+		await expect(loadConfig()).rejects.toThrow('VOXR_CAPTCHA_TURNSTILE_SECRET_KEY is required');
 	});
 
 	test('rejects an enabled captcha with no provider', async () => {
-		stubMinimalEnv({FLUXER_CAPTCHA_ENABLED: 'true'});
+		stubMinimalEnv({VOXR_CAPTCHA_ENABLED: 'true'});
 		await expect(loadConfig()).rejects.toThrow(
-			'FLUXER_CAPTCHA_PROVIDER must be hcaptcha or turnstile when FLUXER_CAPTCHA_ENABLED is true',
+			'VOXR_CAPTCHA_PROVIDER must be hcaptcha or turnstile when VOXR_CAPTCHA_ENABLED is true',
 		);
 	});
 
 	test('accepts an enabled captcha with both keys for the selected provider', async () => {
 		stubMinimalEnv({
-			FLUXER_CAPTCHA_ENABLED: 'true',
-			FLUXER_CAPTCHA_PROVIDER: 'hcaptcha',
-			FLUXER_CAPTCHA_HCAPTCHA_SITE_KEY: 'hcaptcha-site-key',
-			FLUXER_CAPTCHA_HCAPTCHA_SECRET_KEY: 'hcaptcha-secret-key',
+			VOXR_CAPTCHA_ENABLED: 'true',
+			VOXR_CAPTCHA_PROVIDER: 'hcaptcha',
+			VOXR_CAPTCHA_HCAPTCHA_SITE_KEY: 'hcaptcha-site-key',
+			VOXR_CAPTCHA_HCAPTCHA_SECRET_KEY: 'hcaptcha-secret-key',
 		});
 
 		const config = await loadConfig();
@@ -526,7 +526,7 @@ describe('ConfigLoader', () => {
 	});
 
 	test('leaves a disabled captcha unvalidated', async () => {
-		stubMinimalEnv({FLUXER_CAPTCHA_PROVIDER: 'hcaptcha'});
+		stubMinimalEnv({VOXR_CAPTCHA_PROVIDER: 'hcaptcha'});
 		expect((await loadConfig()).integrations.captcha.enabled).toBe(false);
 	});
 
@@ -543,9 +543,9 @@ describe('ConfigLoader', () => {
 
 	test('applies explicit Bluesky legal URLs from the environment', async () => {
 		stubMinimalEnv({
-			FLUXER_AUTH_BLUESKY_ENABLED: 'true',
-			FLUXER_AUTH_BLUESKY_TOS_URI: 'https://chat.example.com/terms',
-			FLUXER_AUTH_BLUESKY_POLICY_URI: 'https://chat.example.com/privacy',
+			VOXR_AUTH_BLUESKY_ENABLED: 'true',
+			VOXR_AUTH_BLUESKY_TOS_URI: 'https://chat.example.com/terms',
+			VOXR_AUTH_BLUESKY_POLICY_URI: 'https://chat.example.com/privacy',
 		});
 
 		const config = await loadConfig();
@@ -557,7 +557,7 @@ describe('ConfigLoader', () => {
 
 	test('reads the upload relay secret through the override table', async () => {
 		const secret = Buffer.alloc(32, 9).toString('base64');
-		stubMinimalEnv({FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: secret});
+		stubMinimalEnv({VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: secret});
 
 		const config = await loadConfig();
 
@@ -571,28 +571,28 @@ describe('ConfigLoader', () => {
 
 	test('rejects a missing upload relay secret in upload mode', async () => {
 		stubMinimalEnv();
-		vi.stubEnv('FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64', '');
+		vi.stubEnv('VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64', '');
 
 		await expect(loadConfig()).rejects.toThrow(
-			'FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64 is required in upload mode',
+			'VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64 is required in upload mode',
 		);
 	});
 
 	test('rejects a non-base64 upload relay secret', async () => {
-		stubMinimalEnv({FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: 'not base64!'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64 must be base64');
+		stubMinimalEnv({VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: 'not base64!'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64 must be base64');
 	});
 
 	test('rejects an upload relay secret shorter than 32 bytes', async () => {
-		stubMinimalEnv({FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: Buffer.alloc(16, 7).toString('base64')});
+		stubMinimalEnv({VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: Buffer.alloc(16, 7).toString('base64')});
 		await expect(loadConfig()).rejects.toThrow(
-			'FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64 must decode to at least 32 bytes',
+			'VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64 must decode to at least 32 bytes',
 		);
 	});
 
 	test('leaves the upload relay secret optional outside upload mode', async () => {
-		stubMinimalEnv({FLUXER_MEDIA_PROXY_MODE: 'mp'});
-		vi.stubEnv('FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64', '');
+		stubMinimalEnv({VOXR_MEDIA_PROXY_MODE: 'mp'});
+		vi.stubEnv('VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64', '');
 
 		const config = await loadConfig();
 
@@ -602,38 +602,38 @@ describe('ConfigLoader', () => {
 	test('rejects a VAPID public key that is not a 65-byte uncompressed point', async () => {
 		const {privateKey} = generateVapidPair();
 		stubMinimalEnv({
-			FLUXER_VAPID_PUBLIC_KEY: Buffer.alloc(64, 4).toString('base64url'),
-			FLUXER_VAPID_PRIVATE_KEY: privateKey,
+			VOXR_VAPID_PUBLIC_KEY: Buffer.alloc(64, 4).toString('base64url'),
+			VOXR_VAPID_PRIVATE_KEY: privateKey,
 		});
 		await expect(loadConfig()).rejects.toThrow(
-			'FLUXER_VAPID_PUBLIC_KEY must be the base64url 65-byte uncompressed P-256 point',
+			'VOXR_VAPID_PUBLIC_KEY must be the base64url 65-byte uncompressed P-256 point',
 		);
 	});
 
 	test('rejects a VAPID private key that is not a 32-byte scalar', async () => {
 		const {publicKey} = generateVapidPair();
 		stubMinimalEnv({
-			FLUXER_VAPID_PUBLIC_KEY: publicKey,
-			FLUXER_VAPID_PRIVATE_KEY: Buffer.alloc(31, 9).toString('base64url'),
+			VOXR_VAPID_PUBLIC_KEY: publicKey,
+			VOXR_VAPID_PRIVATE_KEY: Buffer.alloc(31, 9).toString('base64url'),
 		});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_VAPID_PRIVATE_KEY must be the base64url 32-byte P-256 scalar');
+		await expect(loadConfig()).rejects.toThrow('VOXR_VAPID_PRIVATE_KEY must be the base64url 32-byte P-256 scalar');
 	});
 
 	test('rejects a well formed VAPID scalar that does not derive the public point', async () => {
 		const {publicKey} = generateVapidPair();
 		const other = generateVapidPair();
 		stubMinimalEnv({
-			FLUXER_VAPID_PUBLIC_KEY: publicKey,
-			FLUXER_VAPID_PRIVATE_KEY: other.privateKey,
+			VOXR_VAPID_PUBLIC_KEY: publicKey,
+			VOXR_VAPID_PRIVATE_KEY: other.privateKey,
 		});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_VAPID_PRIVATE_KEY does not match FLUXER_VAPID_PUBLIC_KEY');
+		await expect(loadConfig()).rejects.toThrow('VOXR_VAPID_PRIVATE_KEY does not match VOXR_VAPID_PUBLIC_KEY');
 	});
 
 	test('accepts a generated VAPID pair', async () => {
 		const pair = generateVapidPair();
 		stubMinimalEnv({
-			FLUXER_VAPID_PUBLIC_KEY: pair.publicKey,
-			FLUXER_VAPID_PRIVATE_KEY: pair.privateKey,
+			VOXR_VAPID_PUBLIC_KEY: pair.publicKey,
+			VOXR_VAPID_PRIVATE_KEY: pair.privateKey,
 		});
 
 		const config = await loadConfig();
@@ -643,12 +643,12 @@ describe('ConfigLoader', () => {
 	});
 
 	test('requires a complete environment', async () => {
-		vi.stubEnv('FLUXER_ENV', 'test');
+		vi.stubEnv('VOXR_ENV', 'test');
 		await expect(loadConfig()).rejects.toThrow();
 	});
 
 	test('inserts the public port into the LiveKit url', async () => {
-		stubMinimalEnv({FLUXER_LIVEKIT_URL: 'http://localhost/livekit'});
+		stubMinimalEnv({VOXR_LIVEKIT_URL: 'http://localhost/livekit'});
 
 		const config = await loadConfig();
 
@@ -657,14 +657,14 @@ describe('ConfigLoader', () => {
 
 	test('inserts the public port into every other public url the config carries', async () => {
 		stubMinimalEnv({
-			FLUXER_GATEWAY_MEDIA_PROXY_ENDPOINT: 'http://localhost/media',
-			FLUXER_S3_PUBLIC_ENDPOINT: 'http://localhost/s3',
-			FLUXER_EMAIL_APP_BASE_URL: 'http://localhost',
-			FLUXER_SMS_INBOUND_WEBHOOK_PUBLIC_URL: 'http://localhost/webhooks/sms',
-			FLUXER_AUTH_BLUESKY_CLIENT_URI: 'http://localhost',
-			FLUXER_AUTH_BLUESKY_TOS_URI: 'http://localhost/terms',
-			FLUXER_APP_ICON_URL: 'http://localhost/icon.png',
-			FLUXER_LIVEKIT_INTERNAL_URL: 'http://livekit:7880',
+			VOXR_GATEWAY_MEDIA_PROXY_ENDPOINT: 'http://localhost/media',
+			VOXR_S3_PUBLIC_ENDPOINT: 'http://localhost/s3',
+			VOXR_EMAIL_APP_BASE_URL: 'http://localhost',
+			VOXR_SMS_INBOUND_WEBHOOK_PUBLIC_URL: 'http://localhost/webhooks/sms',
+			VOXR_AUTH_BLUESKY_CLIENT_URI: 'http://localhost',
+			VOXR_AUTH_BLUESKY_TOS_URI: 'http://localhost/terms',
+			VOXR_APP_ICON_URL: 'http://localhost/icon.png',
+			VOXR_LIVEKIT_INTERNAL_URL: 'http://livekit:7880',
 		});
 
 		const config = await loadConfig();
@@ -680,15 +680,15 @@ describe('ConfigLoader', () => {
 	});
 
 	test('rejects a public port outside the valid range', async () => {
-		stubMinimalEnv({FLUXER_PUBLIC_PORT: '70000'});
-		await expect(loadConfig()).rejects.toThrow('FLUXER_PUBLIC_PORT must be an integer between 1 and 65535');
+		stubMinimalEnv({VOXR_PUBLIC_PORT: '70000'});
+		await expect(loadConfig()).rejects.toThrow('VOXR_PUBLIC_PORT must be an integer between 1 and 65535');
 	});
 });
 
-describe('FLUXER_PUBLIC_ORIGIN', () => {
+describe('VOXR_PUBLIC_ORIGIN', () => {
 	beforeEach(() => {
 		resetConfig();
-		clearFluxerEnv();
+		clearVoxrEnv();
 	});
 
 	afterEach(() => {
@@ -698,15 +698,15 @@ describe('FLUXER_PUBLIC_ORIGIN', () => {
 
 	test('a ported origin ports every derived endpoint and every compose override', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '',
-			FLUXER_PUBLIC_ORIGIN: 'https://chat.example.com:29080',
-			FLUXER_MARKETING_ENDPOINT: 'https://chat.example.com:29080',
-			FLUXER_MEDIA_ENDPOINT: 'https://chat.example.com:29080/media',
-			FLUXER_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'https://chat.example.com:29080/media',
-			FLUXER_LIVEKIT_URL: 'https://chat.example.com:29080/livekit',
-			FLUXER_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'https://chat.example.com:29080',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '',
+			VOXR_PUBLIC_ORIGIN: 'https://chat.example.com:29080',
+			VOXR_MARKETING_ENDPOINT: 'https://chat.example.com:29080',
+			VOXR_MEDIA_ENDPOINT: 'https://chat.example.com:29080/media',
+			VOXR_MEDIA_PROXY_UPLOAD_RELAY_ENDPOINT: 'https://chat.example.com:29080/media',
+			VOXR_LIVEKIT_URL: 'https://chat.example.com:29080/livekit',
+			VOXR_PASSKEY_ADDITIONAL_ALLOWED_ORIGINS: 'https://chat.example.com:29080',
 		});
 
 		const config = await loadConfig();
@@ -724,12 +724,12 @@ describe('FLUXER_PUBLIC_ORIGIN', () => {
 		expect(config.auth.passkeys.additional_allowed_origins).toEqual(['https://chat.example.com:29080']);
 	});
 
-	test('the origin port wins over a FLUXER_PUBLIC_PORT that disagrees', async () => {
+	test('the origin port wins over a VOXR_PUBLIC_PORT that disagrees', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '443',
-			FLUXER_PUBLIC_ORIGIN: 'https://chat.example.com:29080',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '443',
+			VOXR_PUBLIC_ORIGIN: 'https://chat.example.com:29080',
 		});
 
 		const config = await loadConfig();
@@ -741,12 +741,12 @@ describe('FLUXER_PUBLIC_ORIGIN', () => {
 		expect(config.endpoints.admin).toBe('https://chat.example.com:29080/admin');
 	});
 
-	test('accepts an origin whose port matches FLUXER_PUBLIC_PORT', async () => {
+	test('accepts an origin whose port matches VOXR_PUBLIC_PORT', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '29080',
-			FLUXER_PUBLIC_ORIGIN: 'https://chat.example.com:29080',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '29080',
+			VOXR_PUBLIC_ORIGIN: 'https://chat.example.com:29080',
 		});
 
 		expect((await loadConfig()).endpoints.gateway).toBe('wss://chat.example.com:29080/gateway');
@@ -754,11 +754,11 @@ describe('FLUXER_PUBLIC_ORIGIN', () => {
 
 	test('normalizes an origin written with an explicit default port', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '443',
-			FLUXER_PUBLIC_ORIGIN: 'https://chat.example.com:443',
-			FLUXER_ADMIN_ENDPOINT: 'https://chat.example.com/admin',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '443',
+			VOXR_PUBLIC_ORIGIN: 'https://chat.example.com:443',
+			VOXR_ADMIN_ENDPOINT: 'https://chat.example.com/admin',
 		});
 
 		const config = await loadConfig();
@@ -772,10 +772,10 @@ describe('FLUXER_PUBLIC_ORIGIN', () => {
 
 	test('takes the scheme and the domain from the origin when neither is set', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: '',
-			FLUXER_PUBLIC_SCHEME: '',
-			FLUXER_PUBLIC_PORT: '',
-			FLUXER_PUBLIC_ORIGIN: 'https://chat.example.com:29080',
+			VOXR_BASE_DOMAIN: '',
+			VOXR_PUBLIC_SCHEME: '',
+			VOXR_PUBLIC_PORT: '',
+			VOXR_PUBLIC_ORIGIN: 'https://chat.example.com:29080',
 		});
 
 		const config = await loadConfig();
@@ -785,12 +785,12 @@ describe('FLUXER_PUBLIC_ORIGIN', () => {
 		expect(config.domain.public_port).toBe(29080);
 	});
 
-	test('the origin scheme wins over a FLUXER_PUBLIC_SCHEME that disagrees', async () => {
+	test('the origin scheme wins over a VOXR_PUBLIC_SCHEME that disagrees', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'http',
-			FLUXER_PUBLIC_PORT: '',
-			FLUXER_PUBLIC_ORIGIN: 'https://chat.example.com',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'http',
+			VOXR_PUBLIC_PORT: '',
+			VOXR_PUBLIC_ORIGIN: 'https://chat.example.com',
 		});
 
 		const config = await loadConfig();
@@ -800,12 +800,12 @@ describe('FLUXER_PUBLIC_ORIGIN', () => {
 		expect(config.endpoints.gateway).toBe('wss://chat.example.com/gateway');
 	});
 
-	test('the origin host wins over a FLUXER_BASE_DOMAIN that disagrees', async () => {
+	test('the origin host wins over a VOXR_BASE_DOMAIN that disagrees', async () => {
 		stubMinimalEnv({
-			FLUXER_BASE_DOMAIN: 'chat.example.com',
-			FLUXER_PUBLIC_SCHEME: 'https',
-			FLUXER_PUBLIC_PORT: '',
-			FLUXER_PUBLIC_ORIGIN: 'https://other.example.com',
+			VOXR_BASE_DOMAIN: 'chat.example.com',
+			VOXR_PUBLIC_SCHEME: 'https',
+			VOXR_PUBLIC_PORT: '',
+			VOXR_PUBLIC_ORIGIN: 'https://other.example.com',
 		});
 
 		const config = await loadConfig();
@@ -815,9 +815,9 @@ describe('FLUXER_PUBLIC_ORIGIN', () => {
 	});
 
 	test('refuses to boot on an origin that is not a bare origin', async () => {
-		stubMinimalEnv({FLUXER_PUBLIC_ORIGIN: 'https://chat.example.com/app'});
+		stubMinimalEnv({VOXR_PUBLIC_ORIGIN: 'https://chat.example.com/app'});
 		await expect(loadConfig()).rejects.toThrow(
-			'FLUXER_PUBLIC_ORIGIN must be a scheme, host and optional port such as https://chat.example.com:8443, got https://chat.example.com/app',
+			'VOXR_PUBLIC_ORIGIN must be a scheme, host and optional port such as https://chat.example.com:8443, got https://chat.example.com/app',
 		);
 	});
 

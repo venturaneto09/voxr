@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {BadRequestError} from '@fluxer/errors/src/domains/core/BadRequestError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {BadRequestError} from '@voxr/errors/src/domains/core/BadRequestError';
 
 export type GroupDmRecipientNotAddableReason = 'unknown_user' | 'blocked' | 'not_friends' | 'group_dm_add_disabled';
 

@@ -24,7 +24,7 @@ pub async fn bootstrap(skip_install: bool) -> Result<()> {
     setup_gateway_config()?;
     wait_core_infra().await?;
     bootstrap_schema().await?;
-    println!("Fluxer dev bootstrap complete.");
+    println!("Voxr dev bootstrap complete.");
     Ok(())
 }
 

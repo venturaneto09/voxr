@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {HttpStatus} from '@fluxer/constants/src/HttpConstants';
-import {FluxerError, type FluxerErrorData} from '@fluxer/errors/src/FluxerError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {HttpStatus} from '@voxr/constants/src/HttpConstants';
+import {VoxrError, type VoxrErrorData} from '@voxr/errors/src/VoxrError';
 
 interface HttpErrorOptions {
 	code?: string;
 	message?: string;
-	data?: FluxerErrorData;
+	data?: VoxrErrorData;
 	headers?: Record<string, string>;
 	cause?: Error;
 }
 
-export class BadRequestError extends FluxerError {
+export class BadRequestError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.BAD_REQUEST,
@@ -26,7 +26,7 @@ export class BadRequestError extends FluxerError {
 	}
 }
 
-export class UnauthorizedError extends FluxerError {
+export class UnauthorizedError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.UNAUTHORIZED,
@@ -40,7 +40,7 @@ export class UnauthorizedError extends FluxerError {
 	}
 }
 
-export class ForbiddenError extends FluxerError {
+export class ForbiddenError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.FORBIDDEN,
@@ -54,7 +54,7 @@ export class ForbiddenError extends FluxerError {
 	}
 }
 
-export class NotFoundError extends FluxerError {
+export class NotFoundError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.NOT_FOUND,
@@ -68,7 +68,7 @@ export class NotFoundError extends FluxerError {
 	}
 }
 
-export class MethodNotAllowedError extends FluxerError {
+export class MethodNotAllowedError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.METHOD_NOT_ALLOWED,
@@ -82,7 +82,7 @@ export class MethodNotAllowedError extends FluxerError {
 	}
 }
 
-export class ConflictError extends FluxerError {
+export class ConflictError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.CONFLICT,
@@ -96,7 +96,7 @@ export class ConflictError extends FluxerError {
 	}
 }
 
-export class GoneError extends FluxerError {
+export class GoneError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.GONE,
@@ -110,7 +110,7 @@ export class GoneError extends FluxerError {
 	}
 }
 
-export class InternalServerError extends FluxerError {
+export class InternalServerError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.INTERNAL_SERVER_ERROR,
@@ -124,7 +124,7 @@ export class InternalServerError extends FluxerError {
 	}
 }
 
-export class NotImplementedError extends FluxerError {
+export class NotImplementedError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.NOT_IMPLEMENTED,
@@ -138,7 +138,7 @@ export class NotImplementedError extends FluxerError {
 	}
 }
 
-export class ServiceUnavailableError extends FluxerError {
+export class ServiceUnavailableError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.SERVICE_UNAVAILABLE,
@@ -152,7 +152,7 @@ export class ServiceUnavailableError extends FluxerError {
 	}
 }
 
-export class BadGatewayError extends FluxerError {
+export class BadGatewayError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.BAD_GATEWAY,
@@ -166,7 +166,7 @@ export class BadGatewayError extends FluxerError {
 	}
 }
 
-export class GatewayTimeoutError extends FluxerError {
+export class GatewayTimeoutError extends VoxrError {
 	constructor(options: HttpErrorOptions = {}) {
 		super({
 			code: options.code ?? APIErrorCodes.GATEWAY_TIMEOUT,

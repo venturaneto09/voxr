@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {HttpStatus} from '@fluxer/constants/src/HttpConstants';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
+import {HttpStatus} from '@voxr/constants/src/HttpConstants';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
 import {
 	BadGatewayError,
 	BadRequestError,
@@ -15,7 +15,7 @@ import {
 	NotImplementedError,
 	ServiceUnavailableError,
 	UnauthorizedError,
-} from '@fluxer/errors/src/HttpErrors';
+} from '@voxr/errors/src/HttpErrors';
 import {describe, expect, it} from 'vitest';
 
 describe('HttpErrors', () => {
@@ -62,9 +62,9 @@ describe('HttpErrors', () => {
 			const error = new BadRequestError({cause});
 			expect(error.cause).toBe(cause);
 		});
-		it('should be instance of FluxerError', () => {
+		it('should be instance of VoxrError', () => {
 			const error = new BadRequestError();
-			expect(error).toBeInstanceOf(FluxerError);
+			expect(error).toBeInstanceOf(VoxrError);
 		});
 	});
 	describe('UnauthorizedError', () => {
@@ -214,7 +214,7 @@ describe('HttpErrors', () => {
 		});
 	});
 	describe('error inheritance', () => {
-		it('all HTTP errors should extend FluxerError', () => {
+		it('all HTTP errors should extend VoxrError', () => {
 			const errors = [
 				new BadRequestError(),
 				new UnauthorizedError(),
@@ -230,7 +230,7 @@ describe('HttpErrors', () => {
 				new GatewayTimeoutError(),
 			];
 			for (const error of errors) {
-				expect(error).toBeInstanceOf(FluxerError);
+				expect(error).toBeInstanceOf(VoxrError);
 				expect(error).toBeInstanceOf(Error);
 			}
 		});

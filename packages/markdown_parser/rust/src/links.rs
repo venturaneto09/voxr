@@ -10,7 +10,7 @@ use crate::text::{
     is_digit, is_digit_only, is_whitespace, starts_with, trim,
 };
 
-const APP_PROTOCOL_SCHEME: &str = "fluxer:";
+const APP_PROTOCOL_SCHEME: &str = "voxr:";
 
 #[derive(Clone, Debug)]
 struct BracketResult<'a> {

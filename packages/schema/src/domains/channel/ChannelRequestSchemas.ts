@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ChannelTypes} from '@fluxer/constants/src/ChannelConstants';
-import {CONTENT_WARNING_TEXT_MAX_LENGTH} from '@fluxer/constants/src/GuildConstants';
+import {ChannelTypes} from '@voxr/constants/src/ChannelConstants';
+import {CONTENT_WARNING_TEXT_MAX_LENGTH} from '@voxr/constants/src/GuildConstants';
 import {
 	AVATAR_MAX_SIZE,
 	CHANNEL_RATE_LIMIT_PER_USER_MAX,
@@ -16,13 +16,13 @@ import {
 	VOICE_CHANNEL_CONNECTION_LIMIT_MIN,
 	VOICE_CHANNEL_USER_LIMIT_MAX,
 	VOICE_CHANNEL_USER_LIMIT_MIN,
-} from '@fluxer/constants/src/LimitConstants';
-import {ChannelNicknameOverrides} from '@fluxer/schema/src/domains/channel/ChannelSchemas';
-import {ReadStateResponse} from '@fluxer/schema/src/domains/gateway/GatewaySchemas';
-import {ChannelOverwriteTypeSchema, GeneralChannelNameType} from '@fluxer/schema/src/primitives/ChannelValidators';
-import {base64LengthForBytes, createBase64StringType} from '@fluxer/schema/src/primitives/FileValidators';
-import {ContentWarningLevelSchema} from '@fluxer/schema/src/primitives/GuildValidators';
-import {QueryBooleanType} from '@fluxer/schema/src/primitives/QueryValidators';
+} from '@voxr/constants/src/LimitConstants';
+import {ChannelNicknameOverrides} from '@voxr/schema/src/domains/channel/ChannelSchemas';
+import {ReadStateResponse} from '@voxr/schema/src/domains/gateway/GatewaySchemas';
+import {ChannelOverwriteTypeSchema, GeneralChannelNameType} from '@voxr/schema/src/primitives/ChannelValidators';
+import {base64LengthForBytes, createBase64StringType} from '@voxr/schema/src/primitives/FileValidators';
+import {ContentWarningLevelSchema} from '@voxr/schema/src/primitives/GuildValidators';
+import {QueryBooleanType} from '@voxr/schema/src/primitives/QueryValidators';
 import {
 	createNamedLiteral,
 	createNamedLiteralUnion,
@@ -30,8 +30,8 @@ import {
 	Int32Type,
 	SnowflakeType,
 	UnsignedInt64Type,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {URLType} from '@fluxer/schema/src/primitives/UrlValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {URLType} from '@voxr/schema/src/primitives/UrlValidators';
 import {z} from 'zod';
 
 const ChannelOverwriteRequest = z.object({
@@ -43,8 +43,8 @@ const ChannelOverwriteRequest = z.object({
 		],
 		'The type of overwrite (0 = role, 1 = member)',
 	),
-	allow: UnsignedInt64Type.optional().describe('fluxer:UnsignedInt64Type Bitwise value of allowed permissions'),
-	deny: UnsignedInt64Type.optional().describe('fluxer:UnsignedInt64Type Bitwise value of denied permissions'),
+	allow: UnsignedInt64Type.optional().describe('voxr:UnsignedInt64Type Bitwise value of allowed permissions'),
+	deny: UnsignedInt64Type.optional().describe('voxr:UnsignedInt64Type Bitwise value of denied permissions'),
 });
 
 const ChannelCommonBase = z.object({
@@ -200,8 +200,8 @@ export type ChannelUpdateRequest = z.infer<typeof ChannelUpdateRequest>;
 
 export const PermissionOverwriteCreateRequest = z.object({
 	type: ChannelOverwriteTypeSchema.describe('The type of overwrite (0 = role, 1 = member)'),
-	allow: UnsignedInt64Type.nullish().describe('fluxer:UnsignedInt64Type Bitwise value of allowed permissions'),
-	deny: UnsignedInt64Type.nullish().describe('fluxer:UnsignedInt64Type Bitwise value of denied permissions'),
+	allow: UnsignedInt64Type.nullish().describe('voxr:UnsignedInt64Type Bitwise value of allowed permissions'),
+	deny: UnsignedInt64Type.nullish().describe('voxr:UnsignedInt64Type Bitwise value of denied permissions'),
 });
 
 export type PermissionOverwriteCreateRequest = z.infer<typeof PermissionOverwriteCreateRequest>;

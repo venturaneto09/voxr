@@ -1,34 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type {BitflagEntry, EnumEntry} from '@fluxer/openapi/src/converters/ZodToOpenAPIAnnotationParser';
-import type {OpenAPISchema} from '@fluxer/openapi/src/Types';
+import type {BitflagEntry, EnumEntry} from '@voxr/openapi/src/converters/ZodToOpenAPIAnnotationParser';
+import type {OpenAPISchema} from '@voxr/openapi/src/Types';
 
-export interface FluxerOpenAPIExtensions {
+export interface VoxrOpenAPIExtensions {
 	'x-enumNames'?: Array<string | null>;
 	'x-enumDescriptions'?: Array<string | null>;
 	'x-bitflagValues'?: Array<BitflagEntry>;
 	'x-keyType'?: 'snowflake';
 }
 
-export type OpenAPISchemaWithExtensions = OpenAPISchema & FluxerOpenAPIExtensions;
+export type OpenAPISchemaWithExtensions = OpenAPISchema & VoxrOpenAPIExtensions;
 
-function withFluxerExtensions(schema: OpenAPISchema): OpenAPISchemaWithExtensions {
+function withVoxrExtensions(schema: OpenAPISchema): OpenAPISchemaWithExtensions {
 	return schema as OpenAPISchemaWithExtensions;
 }
 
 export function setEnumNames(schema: OpenAPISchema, names: Array<string | null>): void {
-	withFluxerExtensions(schema)['x-enumNames'] = names;
+	withVoxrExtensions(schema)['x-enumNames'] = names;
 }
 
 export function setEnumDescriptions(schema: OpenAPISchema, descriptions: Array<string | null>): void {
-	withFluxerExtensions(schema)['x-enumDescriptions'] = descriptions;
+	withVoxrExtensions(schema)['x-enumDescriptions'] = descriptions;
 }
 
 export function setBitflagValues(schema: OpenAPISchema, values: Array<BitflagEntry>): void {
-	withFluxerExtensions(schema)['x-bitflagValues'] = values;
+	withVoxrExtensions(schema)['x-bitflagValues'] = values;
 }
 
 export function setSnowflakeKeyType(schema: OpenAPISchema): void {
-	withFluxerExtensions(schema)['x-keyType'] = 'snowflake';
+	withVoxrExtensions(schema)['x-keyType'] = 'snowflake';
 }
 
 export function getEnumDescriptions(entries: Array<EnumEntry>): Array<string | null> | null {

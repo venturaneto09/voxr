@@ -6,7 +6,7 @@ import {
 	EmbedFooterResponse,
 	EmbedMediaResponse,
 	MessageEmbedResponse,
-} from '@fluxer/schema/src/domains/message/EmbedSchemas';
+} from '@voxr/schema/src/domains/message/EmbedSchemas';
 import {describe, expect, it} from 'vitest';
 
 describe('EmbedAuthorResponse', () => {

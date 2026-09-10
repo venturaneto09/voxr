@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {request as httpRequest} from 'node:http';
-import {createServer} from '@fluxer/hono/src/Server';
+import {createServer} from '@voxr/hono/src/Server';
 import type {ServerType} from '@hono/node-server';
 import {Hono} from 'hono';
 import {afterEach, describe, expect, test} from 'vitest';

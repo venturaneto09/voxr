@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type {OpenAPIRef, OpenAPISchema} from '@fluxer/openapi/src/Types';
+import type {OpenAPIRef, OpenAPISchema} from '@voxr/openapi/src/Types';
 import type {ZodTypeAny} from 'zod';
 
-const FLUXER_CUSTOM_TYPE_KEY = '__fluxer_custom_type__';
+const VOXR_CUSTOM_TYPE_KEY = '__voxr_custom_type__';
 interface CustomSchemaTypeConfig<TName extends string = string> {
 	readonly name: TName;
 	readonly zodSchema: ZodTypeAny;
@@ -40,6 +40,6 @@ export class CustomSchemaType<TName extends string = string> {
 	}
 }
 function markAsCustomType<T extends ZodTypeAny>(schema: T, typeName: string): T {
-	(schema as Record<string, unknown>)[FLUXER_CUSTOM_TYPE_KEY] = typeName;
+	(schema as Record<string, unknown>)[VOXR_CUSTOM_TYPE_KEY] = typeName;
 	return schema;
 }

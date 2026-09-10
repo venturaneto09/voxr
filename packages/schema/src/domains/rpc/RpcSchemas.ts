@@ -1,29 +1,29 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {RTC_REGION_ID_MAX_LENGTH, RTC_REGION_ID_MIN_LENGTH} from '@fluxer/constants/src/LimitConstants';
-import {GatewayRolloutConfigResponse} from '@fluxer/schema/src/domains/admin/GatewayRolloutSchemas';
-import {WebAuthnCredentialResponse} from '@fluxer/schema/src/domains/auth/AuthSchemas';
-import {ChannelResponse, RtcRegionResponse} from '@fluxer/schema/src/domains/channel/ChannelSchemas';
-import {VoiceStateResponse} from '@fluxer/schema/src/domains/gateway/GatewaySchemas';
-import {GuildEmojiResponse, GuildStickerResponse} from '@fluxer/schema/src/domains/guild/GuildEmojiSchemas';
-import {GuildMemberResponse} from '@fluxer/schema/src/domains/guild/GuildMemberSchemas';
-import {GuildResponse} from '@fluxer/schema/src/domains/guild/GuildResponseSchemas';
-import {GuildRoleResponse} from '@fluxer/schema/src/domains/guild/GuildRoleSchemas';
-import {FavoriteMemeResponse} from '@fluxer/schema/src/domains/meme/MemeSchemas';
-import {CustomStatusPayload} from '@fluxer/schema/src/domains/user/UserRequestSchemas';
+import {RTC_REGION_ID_MAX_LENGTH, RTC_REGION_ID_MIN_LENGTH} from '@voxr/constants/src/LimitConstants';
+import {GatewayRolloutConfigResponse} from '@voxr/schema/src/domains/admin/GatewayRolloutSchemas';
+import {WebAuthnCredentialResponse} from '@voxr/schema/src/domains/auth/AuthSchemas';
+import {ChannelResponse, RtcRegionResponse} from '@voxr/schema/src/domains/channel/ChannelSchemas';
+import {VoiceStateResponse} from '@voxr/schema/src/domains/gateway/GatewaySchemas';
+import {GuildEmojiResponse, GuildStickerResponse} from '@voxr/schema/src/domains/guild/GuildEmojiSchemas';
+import {GuildMemberResponse} from '@voxr/schema/src/domains/guild/GuildMemberSchemas';
+import {GuildResponse} from '@voxr/schema/src/domains/guild/GuildResponseSchemas';
+import {GuildRoleResponse} from '@voxr/schema/src/domains/guild/GuildRoleSchemas';
+import {FavoriteMemeResponse} from '@voxr/schema/src/domains/meme/MemeSchemas';
+import {CustomStatusPayload} from '@voxr/schema/src/domains/user/UserRequestSchemas';
 import {
 	CustomStatusResponse,
 	RelationshipResponse,
 	UserGuildSettingsResponse,
 	UserPrivateResponse,
 	UserSettingsResponse,
-} from '@fluxer/schema/src/domains/user/UserResponseSchemas';
+} from '@voxr/schema/src/domains/user/UserResponseSchemas';
 import {
 	createStringType,
 	SnowflakeStringType,
 	SnowflakeType,
 	UnsignedInt64StringType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const RPC_USER_BATCH_MAX = 1000;

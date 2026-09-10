@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import * as fs from 'node:fs';
-import {localeFilePath} from '@fluxer/i18n/src/io/LocaleFilePath';
-import {parseYamlRecord} from '@fluxer/i18n/src/io/ParseYamlRecord';
-import {buildTemplates} from '@fluxer/i18n/src/runtime/BuildTemplates';
-import type {I18nState} from '@fluxer/i18n/src/runtime/I18nTypes';
+import {localeFilePath} from '@voxr/i18n/src/io/LocaleFilePath';
+import {parseYamlRecord} from '@voxr/i18n/src/io/ParseYamlRecord';
+import {buildTemplates} from '@voxr/i18n/src/runtime/BuildTemplates';
+import type {I18nState} from '@voxr/i18n/src/runtime/I18nTypes';
 
 export function loadLocaleIfNotLoaded<TKey extends string, TValue, TVariables>(
 	state: I18nState<TKey, TValue, TVariables>,

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {CSRF_HEADER_NAME} from '@fluxer/constants/src/Cookies';
-import {createCsrfProtection} from '@fluxer/hono/src/security/CsrfProtection';
+import {CSRF_HEADER_NAME} from '@voxr/constants/src/Cookies';
+import {createCsrfProtection} from '@voxr/hono/src/security/CsrfProtection';
 import {Hono} from 'hono';
 import {describe, expect, test} from 'vitest';
 

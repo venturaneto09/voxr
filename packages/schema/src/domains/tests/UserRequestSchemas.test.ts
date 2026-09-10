@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {create} from '@bufbuild/protobuf';
-import {MAX_GROUP_DM_OTHER_RECIPIENTS} from '@fluxer/constants/src/LimitConstants';
-import {encodeSyncedPreferences, SyncedPreferencesSchema} from '@fluxer/schema/src/domains/user/SyncedPreferencesCodec';
+import {MAX_GROUP_DM_OTHER_RECIPIENTS} from '@voxr/constants/src/LimitConstants';
+import {encodeSyncedPreferences, SyncedPreferencesSchema} from '@voxr/schema/src/domains/user/SyncedPreferencesCodec';
 import {
 	CreatePrivateChannelRequest,
 	CustomStatusPayload,
 	UserSettingsUpdateRequest,
-} from '@fluxer/schema/src/domains/user/UserRequestSchemas';
-import {SearchEngineSettingsSchema} from '@fluxer/schema/src/gen/fluxer/user/preferences/v1/preferences_pb';
+} from '@voxr/schema/src/domains/user/UserRequestSchemas';
+import {SearchEngineSettingsSchema} from '@voxr/schema/src/gen/voxr/user/preferences/v1/preferences_pb';
 import {describe, expect, it} from 'vitest';
 
 describe('CustomStatusPayload', () => {

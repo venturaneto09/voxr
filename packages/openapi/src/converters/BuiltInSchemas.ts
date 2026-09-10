@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {ErrorCodeToI18nKey} from '@fluxer/errors/src/i18n/ErrorCodeMappings';
-import {ERROR_I18N_MESSAGES} from '@fluxer/errors/src/i18n/ErrorI18nMessages';
-import type {OpenAPISchemaWithExtensions} from '@fluxer/openapi/src/converters/OpenAPIExtensions';
-import type {OpenAPIRef, OpenAPISchema} from '@fluxer/openapi/src/Types';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {ErrorCodeToI18nKey} from '@voxr/errors/src/i18n/ErrorCodeMappings';
+import {ERROR_I18N_MESSAGES} from '@voxr/errors/src/i18n/ErrorI18nMessages';
+import type {OpenAPISchemaWithExtensions} from '@voxr/openapi/src/converters/OpenAPIExtensions';
+import type {OpenAPIRef, OpenAPISchema} from '@voxr/openapi/src/Types';
 export const SnowflakeTypeSchema: OpenAPISchema = {
 	type: 'string',
 	pattern: '^(0|[1-9][0-9]*)$',

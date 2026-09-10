@@ -1,5 +1,5 @@
 {
-	"name": "@fluxer/openapi",
+	"name": "@voxr/openapi",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -13,8 +13,8 @@
 		"validate": "tsx src/scripts/GenerateSpec.ts --validate-only"
 	},
 	"dependencies": {
-		"@fluxer/constants": "workspace:*",
-		"@fluxer/errors": "workspace:*",
+		"@voxr/constants": "workspace:*",
+		"@voxr/errors": "workspace:*",
 		"ts-morph": "catalog:",
 		"zod": "catalog:"
 	},

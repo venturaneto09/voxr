@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {LimitKey} from '@fluxer/constants/src/LimitConfigMetadata';
-import {applyRuleToResolvedLimits} from '@fluxer/limits/src/LimitRuleRuntime';
-import type {EvaluationContext, LimitRule} from '@fluxer/limits/src/LimitTypes';
+import type {LimitKey} from '@voxr/constants/src/LimitConfigMetadata';
+import {applyRuleToResolvedLimits} from '@voxr/limits/src/LimitRuleRuntime';
+import type {EvaluationContext, LimitRule} from '@voxr/limits/src/LimitTypes';
 
 export function mergeRuleIntoResolved(
 	resolved: Record<LimitKey, number>,

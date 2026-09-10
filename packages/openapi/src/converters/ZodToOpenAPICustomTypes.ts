@@ -13,22 +13,22 @@ import {
 	SnowflakeTypeRef,
 	UnsignedInt64TypeRef,
 	UsernameTypeRef,
-} from '@fluxer/openapi/src/converters/BuiltInSchemas';
-import {applyEnumEntryExtensions, setBitflagValues} from '@fluxer/openapi/src/converters/OpenAPIExtensions';
-import {getCustomTypeMetadata, getZodParent} from '@fluxer/openapi/src/converters/ZodInternals';
+} from '@voxr/openapi/src/converters/BuiltInSchemas';
+import {applyEnumEntryExtensions, setBitflagValues} from '@voxr/openapi/src/converters/OpenAPIExtensions';
+import {getCustomTypeMetadata, getZodParent} from '@voxr/openapi/src/converters/ZodInternals';
 import {
-	type FluxerTypeAnnotation,
-	parseFluxerTypeAnnotation,
-} from '@fluxer/openapi/src/converters/ZodToOpenAPIAnnotationParser';
+	type VoxrTypeAnnotation,
+	parseVoxrTypeAnnotation,
+} from '@voxr/openapi/src/converters/ZodToOpenAPIAnnotationParser';
 import {
 	getDescription,
 	getInnerType,
 	getOptions,
 	getZodTypeName,
 	isStringNumberIntUnion,
-} from '@fluxer/openapi/src/converters/ZodToOpenAPIIntrospection';
-import {CustomSchemaType} from '@fluxer/openapi/src/schemas/CustomSchemaType';
-import type {OpenAPISchema, OpenAPISchemaOrRef} from '@fluxer/openapi/src/Types';
+} from '@voxr/openapi/src/converters/ZodToOpenAPIIntrospection';
+import {CustomSchemaType} from '@voxr/openapi/src/schemas/CustomSchemaType';
+import type {OpenAPISchema, OpenAPISchemaOrRef} from '@voxr/openapi/src/Types';
 import type {ZodTypeAny} from 'zod';
 
 const bitflagSchemaRegistry = new Map<string, OpenAPISchema>();
@@ -84,53 +84,53 @@ function makeSchemaRef(schemaName: string, description: string | undefined): Ope
 	}
 	return {$ref: `#/components/schemas/${schemaName}`};
 }
-function applyInt32EnumEntries(schema: OpenAPISchema, fluxer: FluxerTypeAnnotation): void {
-	if (!fluxer.enumEntries || fluxer.enumEntries.length === 0) {
+function applyInt32EnumEntries(schema: OpenAPISchema, voxr: VoxrTypeAnnotation): void {
+	if (!voxr.enumEntries || voxr.enumEntries.length === 0) {
 		return;
 	}
-	applyEnumEntryExtensions(schema, fluxer.enumEntries);
+	applyEnumEntryExtensions(schema, voxr.enumEntries);
 }
-function makeInt32EnumSchema(fluxer: FluxerTypeAnnotation): OpenAPISchema {
+function makeInt32EnumSchema(voxr: VoxrTypeAnnotation): OpenAPISchema {
 	const schema: OpenAPISchema = {type: 'integer', format: 'int32'};
-	applyInt32EnumEntries(schema, fluxer);
-	if (fluxer.userDescription) {
-		schema.description = fluxer.userDescription;
+	applyInt32EnumEntries(schema, voxr);
+	if (voxr.userDescription) {
+		schema.description = voxr.userDescription;
 	}
 	return schema;
 }
-function getInt32EnumSchema(fluxer: FluxerTypeAnnotation): OpenAPISchemaOrRef {
-	if (!fluxer.bitflagTypeName) {
-		return makeInt32EnumSchema(fluxer);
+function getInt32EnumSchema(voxr: VoxrTypeAnnotation): OpenAPISchemaOrRef {
+	if (!voxr.bitflagTypeName) {
+		return makeInt32EnumSchema(voxr);
 	}
-	const schemaName = fluxer.bitflagTypeName;
+	const schemaName = voxr.bitflagTypeName;
 	if (!int32EnumSchemaRegistry.has(schemaName)) {
-		int32EnumSchemaRegistry.set(schemaName, makeInt32EnumSchema(fluxer));
+		int32EnumSchemaRegistry.set(schemaName, makeInt32EnumSchema(voxr));
 	}
-	return makeSchemaRef(schemaName, fluxer.fieldDescription);
+	return makeSchemaRef(schemaName, voxr.fieldDescription);
 }
-function makeBitflagSchema(fluxer: FluxerTypeAnnotation, integer: boolean): OpenAPISchema {
+function makeBitflagSchema(voxr: VoxrTypeAnnotation, integer: boolean): OpenAPISchema {
 	const schema: OpenAPISchema = integer
 		? {type: 'integer', format: 'int32', minimum: 0, maximum: 2147483647}
 		: {type: 'string', format: 'int64', pattern: '^[0-9]+$'};
-	if (fluxer.bitflagValues && fluxer.bitflagValues.length > 0) {
-		setBitflagValues(schema, fluxer.bitflagValues);
+	if (voxr.bitflagValues && voxr.bitflagValues.length > 0) {
+		setBitflagValues(schema, voxr.bitflagValues);
 	}
-	if (fluxer.userDescription) {
-		schema.description = fluxer.userDescription;
+	if (voxr.userDescription) {
+		schema.description = voxr.userDescription;
 	}
 	return schema;
 }
-function getBitflagSchema(fluxer: FluxerTypeAnnotation, integer: boolean): OpenAPISchemaOrRef {
-	if (!fluxer.bitflagTypeName) {
-		return makeBitflagSchema(fluxer, integer);
+function getBitflagSchema(voxr: VoxrTypeAnnotation, integer: boolean): OpenAPISchemaOrRef {
+	if (!voxr.bitflagTypeName) {
+		return makeBitflagSchema(voxr, integer);
 	}
-	const schemaName = fluxer.bitflagTypeName;
+	const schemaName = voxr.bitflagTypeName;
 	if (!bitflagSchemaRegistry.has(schemaName)) {
-		bitflagSchemaRegistry.set(schemaName, makeBitflagSchema(fluxer, integer));
+		bitflagSchemaRegistry.set(schemaName, makeBitflagSchema(voxr, integer));
 	}
-	return makeSchemaRef(schemaName, fluxer.fieldDescription);
+	return makeSchemaRef(schemaName, voxr.fieldDescription);
 }
-export function getFluxerCustomTypeSchema(schema: ZodTypeAny, depth = 0): OpenAPISchemaOrRef | null {
+export function getVoxrCustomTypeSchema(schema: ZodTypeAny, depth = 0): OpenAPISchemaOrRef | null {
 	if (depth > 15) return null;
 	const customType = getCustomType(schema);
 	if (customType) {
@@ -138,23 +138,23 @@ export function getFluxerCustomTypeSchema(schema: ZodTypeAny, depth = 0): OpenAP
 		if (ref) return ref;
 	}
 	const description = getDescription(schema);
-	const fluxer = parseFluxerTypeAnnotation(description);
-	if (fluxer) {
-		const ref = getRefForCustomTypeName(fluxer.typeName);
+	const voxr = parseVoxrTypeAnnotation(description);
+	if (voxr) {
+		const ref = getRefForCustomTypeName(voxr.typeName);
 		if (ref) return ref;
-		if (fluxer.typeName === 'Int32Enum') {
-			return getInt32EnumSchema(fluxer);
+		if (voxr.typeName === 'Int32Enum') {
+			return getInt32EnumSchema(voxr);
 		}
-		if (fluxer.typeName === 'Bitflags64') {
-			return getBitflagSchema(fluxer, false);
+		if (voxr.typeName === 'Bitflags64') {
+			return getBitflagSchema(voxr, false);
 		}
-		if (fluxer.typeName === 'Bitflags32') {
-			return getBitflagSchema(fluxer, true);
+		if (voxr.typeName === 'Bitflags32') {
+			return getBitflagSchema(voxr, true);
 		}
-		if (fluxer.typeName === 'Permissions') {
-			return getBitflagSchema(fluxer, false);
+		if (voxr.typeName === 'Permissions') {
+			return getBitflagSchema(voxr, false);
 		}
-		const customSchema = FLUXER_CUSTOM_TYPES[fluxer.typeName];
+		const customSchema = VOXR_CUSTOM_TYPES[voxr.typeName];
 		return customSchema ? {...customSchema} : null;
 	}
 	const zodTypeName = getZodTypeName(schema);
@@ -168,7 +168,7 @@ export function getFluxerCustomTypeSchema(schema: ZodTypeAny, depth = 0): OpenAP
 					return SnowflakeTypeRef;
 				}
 			}
-			const innerCustomSchema = getFluxerCustomTypeSchema(inner, depth + 1);
+			const innerCustomSchema = getVoxrCustomTypeSchema(inner, depth + 1);
 			if (innerCustomSchema) {
 				return innerCustomSchema;
 			}
@@ -184,7 +184,7 @@ export function getFluxerCustomTypeSchema(schema: ZodTypeAny, depth = 0): OpenAP
 	) {
 		const inner = getInnerType(schema);
 		if (inner) {
-			const innerCustomSchema = getFluxerCustomTypeSchema(inner, depth + 1);
+			const innerCustomSchema = getVoxrCustomTypeSchema(inner, depth + 1);
 			if (innerCustomSchema) {
 				return innerCustomSchema;
 			}
@@ -194,7 +194,7 @@ export function getFluxerCustomTypeSchema(schema: ZodTypeAny, depth = 0): OpenAP
 }
 export function isSnowflakeType(schema: ZodTypeAny, depth = 0): boolean {
 	if (depth > 10) return false;
-	const customTypeSchema = getFluxerCustomTypeSchema(schema, depth);
+	const customTypeSchema = getVoxrCustomTypeSchema(schema, depth);
 	if (customTypeSchema === SnowflakeTypeRef) {
 		return true;
 	}
@@ -212,7 +212,7 @@ export function isSnowflakeType(schema: ZodTypeAny, depth = 0): boolean {
 	}
 	return false;
 }
-const FLUXER_CUSTOM_TYPES: Record<string, OpenAPISchema> = {
+const VOXR_CUSTOM_TYPES: Record<string, OpenAPISchema> = {
 	Int64Type: {type: 'string', format: 'int64', pattern: '^-?[0-9]+$'},
 	Int64StringType: {type: 'string', format: 'int64', pattern: '^-?[0-9]+$'},
 	UnsignedInt64Type: {type: 'string', format: 'int64', pattern: '^[0-9]+$'},

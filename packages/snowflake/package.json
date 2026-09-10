@@ -1,5 +1,5 @@
 {
-	"name": "@fluxer/snowflake",
+	"name": "@voxr/snowflake",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -16,7 +16,7 @@
 		"typecheck": "tsgo --noEmit"
 	},
 	"dependencies": {
-		"@fluxer/constants": "workspace:*",
+		"@voxr/constants": "workspace:*",
 		"itty-time": "catalog:"
 	},
 	"devDependencies": {

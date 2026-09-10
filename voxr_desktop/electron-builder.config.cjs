@@ -1,0 +1,1517 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+const isCanary = process.env.BUILD_CHANNEL === 'canary';
+const {execFile} = require('node:child_process');
+const fs = require('node:fs/promises');
+const os = require('node:os');
+const path = require('node:path');
+const {promisify} = require('node:util');
+const execFileAsync = promisify(execFile);
+const productName = isCanary ? 'Voxr Canary' : 'Voxr';
+const artifactProductName = isCanary ? 'Voxr-Canary' : 'Voxr';
+const appId = isCanary ? 'app.voxr.canary' : 'app.voxr';
+const iconDir = isCanary ? 'icons-canary' : 'icons-stable';
+const packageName = isCanary ? 'voxr_desktop_canary' : 'voxr_desktop';
+const linuxPackageName = isCanary ? 'voxr-canary' : 'voxr';
+const linuxDesktopActionIds = ['open-settings', 'new-dm'];
+const linuxDesktopActionList = `${linuxDesktopActionIds.join(';')};`;
+const linuxGlibcBaseline = Object.freeze({major: 2, minor: 35, patch: 0, name: 'GLIBC_2.35'});
+const rpmBuildIdFilePrefix = '/usr/lib/.build-id';
+const rpmBuildIdLinkFpmArgs = [
+	'--rpm-rpmbuild-define',
+	'_build_id_links none',
+	'--rpm-rpmbuild-define',
+	'_missing_build_ids_terminate_build 0',
+];
+const macOSMinimumSystemVersion = '13.0';
+const isLinuxBuild = process.argv.includes('--linux');
+const isMacBuild = process.argv.includes('--mac');
+const isWindowsBuild = process.argv.includes('--win');
+const targetPlatform = isLinuxBuild ? 'linux' : isMacBuild ? 'darwin' : isWindowsBuild ? 'win32' : process.platform;
+const metadataName = isLinuxBuild ? linuxPackageName : packageName;
+const provisioningProfile = isCanary
+	? 'build_resources/profiles/Voxr_Canary.provisionprofile'
+	: 'build_resources/profiles/Voxr.provisionprofile';
+const supportedTargetArchs = ['x64', 'arm64'];
+const supportedMacTargetArchs = [...supportedTargetArchs, 'universal'];
+const electronArch = process.env.ELECTRON_ARCH;
+const cliTargetArch = supportedMacTargetArchs.find((arch) => process.argv.includes(`--${arch}`)) || null;
+const targetNativeArch = electronArch || cliTargetArch;
+
+if (electronArch && !supportedMacTargetArchs.includes(electronArch)) {
+	throw new Error(`Unsupported ELECTRON_ARCH: ${electronArch}`);
+}
+
+if (targetNativeArch === 'universal' && targetPlatform !== 'darwin') {
+	throw new Error(`ELECTRON_ARCH=universal is only supported for macOS builds, received platform ${targetPlatform}`);
+}
+
+const targetArchs = electronArch && electronArch !== 'universal' ? [electronArch] : supportedTargetArchs;
+const macTargetArchs = targetNativeArch ? [targetNativeArch] : supportedTargetArchs;
+const winGameCaptureTargetArchs =
+	targetPlatform === 'win32' && targetNativeArch ? [targetNativeArch] : supportedTargetArchs;
+const winTargets = [
+	{
+		target: 'dir',
+		arch: targetArchs,
+	},
+];
+const voxrNativePackages = [
+	'@voxr/mac-app-audio',
+	'@voxr/mac-clipboard',
+	'@voxr/mac-screen-capture',
+	'@voxr/mac-sysctl',
+	'@voxr/mac-tcc',
+	'@voxr/macos-input-hook',
+	'@voxr/win-process-loopback',
+	'@voxr/win-game-capture',
+	'@voxr/win-clipboard',
+	'@voxr/win-shell',
+	'@voxr/win-toast',
+	'@voxr/windows-input-hook',
+	'@voxr/linux-audio-capture',
+	'@voxr/linux-portals',
+	'@voxr/linux-screen-capture',
+	'@voxr/linux-notifications',
+	'@voxr/linux-evdev',
+	'@voxr/linux-input-hook',
+	'@voxr/system-hunspell',
+	'@voxr/hardware-encoder',
+	'@voxr/platform-info',
+	'@voxr/webauthn',
+];
+const voxrNativePackagesByPlatform = {
+	darwin: [
+		'@voxr/mac-app-audio',
+		'@voxr/mac-clipboard',
+		'@voxr/mac-screen-capture',
+		'@voxr/mac-sysctl',
+		'@voxr/mac-tcc',
+		'@voxr/macos-input-hook',
+		'@voxr/platform-info',
+		'@voxr/webauthn',
+		'@voxr/hardware-encoder',
+	],
+	win32: [
+		'@voxr/win-process-loopback',
+		'@voxr/win-game-capture',
+		'@voxr/win-clipboard',
+		'@voxr/win-shell',
+		'@voxr/win-toast',
+		'@voxr/windows-input-hook',
+		'@voxr/platform-info',
+		'@voxr/webauthn',
+		'@voxr/hardware-encoder',
+	],
+	linux: [
+		'@voxr/linux-audio-capture',
+		'@voxr/linux-portals',
+		'@voxr/linux-screen-capture',
+		'@voxr/linux-notifications',
+		'@voxr/linux-evdev',
+		'@voxr/linux-input-hook',
+		'@voxr/system-hunspell',
+		'@voxr/platform-info',
+		'@voxr/webauthn',
+		'@voxr/hardware-encoder',
+	],
+};
+const velopackNativeFiles = [
+	'velopack_nodeffi_linux_arm64_gnu.node',
+	'velopack_nodeffi_linux_x64_gnu.node',
+	'velopack_nodeffi_osx.node',
+	'velopack_nodeffi_win_arm64_msvc.node',
+	'velopack_nodeffi_win_x64_msvc.node',
+	'velopack_nodeffi_win_x86_msvc.node',
+];
+const nativeRuntimeFilePatterns = [
+	'node_modules/@voxr/mac-app-audio/package.json',
+	'node_modules/@voxr/mac-app-audio/index.js',
+	'node_modules/@voxr/mac-app-audio/loader-diagnostics.cjs',
+	'node_modules/@voxr/mac-app-audio/*.node',
+	'node_modules/@voxr/mac-screen-capture/package.json',
+	'node_modules/@voxr/mac-screen-capture/index.js',
+	'node_modules/@voxr/mac-screen-capture/loader-diagnostics.cjs',
+	'node_modules/@voxr/mac-screen-capture/*.node',
+	'node_modules/@voxr/mac-clipboard/package.json',
+	'node_modules/@voxr/mac-clipboard/index.js',
+	'node_modules/@voxr/mac-clipboard/loader-diagnostics.cjs',
+	'node_modules/@voxr/mac-clipboard/*.node',
+	'node_modules/@voxr/mac-sysctl/package.json',
+	'node_modules/@voxr/mac-sysctl/index.js',
+	'node_modules/@voxr/mac-sysctl/loader-diagnostics.cjs',
+	'node_modules/@voxr/mac-sysctl/*.node',
+	'node_modules/@voxr/mac-tcc/package.json',
+	'node_modules/@voxr/mac-tcc/index.js',
+	'node_modules/@voxr/mac-tcc/loader-diagnostics.cjs',
+	'node_modules/@voxr/mac-tcc/*.node',
+	'node_modules/@voxr/win-process-loopback/package.json',
+	'node_modules/@voxr/win-process-loopback/index.js',
+	'node_modules/@voxr/win-process-loopback/binding.js',
+	'node_modules/@voxr/win-process-loopback/loader-diagnostics.cjs',
+	'node_modules/@voxr/win-process-loopback/*.node',
+	'node_modules/@voxr/win-game-capture/package.json',
+	'node_modules/@voxr/win-game-capture/index.js',
+	'node_modules/@voxr/win-game-capture/loader-diagnostics.cjs',
+	...winGameCaptureTargetArchs.map(
+		(arch) => `node_modules/@voxr/win-game-capture/win-game-capture.win32-${arch}-msvc.node`,
+	),
+	'node_modules/@voxr/win-clipboard/package.json',
+	'node_modules/@voxr/win-clipboard/index.js',
+	'node_modules/@voxr/win-clipboard/loader-diagnostics.cjs',
+	'node_modules/@voxr/win-clipboard/*.node',
+	'node_modules/@voxr/win-shell/package.json',
+	'node_modules/@voxr/win-shell/index.js',
+	'node_modules/@voxr/win-shell/loader-diagnostics.cjs',
+	'node_modules/@voxr/win-shell/*.node',
+	'node_modules/@voxr/win-toast/package.json',
+	'node_modules/@voxr/win-toast/index.js',
+	'node_modules/@voxr/win-toast/loader-diagnostics.cjs',
+	'node_modules/@voxr/win-toast/*.node',
+	'node_modules/@voxr/linux-audio-capture/package.json',
+	'node_modules/@voxr/linux-audio-capture/index.js',
+	'node_modules/@voxr/linux-audio-capture/loader-diagnostics.cjs',
+	'node_modules/@voxr/linux-audio-capture/*.node',
+	'node_modules/@voxr/linux-portals/package.json',
+	'node_modules/@voxr/linux-portals/index.js',
+	'node_modules/@voxr/linux-portals/loader-diagnostics.cjs',
+	'node_modules/@voxr/linux-portals/*.node',
+	'node_modules/@voxr/linux-screen-capture/package.json',
+	'node_modules/@voxr/linux-screen-capture/index.js',
+	'node_modules/@voxr/linux-screen-capture/loader-diagnostics.cjs',
+	'node_modules/@voxr/linux-screen-capture/*.node',
+	'node_modules/@voxr/linux-screen-capture/THIRD_PARTY_OBS_VKCAPTURE.md',
+	'node_modules/@voxr/linux-screen-capture/obs-vkcapture/**/*',
+	'node_modules/@voxr/linux-notifications/package.json',
+	'node_modules/@voxr/linux-notifications/index.js',
+	'node_modules/@voxr/linux-notifications/loader-diagnostics.cjs',
+	'node_modules/@voxr/linux-notifications/*.node',
+	'node_modules/@voxr/linux-evdev/package.json',
+	'node_modules/@voxr/linux-evdev/index.js',
+	'node_modules/@voxr/linux-evdev/loader-diagnostics.cjs',
+	'node_modules/@voxr/linux-evdev/*.node',
+	'node_modules/@voxr/system-hunspell/package.json',
+	'node_modules/@voxr/system-hunspell/index.js',
+	'node_modules/@voxr/system-hunspell/loader-diagnostics.cjs',
+	'node_modules/@voxr/system-hunspell/*.node',
+	'node_modules/@voxr/macos-input-hook/package.json',
+	'node_modules/@voxr/macos-input-hook/index.js',
+	'node_modules/@voxr/macos-input-hook/loader-diagnostics.cjs',
+	'node_modules/@voxr/macos-input-hook/*.node',
+	'node_modules/@voxr/windows-input-hook/package.json',
+	'node_modules/@voxr/windows-input-hook/index.js',
+	'node_modules/@voxr/windows-input-hook/loader-diagnostics.cjs',
+	'node_modules/@voxr/windows-input-hook/*.node',
+	'node_modules/@voxr/linux-input-hook/package.json',
+	'node_modules/@voxr/linux-input-hook/index.js',
+	'node_modules/@voxr/linux-input-hook/loader-diagnostics.cjs',
+	'node_modules/@voxr/linux-input-hook/*.node',
+	'node_modules/@voxr/platform-info/package.json',
+	'node_modules/@voxr/platform-info/index.js',
+	'node_modules/@voxr/platform-info/pure.cjs',
+	'node_modules/@voxr/platform-info/loader-diagnostics.cjs',
+	'node_modules/@voxr/platform-info/*.node',
+	'node_modules/@voxr/webauthn/package.json',
+	'node_modules/@voxr/webauthn/index.js',
+	'node_modules/@voxr/webauthn/index.d.ts',
+	'node_modules/@voxr/webauthn/pure.cjs',
+	'node_modules/@voxr/webauthn/loader-diagnostics.cjs',
+	'node_modules/@voxr/webauthn/*.node',
+	'node_modules/@voxr/webauthn/*.so*',
+	'node_modules/@voxr/hardware-encoder/package.json',
+	'node_modules/@voxr/hardware-encoder/index.js',
+	'node_modules/@voxr/hardware-encoder/index.d.ts',
+	'node_modules/@voxr/hardware-encoder/*.node',
+	'node_modules/.pnpm/@voxr+*/node_modules/@voxr/*/loader-diagnostics.cjs',
+	'node_modules/.pnpm/@voxr+*/node_modules/@voxr/*/pure.cjs',
+	'node_modules/.pnpm/@voxr+win-process-loopback@*/node_modules/@voxr/win-process-loopback/*.node',
+	...winGameCaptureTargetArchs.map(
+		(arch) =>
+			`node_modules/.pnpm/@voxr+win-game-capture@*/node_modules/@voxr/win-game-capture/win-game-capture.win32-${arch}-msvc.node`,
+	),
+	'node_modules/.pnpm/@voxr+win-clipboard@*/node_modules/@voxr/win-clipboard/*.node',
+	'node_modules/.pnpm/@voxr+win-shell@*/node_modules/@voxr/win-shell/*.node',
+	'node_modules/.pnpm/@voxr+win-toast@*/node_modules/@voxr/win-toast/*.node',
+	'node_modules/.pnpm/@voxr+windows-input-hook@*/node_modules/@voxr/windows-input-hook/*.node',
+	'node_modules/.pnpm/@voxr+linux-audio-capture@*/node_modules/@voxr/linux-audio-capture/*.node',
+	'node_modules/.pnpm/@voxr+linux-portals@*/node_modules/@voxr/linux-portals/*.node',
+	'node_modules/.pnpm/@voxr+linux-screen-capture@*/node_modules/@voxr/linux-screen-capture/*.node',
+	'node_modules/.pnpm/@voxr+linux-screen-capture@*/node_modules/@voxr/linux-screen-capture/THIRD_PARTY_OBS_VKCAPTURE.md',
+	'node_modules/.pnpm/@voxr+linux-screen-capture@*/node_modules/@voxr/linux-screen-capture/obs-vkcapture/**/*',
+	'node_modules/.pnpm/@voxr+linux-notifications@*/node_modules/@voxr/linux-notifications/*.node',
+	'node_modules/.pnpm/@voxr+linux-evdev@*/node_modules/@voxr/linux-evdev/*.node',
+	'node_modules/.pnpm/@voxr+linux-input-hook@*/node_modules/@voxr/linux-input-hook/*.node',
+	'node_modules/.pnpm/@voxr+mac-app-audio@*/node_modules/@voxr/mac-app-audio/*.node',
+	'node_modules/.pnpm/@voxr+mac-screen-capture@*/node_modules/@voxr/mac-screen-capture/*.node',
+	'node_modules/.pnpm/@voxr+mac-clipboard@*/node_modules/@voxr/mac-clipboard/*.node',
+	'node_modules/.pnpm/@voxr+mac-sysctl@*/node_modules/@voxr/mac-sysctl/*.node',
+	'node_modules/.pnpm/@voxr+mac-tcc@*/node_modules/@voxr/mac-tcc/*.node',
+	'node_modules/.pnpm/@voxr+macos-input-hook@*/node_modules/@voxr/macos-input-hook/*.node',
+	'node_modules/.pnpm/@voxr+platform-info@*/node_modules/@voxr/platform-info/*.node',
+	'node_modules/.pnpm/@voxr+webauthn@*/node_modules/@voxr/webauthn/*.node',
+	'node_modules/.pnpm/@voxr+webauthn@*/node_modules/@voxr/webauthn/*.so*',
+	'node_modules/.pnpm/@voxr+hardware-encoder@*/node_modules/@voxr/hardware-encoder/*.node',
+];
+const nativeBuildArtifactExcludes = [
+	'!node_modules/@voxr/**/src/**/*',
+	'!node_modules/@voxr/**/target/**/*',
+	'!node_modules/@voxr/**/build/**/*',
+	'!node_modules/@voxr/**/Cargo.toml',
+	'!node_modules/@voxr/**/Cargo.lock',
+	'!node_modules/@voxr/**/CMakeLists.txt',
+	'!node_modules/@voxr/**/tsconfig.json',
+	'!node_modules/@voxr/**/*.d.ts',
+	'!node_modules/@voxr/**/*.d.ts.map',
+	'!node_modules/@voxr/**/*.map',
+	'!node_modules/@voxr/**/*.rs',
+	'!node_modules/@voxr/**/*.swift',
+];
+const packagedRuntimeArtifactExcludes = [
+	'!dist/**/*.map',
+	'!node_modules/**/.cache/**/*',
+	'!node_modules/**/.github/**/*',
+	'!node_modules/**/.yarn/**/*',
+	'!node_modules/**/.yarnrc.yml',
+	'!node_modules/**/*.map',
+	'!node_modules/**/*.d.ts',
+	'!node_modules/**/*.d.ts.map',
+	'!node_modules/**/*.tsbuildinfo',
+	'!node_modules/**/tsconfig.json',
+	'!node_modules/**/tsconfig.*.json',
+	'!node_modules/**/README*',
+	'!node_modules/**/CHANGELOG*',
+	'!node_modules/hunspell-asm/src/**/*',
+	'!node_modules/hunspell-asm/dist/esm/**/*',
+	'!node_modules/hunspell-asm/dist/types/**/*',
+	'!node_modules/hunspell-asm/dist/cjs/lib/browser/**/*',
+	'!node_modules/emscripten-wasm-loader/src/**/*',
+	'!node_modules/emscripten-wasm-loader/dist/esm/**/*',
+	'!node_modules/emscripten-wasm-loader/dist/types/**/*',
+];
+const bundledDependencyExcludes = [
+	'!node_modules/@homebridge/dbus-native/**/*',
+	'!node_modules/@simplewebauthn/browser/**/*',
+	'!node_modules/duplexer/**/*',
+	'!node_modules/event-stream/**/*',
+	'!node_modules/from/**/*',
+	'!node_modules/hexy/**/*',
+	'!node_modules/long/**/*',
+	'!node_modules/map-stream/**/*',
+	'!node_modules/minimist/**/*',
+	'!node_modules/pause-stream/**/*',
+	'!node_modules/safe-buffer/**/*',
+	'!node_modules/sax/**/*',
+	'!node_modules/split/**/*',
+	'!node_modules/stream-combiner/**/*',
+	'!node_modules/through/**/*',
+	'!node_modules/xml2js/**/*',
+	'!node_modules/xmlbuilder/**/*',
+];
+const platformNativeRuntimeExcludes = platformNativeExcludes(targetPlatform, targetNativeArch);
+const platformRuntimeDependencyExcludes =
+	targetPlatform === 'darwin'
+		? []
+		: ['!node_modules/github-url-to-object/**/*', '!node_modules/ms/**/*', '!node_modules/update-electron-app/**/*'];
+const linuxDesktopEntry = {
+	Name: productName,
+	GenericName: 'Instant Messenger',
+	Comment: isCanary ? 'Canary build of Voxr' : 'Instant messaging and VoIP',
+	Keywords: 'chat;im;messaging;messenger;voip;voice;video;call;',
+	Categories: 'Network;InstantMessaging;Chat;',
+	StartupWMClass: linuxPackageName,
+	StartupNotify: 'true',
+	SingleMainWindow: 'true',
+	MimeType: 'x-scheme-handler/voxr;',
+	'X-GNOME-UsesNotifications': 'true',
+};
+const linuxDesktopEntryWithActions = {
+	...linuxDesktopEntry,
+	Actions: linuxDesktopActionList,
+};
+const linuxInstalledExecPath = quoteDesktopExecArg(path.posix.join('/opt', productName, linuxPackageName));
+const linuxDesktopActions = {
+	'open-settings': {
+		Name: 'Open Settings',
+		Exec: buildLinuxDesktopTaskExec('open-settings'),
+	},
+	'new-dm': {
+		Name: 'New Direct Message',
+		Exec: buildLinuxDesktopTaskExec('new-dm'),
+	},
+};
+
+function velopackNativeFile(platform, arch) {
+	if (platform === 'darwin') return 'velopack_nodeffi_osx.node';
+	if (!arch) return null;
+	if (platform === 'win32') return `velopack_nodeffi_win_${arch}_msvc.node`;
+	if (platform === 'linux') return `velopack_nodeffi_linux_${arch}_gnu.node`;
+	return null;
+}
+
+function pnpmStoreDirName(packageName) {
+	return packageName.replace('/', '+');
+}
+
+function windowsGameCaptureArtifactExcludes(arch) {
+	const packageRoots = [
+		'node_modules/@voxr/win-game-capture',
+		'node_modules/.pnpm/@voxr+win-game-capture@*/node_modules/@voxr/win-game-capture',
+	];
+	const excludedNodeArchs = [...supportedTargetArchs, 'ia32'].filter((candidate) => candidate !== arch);
+	return packageRoots.flatMap((packageRoot) => [
+		...excludedNodeArchs.map((excludedArch) => `!${packageRoot}/win-game-capture.win32-${excludedArch}-msvc.node`),
+	]);
+}
+
+function platformNativeExcludes(platform, arch) {
+	const keepVoxrPackages = new Set(voxrNativePackagesByPlatform[platform] ?? []);
+	const voxrPackageExcludes = voxrNativePackages
+		.filter((packageName) => !keepVoxrPackages.has(packageName))
+		.flatMap((packageName) => [
+			`!node_modules/${packageName}/**/*`,
+			`!node_modules/.pnpm/${pnpmStoreDirName(packageName)}@*/**/*`,
+		]);
+	if (platform !== 'win32') {
+		return [...voxrPackageExcludes, '!node_modules/velopack/**/*'];
+	}
+	const keepVelopackNativeFile = velopackNativeFile(platform, arch);
+	if (!keepVelopackNativeFile) {
+		throw new Error(
+			`Cannot determine the Velopack native module for win32 without a target architecture; set ELECTRON_ARCH or pass --x64/--arm64 (received ${JSON.stringify(arch)})`,
+		);
+	}
+	return [
+		...voxrPackageExcludes,
+		...windowsGameCaptureArtifactExcludes(arch),
+		...velopackNativeFiles
+			.filter((fileName) => fileName !== keepVelopackNativeFile)
+			.map((fileName) => `!node_modules/velopack/lib/native/${fileName}`),
+	];
+}
+
+function quoteDesktopExecArg(value) {
+	return `"${value.replace(/(["`$\\])/g, '\\$1')}"`;
+}
+
+function buildLinuxDesktopTaskExec(taskId) {
+	return `${linuxInstalledExecPath} --voxr-task=${taskId} %U`;
+}
+
+function normalizeArch(arch) {
+	if (arch === 'x64' || arch === 'arm64') {
+		return arch;
+	}
+	if (arch === 'universal') return 'universal';
+	if (arch === 1) return 'x64';
+	if (arch === 3) return 'arm64';
+	if (arch === 4) return 'universal';
+	return electronArch || process.arch;
+}
+
+function platformTag(platform, arch) {
+	if (platform === 'darwin') return `darwin-${arch}`;
+	if (platform === 'win32') return `win32-${arch}-msvc`;
+	if (platform === 'linux') return `linux-${arch}-gnu`;
+	return null;
+}
+
+function addWindowsGameCaptureArtifacts(artifacts, tag) {
+	artifacts.push({
+		packageName: '@voxr/win-game-capture',
+		relativePath: `win-game-capture.${tag}.node`,
+	});
+}
+
+function expectedNativeRuntimeArtifacts(platform, arch) {
+	if (platform === 'darwin' && arch === 'universal') {
+		return [
+			...expectedNativeRuntimeArtifactsForArch(platform, 'arm64'),
+			...expectedNativeRuntimeArtifactsForArch(platform, 'x64'),
+		];
+	}
+	return expectedNativeRuntimeArtifactsForArch(platform, arch);
+}
+
+function expectedNativeRuntimeArtifactsForArch(platform, arch) {
+	const tag = platformTag(platform, arch);
+	if (!tag) return [];
+	const artifacts = [];
+	artifacts.push({
+		packageName: '@voxr/webauthn',
+		relativePath: `webauthn.${tag}.node`,
+	});
+	artifacts.push({
+		packageName: '@voxr/hardware-encoder',
+		relativePath: `hardware-encoder.${tag}.node`,
+	});
+	if (platform === 'darwin') {
+		artifacts.push({
+			packageName: '@voxr/mac-app-audio',
+			relativePath: `mac-app-audio.darwin-${arch}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/mac-screen-capture',
+			relativePath: `mac-screen-capture.darwin-${arch}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/mac-clipboard',
+			relativePath: `mac-clipboard.darwin-${arch}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/mac-sysctl',
+			relativePath: `mac-sysctl.darwin-${arch}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/mac-tcc',
+			relativePath: `mac-tcc.darwin-${arch}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/macos-input-hook',
+			relativePath: `macos-input-hook.darwin-${arch}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/platform-info',
+			relativePath: `platform-info.${tag}.node`,
+		});
+	} else if (platform === 'win32') {
+		artifacts.push({
+			packageName: '@voxr/win-process-loopback',
+			relativePath: `win-process-loopback.${tag}.node`,
+		});
+		addWindowsGameCaptureArtifacts(artifacts, tag);
+		artifacts.push({
+			packageName: '@voxr/win-clipboard',
+			relativePath: `win-clipboard.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/win-shell',
+			relativePath: `win-shell.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/win-toast',
+			relativePath: `win-toast.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/windows-input-hook',
+			relativePath: `windows-input-hook.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/platform-info',
+			relativePath: `platform-info.${tag}.node`,
+		});
+	} else if (platform === 'linux') {
+		artifacts.push({
+			packageName: '@voxr/linux-audio-capture',
+			relativePath: `linux-audio-capture.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/linux-portals',
+			relativePath: `linux-portals.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/linux-screen-capture',
+			relativePath: `linux-screen-capture.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/linux-notifications',
+			relativePath: `linux-notifications.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/linux-evdev',
+			relativePath: `linux-evdev.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/system-hunspell',
+			relativePath: `system-hunspell.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/linux-input-hook',
+			relativePath: `linux-input-hook.${tag}.node`,
+		});
+		artifacts.push({
+			packageName: '@voxr/platform-info',
+			relativePath: `platform-info.${tag}.node`,
+		});
+	}
+	return artifacts;
+}
+
+function isLinuxSharedLibraryArtifact(fileName) {
+	return /\.so(?:\.|$)/.test(fileName);
+}
+
+async function expectedNativeRuntimeArtifactsForAppDir(platform, arch, appDir) {
+	const artifacts = expectedNativeRuntimeArtifacts(platform, arch);
+	if (platform !== 'linux') return artifacts;
+	const webAuthnRoot = path.join(appDir, 'node_modules', '@voxr', 'webauthn');
+	const linuxWebAuthnRuntimeLibraries = new Set(['libfido2.so.1']);
+	try {
+		for (const entry of await fs.readdir(webAuthnRoot, {withFileTypes: true})) {
+			if (entry.isFile() && isLinuxSharedLibraryArtifact(entry.name)) {
+				linuxWebAuthnRuntimeLibraries.add(entry.name);
+			}
+		}
+	} catch (error) {
+		if (!error || error.code !== 'ENOENT') throw error;
+	}
+	for (const libraryName of [...linuxWebAuthnRuntimeLibraries].sort()) {
+		artifacts.push({
+			packageName: '@voxr/webauthn',
+			relativePath: libraryName,
+		});
+	}
+	return artifacts;
+}
+
+function packagePathParts(packageName) {
+	const parts = packageName.split('/');
+	if (parts.length === 2 && parts[0].startsWith('@')) {
+		return parts;
+	}
+	return [packageName];
+}
+
+function isNonEmptyString(value) {
+	return typeof value === 'string' && value.length > 0;
+}
+
+function resolveAppDir(context) {
+	const candidates = [
+		context.appDir,
+		context.packager?.info?.appDir,
+		context.packager?.appDir,
+		context.packager?.projectDir,
+		context.packager?.info?.projectDir,
+		process.cwd(),
+	];
+	const appDir = candidates.find(isNonEmptyString);
+	if (!appDir) {
+		throw new Error('Unable to resolve electron-builder app directory for native artifact verification.');
+	}
+	return appDir;
+}
+
+async function fileExists(filePath) {
+	return fs
+		.stat(filePath)
+		.then((stat) => stat.isFile())
+		.catch((error) => {
+			if (error && error.code === 'ENOENT') {
+				return false;
+			}
+			throw error;
+		});
+}
+
+function darwinMachOArchFromLabel(label) {
+	if (label.includes('darwin-arm64')) return 'arm64';
+	if (label.includes('darwin-x64')) return 'x86_64';
+	return null;
+}
+
+function expectedDarwinMachOArch(arch) {
+	if (arch === 'x64') return 'x86_64';
+	if (arch === 'arm64') return 'arm64';
+	return null;
+}
+
+async function darwinMachOArchitectures(filePath) {
+	const {stdout} = await execFileAsync('lipo', ['-archs', filePath]);
+	return stdout.trim().split(/\s+/).filter(Boolean);
+}
+
+async function darwinMachOFileTypes(filePath) {
+	const {stdout} = await execFileAsync('otool', ['-hv', filePath]);
+	const knownFileTypes = new Set(['OBJECT', 'EXECUTE', 'FVMLIB', 'CORE', 'PRELOAD', 'DYLIB', 'DYLINKER', 'BUNDLE']);
+	return stdout
+		.split(/\r?\n/)
+		.flatMap((line) => line.trim().split(/\s+/))
+		.filter((token) => knownFileTypes.has(token));
+}
+
+async function darwinMachOLoadCommands(filePath) {
+	const {stdout} = await execFileAsync('otool', ['-l', filePath]);
+	return stdout
+		.split(/\r?\n/)
+		.map((line) => line.trim().match(/^cmd\s+(\S+)$/)?.[1])
+		.filter(Boolean);
+}
+
+async function verifyDarwinNativeArchitectures(platform, arch, entries, stage) {
+	if (platform !== 'darwin') return;
+	const isUniversal = arch === 'universal';
+	const expectedArch = expectedDarwinMachOArch(arch);
+	if (!expectedArch && !isUniversal) return;
+	const mismatches = [];
+	for (const entry of entries) {
+		if (!(await fileExists(entry.path))) continue;
+		const entryExpectedArch = isUniversal ? darwinMachOArchFromLabel(entry.label) : expectedArch;
+		if (!entryExpectedArch) continue;
+		const archs = await darwinMachOArchitectures(entry.path);
+		const fileTypes = await darwinMachOFileTypes(entry.path);
+		if (!archs.includes(entryExpectedArch)) {
+			mismatches.push(`${entry.label}: has ${archs.join(', ') || '<none>'}; expected ${entryExpectedArch}`);
+		}
+		if (entryExpectedArch === 'x86_64' && archs.includes('x86_64h') && !archs.includes('x86_64')) {
+			mismatches.push(`${entry.label}: has x86_64h only; expected baseline x86_64 for Intel compatibility`);
+		}
+		if (fileTypes.length === 0 || fileTypes.some((fileType) => fileType !== 'BUNDLE' && fileType !== 'DYLIB')) {
+			mismatches.push(
+				`${entry.label}: Mach-O file type ${fileTypes.join(', ') || '<none>'}; expected DYLIB or BUNDLE for Node addon loading`,
+			);
+		}
+		if (fileTypes.includes('BUNDLE')) {
+			const loadCommands = await darwinMachOLoadCommands(entry.path);
+			if (loadCommands.includes('LC_ID_DYLIB')) {
+				mismatches.push(
+					`${entry.label}: Mach-O BUNDLE contains LC_ID_DYLIB; dyld rejects this combination when Electron loads the addon`,
+				);
+			}
+		}
+	}
+	if (mismatches.length > 0) {
+		throw new Error(
+			[
+				`Wrong native runtime architecture(s) ${stage} for ${platform}/${arch}:`,
+				...mismatches.map((entry) => `  - ${entry}`),
+			].join('\n'),
+		);
+	}
+}
+
+async function verifyNativePackageInputs(context) {
+	if (process.env.VOXR_SKIP_NATIVE === 'true') return;
+	const platform = context.electronPlatformName;
+	const arch = normalizeArch(context.arch);
+	const appDir = resolveAppDir(context);
+	const missing = [];
+	const entries = [];
+	for (const artifact of await expectedNativeRuntimeArtifactsForAppDir(platform, arch, appDir)) {
+		const artifactPath = path.join(
+			appDir,
+			'node_modules',
+			...packagePathParts(artifact.packageName),
+			artifact.relativePath,
+		);
+		entries.push({
+			label: `${artifact.packageName}/${artifact.relativePath}`,
+			path: artifactPath,
+		});
+		if (!(await fileExists(artifactPath))) {
+			missing.push(`${artifact.packageName}/${artifact.relativePath}`);
+		}
+	}
+	if (missing.length > 0) {
+		throw new Error(
+			[
+				`Missing native runtime artifact(s) before packaging for ${platform}/${arch}:`,
+				...missing.map((entry) => `  - ${entry}`),
+				'Run `pnpm build` from voxr_desktop so native build outputs are synced into node_modules before electron-builder runs.',
+			].join('\n'),
+		);
+	}
+	await verifyDarwinNativeArchitectures(platform, arch, entries, 'before packaging');
+}
+
+async function verifyPackagedNativeArtifacts(context) {
+	const platform = context.electronPlatformName;
+	const arch = normalizeArch(context.arch);
+	const appDir = resolveAppDir(context);
+	const missing = [];
+	const entries = [];
+	for (const artifact of await expectedNativeRuntimeArtifactsForAppDir(platform, arch, appDir)) {
+		const artifactPath = path.join(
+			context.appOutDir,
+			'resources',
+			'app.asar.unpacked',
+			'node_modules',
+			...packagePathParts(artifact.packageName),
+			artifact.relativePath,
+		);
+		entries.push({
+			label: `${artifact.packageName}/${artifact.relativePath}`,
+			path: artifactPath,
+		});
+		if (!(await fileExists(artifactPath))) {
+			missing.push(`${artifact.packageName}/${artifact.relativePath}`);
+		}
+	}
+	if (missing.length > 0) {
+		throw new Error(
+			[
+				`Missing unpacked native runtime artifact(s) after packaging for ${platform}/${arch}:`,
+				...missing.map((entry) => `  - ${entry}`),
+				'Check electron-builder asar.unpack patterns and native package artifact sync.',
+			].join('\n'),
+		);
+	}
+	await verifyDarwinNativeArchitectures(platform, arch, entries, 'after packaging');
+}
+
+async function copyMissingPackagedNativeArtifacts(context) {
+	const platform = context.electronPlatformName;
+	const arch = normalizeArch(context.arch);
+	const appDir = resolveAppDir(context);
+	for (const artifact of await expectedNativeRuntimeArtifactsForAppDir(platform, arch, appDir)) {
+		const packageParts = packagePathParts(artifact.packageName);
+		const sourcePath = path.join(appDir, 'node_modules', ...packageParts, artifact.relativePath);
+		const targetPath = path.join(
+			context.appOutDir,
+			'resources',
+			'app.asar.unpacked',
+			'node_modules',
+			...packageParts,
+			artifact.relativePath,
+		);
+		if ((await fileExists(targetPath)) || !(await fileExists(sourcePath))) {
+			continue;
+		}
+		await fs.mkdir(path.dirname(targetPath), {recursive: true});
+		await fs.copyFile(sourcePath, targetPath);
+	}
+}
+
+async function removeIfExists(targetPath) {
+	await fs.rm(targetPath, {force: true, recursive: true});
+}
+
+async function cleanupNativeBuildIntermediates(context) {
+	const unpackedNodeModules = path.join(context.appOutDir, 'resources', 'app.asar.unpacked', 'node_modules');
+	const entries = await fs.readdir(unpackedNodeModules, {withFileTypes: true}).catch((error) => {
+		if (error && error.code === 'ENOENT') {
+			return [];
+		}
+		throw error;
+	});
+	const packageDirs = [];
+	for (const entry of entries) {
+		if (!entry.isDirectory()) {
+			continue;
+		}
+		const entryPath = path.join(unpackedNodeModules, entry.name);
+		if (entry.name.startsWith('@')) {
+			const scopedEntries = await fs.readdir(entryPath, {withFileTypes: true});
+			for (const scopedEntry of scopedEntries) {
+				if (scopedEntry.isDirectory()) {
+					packageDirs.push(path.join(entryPath, scopedEntry.name));
+				}
+			}
+		} else {
+			packageDirs.push(entryPath);
+		}
+	}
+	await Promise.all(packageDirs.map((packageDir) => removeIfExists(path.join(packageDir, 'build', 'Release', 'obj'))));
+}
+
+async function addLinuxLegacyBinarySymlink(context) {
+	if (context.electronPlatformName !== 'linux') return;
+	const legacyName = packageName;
+	const currentName = linuxPackageName;
+	if (legacyName === currentName) return;
+	const linkPath = path.join(context.appOutDir, legacyName);
+	try {
+		await fs.symlink(currentName, linkPath);
+	} catch (error) {
+		if (!error || error.code !== 'EEXIST') throw error;
+	}
+}
+
+async function isElfFile(filePath) {
+	const handle = await fs.open(filePath, 'r');
+	try {
+		const magic = Buffer.alloc(4);
+		const {bytesRead} = await handle.read(magic, 0, magic.length, 0);
+		return bytesRead === magic.length && magic.equals(Buffer.from([0x7f, 0x45, 0x4c, 0x46]));
+	} finally {
+		await handle.close();
+	}
+}
+
+async function findPackagedElfFiles(rootDir) {
+	const results = [];
+	async function visit(directory) {
+		const entries = await fs.readdir(directory, {withFileTypes: true});
+		for (const entry of entries) {
+			const entryPath = path.join(directory, entry.name);
+			if (entry.isDirectory()) {
+				await visit(entryPath);
+			} else if (entry.isFile() && (await isElfFile(entryPath))) {
+				results.push(entryPath);
+			}
+		}
+	}
+	await visit(rootDir);
+	return results.sort();
+}
+
+function compareGlibcVersions(left, right) {
+	for (const key of ['major', 'minor', 'patch']) {
+		if (left[key] !== right[key]) return left[key] - right[key];
+	}
+	return 0;
+}
+
+async function inspectElfGlibcRequirements(elfPath) {
+	let stdout;
+	try {
+		({stdout} = await execFileAsync('readelf', ['--version-info', '--dynamic', '--wide', elfPath], {
+			env: {...process.env, LC_ALL: 'C'},
+			maxBuffer: 16 * 1024 * 1024,
+		}));
+	} catch (error) {
+		if (error && error.code === 'ENOENT') {
+			throw new Error(`Cannot verify Linux glibc compatibility: readelf executable is not available.`);
+		}
+		const stderr = typeof error?.stderr === 'string' ? error.stderr.trim() : '';
+		throw new Error(`Cannot inspect ELF file ${elfPath}: ${stderr || error?.message || String(error)}`);
+	}
+	const versions = new Map();
+	const unsupportedRequirements = new Set();
+	const hasGlibcRequirement = /\bGLIBC_[A-Za-z0-9_.]+\b/.test(stdout);
+	let readingVersionNeeds = false;
+	let foundVersionNeeds = false;
+	let hasVersionNeedsTag = false;
+	let needsGlibc = false;
+	let usesDtRelr = false;
+	for (const line of stdout.split(/\r?\n/)) {
+		const trimmed = line.trim();
+		if (/\(VERNEED\)/.test(trimmed)) {
+			hasVersionNeedsTag = true;
+		}
+		if (/^0x0*(?:23|24|25)\s+\(/i.test(trimmed) || /\((?:RELR|RELRSZ|RELRENT)\)/.test(trimmed)) {
+			usesDtRelr = true;
+		}
+		if (/\(NEEDED\)/.test(trimmed)) {
+			const neededMatch = /\(NEEDED\)\s+Shared library: \[([^\]]+)\]/.exec(trimmed);
+			if (!neededMatch) {
+				throw new Error(`Cannot parse a required library for ELF file ${elfPath}: ${trimmed}`);
+			}
+			if (neededMatch[1] === 'libc.so.6') needsGlibc = true;
+		}
+		if (trimmed.startsWith('Version needs section ')) {
+			readingVersionNeeds = true;
+			foundVersionNeeds = true;
+			continue;
+		}
+		if (trimmed.startsWith('Version symbols section ') || trimmed.startsWith('Version definition section ')) {
+			readingVersionNeeds = false;
+			continue;
+		}
+		if (!readingVersionNeeds) continue;
+		const requirement = /\bName:\s+(\S+)/.exec(trimmed)?.[1];
+		if (!requirement?.startsWith('GLIBC_')) continue;
+		const match = /^GLIBC_(\d+)\.(\d+)(?:\.(\d+))?$/.exec(requirement);
+		if (!match) {
+			unsupportedRequirements.add(requirement);
+			continue;
+		}
+		const version = {
+			major: Number.parseInt(match[1], 10),
+			minor: Number.parseInt(match[2], 10),
+			patch: Number.parseInt(match[3] ?? '0', 10),
+			name: requirement,
+		};
+		if (![version.major, version.minor, version.patch].every(Number.isSafeInteger)) {
+			throw new Error(`readelf returned an invalid glibc version for ${elfPath}: ${requirement}`);
+		}
+		versions.set(version.name, version);
+	}
+	if ((hasGlibcRequirement || hasVersionNeedsTag) && !foundVersionNeeds) {
+		throw new Error(`Cannot verify glibc requirements for ELF file ${elfPath}: readelf omitted version needs.`);
+	}
+	if (needsGlibc && (!foundVersionNeeds || (versions.size === 0 && unsupportedRequirements.size === 0))) {
+		throw new Error(`Cannot verify glibc requirements for ELF file ${elfPath}: readelf returned no version needs.`);
+	}
+	return {
+		versions: Array.from(versions.values()),
+		unsupportedRequirements: Array.from(unsupportedRequirements).sort(),
+		usesDtRelr,
+	};
+}
+
+async function findLinuxGlibcCompatibilityViolations(elfFiles) {
+	const violations = [];
+	for (const elfPath of elfFiles) {
+		const {versions, unsupportedRequirements, usesDtRelr} = await inspectElfGlibcRequirements(elfPath);
+		const maximum = versions.sort(compareGlibcVersions).at(-1);
+		const requirements = [...unsupportedRequirements];
+		if (maximum && compareGlibcVersions(maximum, linuxGlibcBaseline) > 0) {
+			requirements.push(maximum.name);
+		}
+		if (usesDtRelr) requirements.push('DT_RELR (glibc 2.36+)');
+		if (requirements.length > 0) violations.push({elfPath, requirements});
+	}
+	return violations;
+}
+
+function throwLinuxGlibcCompatibilityError(violations, formatPath) {
+	if (violations.length === 0) return;
+	const lines = [
+		`Linux package exceeds the supported ${linuxGlibcBaseline.name} ABI baseline.`,
+		'Build Linux artifacts on Ubuntu 22.04 and keep every shipped ELF at or below that glibc requirement.',
+	];
+	for (const {elfPath, requirements} of violations) {
+		lines.push(`  - ${formatPath(elfPath)} requires ${requirements.join(', ')}`);
+	}
+	throw new Error(lines.join('\n'));
+}
+
+function linuxDistributableTargetNames(context) {
+	if (!Array.isArray(context.targets)) {
+		throw new Error('Cannot verify Linux glibc compatibility: electron-builder did not provide a target list.');
+	}
+	return context.targets.map((target) => target.name).filter((name) => name !== 'dir');
+}
+
+async function verifyLinuxGlibcCompatibility(context) {
+	if (context.electronPlatformName !== 'linux') return;
+	const distributableTargets = linuxDistributableTargetNames(context);
+	if (distributableTargets.length === 0) {
+		console.log(
+			`Skipped the ${linuxGlibcBaseline.name} ABI baseline check: this pack produces no distributable Linux artifact.`,
+		);
+		return;
+	}
+	const elfFiles = await findPackagedElfFiles(context.appOutDir);
+	if (elfFiles.length === 0) {
+		throw new Error(`Linux package output contains no ELF files: ${context.appOutDir}`);
+	}
+	const violations = await findLinuxGlibcCompatibilityViolations(elfFiles);
+	throwLinuxGlibcCompatibilityError(violations, (elfPath) => path.relative(context.appOutDir, elfPath));
+	console.log(
+		`Verified ${elfFiles.length} packaged Linux ELF files against the ${linuxGlibcBaseline.name} ABI baseline.`,
+	);
+}
+
+async function afterPack(context) {
+	await copyMissingPackagedNativeArtifacts(context);
+	await cleanupNativeBuildIntermediates(context);
+	await addLinuxLegacyBinarySymlink(context);
+	await verifyPackagedNativeArtifacts(context);
+	await verifyLinuxGlibcCompatibility(context);
+}
+
+async function listRpmPackageFiles(artifactPath) {
+	try {
+		const {stdout} = await execFileAsync('rpm', ['-qpl', artifactPath], {
+			maxBuffer: 16 * 1024 * 1024,
+		});
+		return stdout
+			.split(/\r?\n/)
+			.map((line) => line.trim())
+			.filter(Boolean);
+	} catch (error) {
+		if (error && error.code === 'ENOENT') {
+			throw new Error(`Cannot inspect RPM artifact ${artifactPath}: rpm executable is not available.`);
+		}
+		const stderr = typeof error?.stderr === 'string' ? error.stderr.trim() : '';
+		throw new Error(`Cannot inspect RPM artifact ${artifactPath}: ${stderr || error?.message || String(error)}`);
+	}
+}
+
+async function listDebPackageFiles(artifactPath) {
+	try {
+		const {stdout} = await execFileAsync('dpkg-deb', ['--contents', artifactPath], {
+			maxBuffer: 16 * 1024 * 1024,
+		});
+		return stdout
+			.split(/\r?\n/)
+			.map((line) => line.match(/^\S+\s+\S+\s+\d+\s+\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}\s+(.+)$/)?.[1])
+			.filter(Boolean)
+			.map((filePath) => filePath.replace(/^\.\//, '/'));
+	} catch (error) {
+		if (error && error.code === 'ENOENT') {
+			throw new Error(`Cannot inspect DEB artifact ${artifactPath}: dpkg-deb executable is not available.`);
+		}
+		const stderr = typeof error?.stderr === 'string' ? error.stderr.trim() : '';
+		throw new Error(`Cannot inspect DEB artifact ${artifactPath}: ${stderr || error?.message || String(error)}`);
+	}
+}
+
+async function verifyRpmArtifactsDoNotOwnBuildIds(buildResult) {
+	const rpmArtifacts = (buildResult.artifactPaths ?? []).filter(
+		(artifactPath) => path.extname(artifactPath) === '.rpm',
+	);
+	const violations = [];
+	for (const artifactPath of rpmArtifacts) {
+		const packageFiles = await listRpmPackageFiles(artifactPath);
+		const buildIdFiles = packageFiles.filter(
+			(filePath) => filePath === rpmBuildIdFilePrefix || filePath.startsWith(`${rpmBuildIdFilePrefix}/`),
+		);
+		if (buildIdFiles.length > 0) {
+			violations.push({artifactPath, buildIdFiles});
+		}
+	}
+	if (violations.length === 0) return [];
+
+	const lines = [
+		`RPM artifact(s) must not own ${rpmBuildIdFilePrefix} entries.`,
+		'These global rpmbuild-generated links collide with other Electron RPMs that bundle the same upstream ELF binaries.',
+	];
+	for (const {artifactPath, buildIdFiles} of violations) {
+		lines.push(`  - ${path.basename(artifactPath)}:`);
+		for (const filePath of buildIdFiles.slice(0, 12)) {
+			lines.push(`    ${filePath}`);
+		}
+		if (buildIdFiles.length > 12) {
+			lines.push(`    ... ${buildIdFiles.length - 12} more`);
+		}
+	}
+	throw new Error(lines.join('\n'));
+}
+
+function packageFilesContainAppArmorProfile(packageFiles) {
+	return packageFiles.some((filePath) => filePath.endsWith('/resources/apparmor-profile'));
+}
+
+async function verifyLinuxPackagesContainAppArmorProfile(buildResult) {
+	const packageArtifacts = (buildResult.artifactPaths ?? []).filter((artifactPath) =>
+		['.deb', '.rpm'].includes(path.extname(artifactPath)),
+	);
+	const violations = [];
+	for (const artifactPath of packageArtifacts) {
+		const extension = path.extname(artifactPath);
+		const packageFiles =
+			extension === '.deb' ? await listDebPackageFiles(artifactPath) : await listRpmPackageFiles(artifactPath);
+		if (!packageFilesContainAppArmorProfile(packageFiles)) {
+			violations.push({artifactPath});
+		}
+	}
+	if (violations.length === 0) return;
+
+	const lines = [
+		'Linux package artifact(s) must include the Electron AppArmor profile.',
+		'Ubuntu 24.04+ restricts unprivileged user namespaces; packaged Electron apps need this profile so the Chromium sandbox can run without forcing --no-sandbox.',
+	];
+	for (const {artifactPath} of violations) {
+		lines.push(`  - ${path.basename(artifactPath)}`);
+	}
+	throw new Error(lines.join('\n'));
+}
+
+async function readElfNeededLibraries(artifactPath) {
+	try {
+		const {stdout} = await execFileAsync('readelf', ['-d', artifactPath], {
+			env: {...process.env, LC_ALL: 'C'},
+			maxBuffer: 8 * 1024 * 1024,
+		});
+		const neededLibraries = [];
+		for (const line of stdout.split(/\r?\n/)) {
+			if (!/\(NEEDED\)/.test(line)) continue;
+			const match = /\(NEEDED\).*\[([^\]]+)\]/.exec(line);
+			if (!match) {
+				throw new Error(`Cannot parse a required library for AppImage artifact ${artifactPath}: ${line.trim()}`);
+			}
+			neededLibraries.push(match[1]);
+		}
+		return neededLibraries;
+	} catch (error) {
+		if (error && error.code === 'ENOENT') {
+			throw new Error(`Cannot inspect AppImage artifact ${artifactPath}: readelf executable is not available.`);
+		}
+		const stderr = typeof error?.stderr === 'string' ? error.stderr.trim() : '';
+		throw new Error(`Cannot inspect AppImage artifact ${artifactPath}: ${stderr || error?.message || String(error)}`);
+	}
+}
+
+async function verifyAppImageArtifactsGlibcCompatibility(buildResult) {
+	const appImageArtifacts = (buildResult.artifactPaths ?? []).filter(
+		(artifactPath) => path.extname(artifactPath) === '.AppImage',
+	);
+	const violations = await findLinuxGlibcCompatibilityViolations(appImageArtifacts);
+	throwLinuxGlibcCompatibilityError(violations, (artifactPath) => path.basename(artifactPath));
+}
+
+async function verifyAppImageArtifactsDoNotNeedFuse2(buildResult) {
+	const appImageArtifacts = (buildResult.artifactPaths ?? []).filter(
+		(artifactPath) => path.extname(artifactPath) === '.AppImage',
+	);
+	const violations = [];
+	for (const artifactPath of appImageArtifacts) {
+		const neededLibraries = await readElfNeededLibraries(artifactPath);
+		if (neededLibraries.includes('libfuse.so.2')) {
+			violations.push({artifactPath, neededLibraries});
+		}
+	}
+	if (violations.length === 0) return;
+
+	const lines = [
+		'AppImage artifact(s) must not depend on libfuse.so.2.',
+		'Use electron-builder toolsets.appimage 1.0.3 so the AppImage runtime is static and works on modern distributions without libfuse2.',
+	];
+	for (const {artifactPath, neededLibraries} of violations) {
+		lines.push(`  - ${path.basename(artifactPath)} imports: ${neededLibraries.join(', ') || '<none>'}`);
+	}
+	throw new Error(lines.join('\n'));
+}
+
+function canExecuteAppImageArtifact(artifactPath) {
+	const artifactName = path.basename(artifactPath).toLowerCase();
+	const hostArch = process.arch;
+	if (artifactName.includes('arm64') || artifactName.includes('aarch64')) {
+		return hostArch === 'arm64';
+	}
+	if (artifactName.includes('x86_64') || artifactName.includes('amd64') || artifactName.includes('x64')) {
+		return hostArch === 'x64';
+	}
+	return true;
+}
+
+async function extractAppImagePattern(artifactPath, pattern, tempDir) {
+	try {
+		await execFileAsync(path.resolve(artifactPath), ['--appimage-extract', pattern], {
+			cwd: tempDir,
+			maxBuffer: 8 * 1024 * 1024,
+		});
+	} catch (error) {
+		const stderr = typeof error?.stderr === 'string' ? error.stderr.trim() : '';
+		throw new Error(
+			`Cannot extract ${pattern} from AppImage artifact ${artifactPath}: ${stderr || error?.message || String(error)}`,
+		);
+	}
+}
+
+async function findExtractedFiles(rootDir, predicate) {
+	const results = [];
+	async function visit(directory) {
+		const entries = await fs.readdir(directory, {withFileTypes: true});
+		for (const entry of entries) {
+			const entryPath = path.join(directory, entry.name);
+			if (entry.isDirectory()) {
+				await visit(entryPath);
+			} else if (entry.isFile() && predicate(entryPath)) {
+				results.push(entryPath);
+			}
+		}
+	}
+	await visit(rootDir);
+	return results;
+}
+
+async function inspectAppImageLauncher(artifactPath) {
+	const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'voxr-appimage-'));
+	try {
+		await extractAppImagePattern(artifactPath, 'AppRun', tempDir);
+		await extractAppImagePattern(artifactPath, '*.desktop', tempDir);
+		const squashfsRoot = path.join(tempDir, 'squashfs-root');
+		const appRun = await fs.readFile(path.join(squashfsRoot, 'AppRun'), 'utf8');
+		const desktopFiles = await findExtractedFiles(squashfsRoot, (filePath) => path.extname(filePath) === '.desktop');
+		const violations = [];
+
+		if (desktopFiles.length === 0) {
+			violations.push('does not contain a desktop entry');
+		}
+
+		const appRunUsesNamespaceProbe = /unshare\s+(?:-Ur|--user)\s+true/.test(appRun);
+		const appRunFallsBackToNoSandbox = /NO_SANDBOX=\(?--no-sandbox\)?/.test(appRun);
+		if (!appRunUsesNamespaceProbe || !appRunFallsBackToNoSandbox) {
+			violations.push('AppRun does not use the expected user-namespace probe before falling back to --no-sandbox');
+		}
+
+		for (const desktopFile of desktopFiles) {
+			const desktopEntry = await fs.readFile(desktopFile, 'utf8');
+			for (const line of desktopEntry.split(/\r?\n/)) {
+				if (line.startsWith('Exec=') && line.includes('--no-sandbox')) {
+					violations.push(`${path.basename(desktopFile)} has an unconditional --no-sandbox Exec line`);
+				}
+			}
+		}
+
+		return violations;
+	} finally {
+		await fs.rm(tempDir, {recursive: true, force: true});
+	}
+}
+
+async function verifyAppImageArtifactsUseSandboxAwareLauncher(buildResult) {
+	const appImageArtifacts = (buildResult.artifactPaths ?? []).filter(
+		(artifactPath) => path.extname(artifactPath) === '.AppImage',
+	);
+	const violations = [];
+	for (const artifactPath of appImageArtifacts) {
+		if (!canExecuteAppImageArtifact(artifactPath)) {
+			console.warn(
+				`Skipping AppImage launcher extraction for ${path.basename(artifactPath)} because it does not match host architecture ${process.arch}.`,
+			);
+			continue;
+		}
+		const artifactViolations = await inspectAppImageLauncher(artifactPath);
+		if (artifactViolations.length > 0) {
+			violations.push({artifactPath, artifactViolations});
+		}
+	}
+	if (violations.length === 0) return;
+
+	const lines = [
+		'AppImage artifact(s) must use the static-runtime, sandbox-aware launcher contract.',
+		'The desktop entry must not pass --no-sandbox unconditionally; AppRun may add it only after the user-namespace probe fails.',
+	];
+	for (const {artifactPath, artifactViolations} of violations) {
+		lines.push(`  - ${path.basename(artifactPath)}:`);
+		for (const violation of artifactViolations) {
+			lines.push(`    ${violation}`);
+		}
+	}
+	throw new Error(lines.join('\n'));
+}
+
+async function verifyLinuxArtifactContracts(buildResult) {
+	await verifyRpmArtifactsDoNotOwnBuildIds(buildResult);
+	await verifyLinuxPackagesContainAppArmorProfile(buildResult);
+	await verifyAppImageArtifactsGlibcCompatibility(buildResult);
+	await verifyAppImageArtifactsDoNotNeedFuse2(buildResult);
+	await verifyAppImageArtifactsUseSandboxAwareLauncher(buildResult);
+}
+
+module.exports = {
+	appId,
+	productName,
+	copyright: 'Copyright © 2026 Voxr Platform AB',
+	artifactName: `${artifactProductName}-\${version}-\${os}-\${arch}.\${ext}`,
+	directories: {
+		buildResources: 'build_resources',
+		output: 'dist-electron',
+	},
+	files: [
+		'dist/**/*',
+		'package.json',
+		...nativeRuntimeFilePatterns,
+		'node_modules/hunspell-asm/**/*',
+		...nativeBuildArtifactExcludes,
+		...packagedRuntimeArtifactExcludes,
+		...bundledDependencyExcludes,
+		...platformNativeRuntimeExcludes,
+		...platformRuntimeDependencyExcludes,
+	],
+	extraMetadata: {
+		main: 'dist/main/index.js',
+		name: metadataName,
+		...(process.env.VERSION ? {version: process.env.VERSION} : {}),
+		...(targetPlatform === 'linux' ? {desktopName: `${linuxPackageName}.desktop`} : {}),
+	},
+	extraResources: [
+		{
+			from: `build_resources/${iconDir}/`,
+			to: 'icons',
+			filter: [
+				'16x16.png',
+				'24x24.png',
+				'32x32.png',
+				'48x48.png',
+				'64x64.png',
+				'128x128.png',
+				'256x256.png',
+				'512x512.png',
+				'VoxrTrayTemplate.png',
+				'VoxrTrayTemplate@2x.png',
+				'icon.ico',
+				'icon.png',
+			],
+		},
+		{
+			from: `build_resources/${iconDir}/badges/`,
+			to: 'badges',
+			filter: ['**/*'],
+		},
+	],
+	asar: {
+		smartUnpack: false,
+		unpack: [
+			'**/*.node',
+			'node_modules/@voxr/win-process-loopback/*.node',
+			...winGameCaptureTargetArchs.map(
+				(arch) => `node_modules/@voxr/win-game-capture/win-game-capture.win32-${arch}-msvc.node`,
+			),
+			'node_modules/@voxr/win-clipboard/*.node',
+			'node_modules/@voxr/win-shell/*.node',
+			'node_modules/@voxr/win-toast/*.node',
+			'node_modules/@voxr/linux-audio-capture/*.node',
+			'node_modules/@voxr/linux-portals/*.node',
+			'node_modules/@voxr/linux-screen-capture/*.node',
+			'node_modules/@voxr/linux-screen-capture/obs-vkcapture/**/*',
+			'node_modules/@voxr/linux-notifications/*.node',
+			'node_modules/@voxr/linux-evdev/*.node',
+			'node_modules/@voxr/system-hunspell/*.node',
+			'node_modules/@voxr/macos-input-hook/*.node',
+			'node_modules/@voxr/mac-app-audio/*.node',
+			'node_modules/@voxr/mac-screen-capture/*.node',
+			'node_modules/@voxr/mac-clipboard/*.node',
+			'node_modules/@voxr/mac-sysctl/*.node',
+			'node_modules/@voxr/mac-tcc/*.node',
+			'node_modules/@voxr/windows-input-hook/*.node',
+			'node_modules/@voxr/linux-input-hook/*.node',
+			'node_modules/@voxr/platform-info/*.node',
+			'node_modules/@voxr/webauthn/*.node',
+			'node_modules/@voxr/webauthn/*.so*',
+			'node_modules/.pnpm/@voxr+win-process-loopback@*/node_modules/@voxr/win-process-loopback/*.node',
+			...winGameCaptureTargetArchs.map(
+				(arch) =>
+					`node_modules/.pnpm/@voxr+win-game-capture@*/node_modules/@voxr/win-game-capture/win-game-capture.win32-${arch}-msvc.node`,
+			),
+			'node_modules/.pnpm/@voxr+win-clipboard@*/node_modules/@voxr/win-clipboard/*.node',
+			'node_modules/.pnpm/@voxr+win-shell@*/node_modules/@voxr/win-shell/*.node',
+			'node_modules/.pnpm/@voxr+win-toast@*/node_modules/@voxr/win-toast/*.node',
+			'node_modules/.pnpm/@voxr+windows-input-hook@*/node_modules/@voxr/windows-input-hook/*.node',
+			'node_modules/.pnpm/@voxr+linux-audio-capture@*/node_modules/@voxr/linux-audio-capture/*.node',
+			'node_modules/.pnpm/@voxr+linux-portals@*/node_modules/@voxr/linux-portals/*.node',
+			'node_modules/.pnpm/@voxr+linux-screen-capture@*/node_modules/@voxr/linux-screen-capture/*.node',
+			'node_modules/.pnpm/@voxr+linux-screen-capture@*/node_modules/@voxr/linux-screen-capture/obs-vkcapture/**/*',
+			'node_modules/.pnpm/@voxr+linux-notifications@*/node_modules/@voxr/linux-notifications/*.node',
+			'node_modules/.pnpm/@voxr+linux-evdev@*/node_modules/@voxr/linux-evdev/*.node',
+			'node_modules/.pnpm/@voxr+linux-input-hook@*/node_modules/@voxr/linux-input-hook/*.node',
+			'node_modules/.pnpm/@voxr+system-hunspell@*/node_modules/@voxr/system-hunspell/*.node',
+			'node_modules/.pnpm/@voxr+macos-input-hook@*/node_modules/@voxr/macos-input-hook/*.node',
+			'node_modules/.pnpm/@voxr+mac-app-audio@*/node_modules/@voxr/mac-app-audio/*.node',
+			'node_modules/.pnpm/@voxr+mac-screen-capture@*/node_modules/@voxr/mac-screen-capture/*.node',
+			'node_modules/.pnpm/@voxr+mac-clipboard@*/node_modules/@voxr/mac-clipboard/*.node',
+			'node_modules/.pnpm/@voxr+mac-sysctl@*/node_modules/@voxr/mac-sysctl/*.node',
+			'node_modules/.pnpm/@voxr+mac-tcc@*/node_modules/@voxr/mac-tcc/*.node',
+			'node_modules/.pnpm/@voxr+platform-info@*/node_modules/@voxr/platform-info/*.node',
+			'node_modules/.pnpm/@voxr+webauthn@*/node_modules/@voxr/webauthn/*.node',
+			'node_modules/.pnpm/@voxr+webauthn@*/node_modules/@voxr/webauthn/*.so*',
+		],
+	},
+	compression: 'normal',
+	nativeModules: {
+		npmRebuild: false,
+	},
+	protocols: [
+		{
+			name: appId,
+			role: 'Viewer',
+			schemes: ['voxr'],
+		},
+	],
+	beforePack: verifyNativePackageInputs,
+	afterPack,
+	afterAllArtifactBuild: verifyLinuxArtifactContracts,
+	toolsets: {
+		appimage: '1.0.3',
+	},
+	mac: {
+		category: 'public.app-category.social-networking',
+		universal: {
+			x64ArchFiles: '**/@voxr/**/*.node',
+		},
+		minimumSystemVersion: macOSMinimumSystemVersion,
+		icon: `build_resources/${iconDir}/_compiled/AppIcon.icns`,
+		darkModeSupport: true,
+		notarize: true,
+		sign: {
+			hardenedRuntime: true,
+			provisioningProfile,
+			entitlements: isCanary
+				? 'build_resources/entitlements.mac.canary.plist'
+				: 'build_resources/entitlements.mac.stable.plist',
+			entitlementsInherit: 'build_resources/entitlements.mac.inherit.plist',
+		},
+		target: [
+			{
+				target: 'dmg',
+				arch: macTargetArchs,
+			},
+			{
+				target: 'zip',
+				arch: macTargetArchs,
+			},
+		],
+		extendInfo: {
+			NSMicrophoneUsageDescription: 'Voxr needs access to your microphone to enable voice chat features.',
+			NSCameraUsageDescription: 'Voxr needs access to your camera to enable video chat features.',
+			NSAppleEventsUsageDescription: 'Voxr needs access to Apple Events for automation features.',
+			NSAudioCaptureUsageDescription: 'Voxr captures audio from the screen or window you choose to share.',
+			NSScreenCaptureUsageDescription: 'Voxr captures the screen or window you choose to share.',
+		},
+	},
+	dmg: {
+		contents: [
+			{
+				x: 130,
+				y: 220,
+			},
+			{
+				x: 410,
+				y: 220,
+				type: 'link',
+				path: '/Applications',
+			},
+		],
+	},
+	win: {
+		icon: `build_resources/${iconDir}/icon.ico`,
+		target: winTargets,
+	},
+	portable: {
+		artifactName: `${artifactProductName}-\${version}-portable-\${os}-\${arch}.\${ext}`,
+	},
+	linux: {
+		icon: `build_resources/${iconDir}/1024x1024.png`,
+		category: 'Network;InstantMessaging;Chat;',
+		target: [
+			{
+				target: 'AppImage',
+				arch: targetArchs,
+			},
+			{
+				target: 'deb',
+				arch: targetArchs,
+			},
+			{
+				target: 'rpm',
+				arch: targetArchs,
+			},
+			{
+				target: 'tar.gz',
+				arch: targetArchs,
+			},
+		],
+		desktop: {
+			entry: linuxDesktopEntry,
+		},
+	},
+	deb: {
+		packageCategory: 'net',
+		desktop: {
+			entry: linuxDesktopEntryWithActions,
+			desktopActions: linuxDesktopActions,
+		},
+		depends: [
+			'libgtk-3-0',
+			'libnotify4',
+			'libnss3',
+			'libxss1',
+			'libxtst6',
+			'xdg-utils',
+			'libatspi2.0-0',
+			'libuuid1',
+			'libsecret-1-0',
+			'libpulse0',
+			'libpipewire-0.3-0',
+			'libstdc++6',
+			'libgcc-s1',
+		],
+	},
+	rpm: {
+		desktop: {
+			entry: linuxDesktopEntryWithActions,
+			desktopActions: linuxDesktopActions,
+		},
+		fpm: rpmBuildIdLinkFpmArgs,
+		depends: [
+			'gtk3',
+			'libnotify',
+			'nss',
+			'libXScrnSaver',
+			'libXtst',
+			'xdg-utils',
+			'at-spi2-core',
+			'libuuid',
+			'libsecret',
+			'pulseaudio-libs',
+			'pipewire-libs',
+			'libstdc++',
+			'libgcc',
+		],
+	},
+	publish: null,
+};

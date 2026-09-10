@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {SlowmodeRateLimitError} from '@fluxer/errors/src/domains/core/SlowmodeRateLimitError';
+import {SlowmodeRateLimitError} from '@voxr/errors/src/domains/core/SlowmodeRateLimitError';
 import {describe, expect, it} from 'vitest';
 
 interface SlowmodeResponseBody {

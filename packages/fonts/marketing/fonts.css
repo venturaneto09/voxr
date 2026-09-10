@@ -100,17 +100,17 @@
 }
 
 :root {
-	--fluxer-font-stack: 'Radio Canada Big', 'Noto Sans', system-ui, sans-serif;
+	--voxr-font-stack: 'Radio Canada Big', 'Noto Sans', system-ui, sans-serif;
 }
 
 :root:lang(ar) {
-	--fluxer-font-stack: 'Radio Canada Big', 'Noto Sans Arabic', 'Noto Sans', system-ui, sans-serif;
+	--voxr-font-stack: 'Radio Canada Big', 'Noto Sans Arabic', 'Noto Sans', system-ui, sans-serif;
 }
 
 :root:lang(he) {
-	--fluxer-font-stack: 'Radio Canada Big', 'Noto Sans Hebrew', 'Noto Sans', system-ui, sans-serif;
+	--voxr-font-stack: 'Radio Canada Big', 'Noto Sans Hebrew', 'Noto Sans', system-ui, sans-serif;
 }
 
 :root:lang(th) {
-	--fluxer-font-stack: 'Radio Canada Big', 'Noto Sans Thai', 'Noto Sans', system-ui, sans-serif;
+	--voxr-font-stack: 'Radio Canada Big', 'Noto Sans Thai', 'Noto Sans', system-ui, sans-serif;
 }

@@ -22,10 +22,10 @@ interface PackageConfig {
 const PACKAGES: Array<PackageConfig> = [
 	{
 		name: '@pkgs/email',
-		localesPath: path.join(REPO_ROOT, 'fluxer_api/pkgs/email/src/email_i18n/locales'),
-		outputFile: path.join(REPO_ROOT, 'fluxer_api/pkgs/email/src/email_i18n/EmailI18nTypes.generated.ts'),
+		localesPath: path.join(REPO_ROOT, 'voxr_api/pkgs/email/src/email_i18n/locales'),
+		outputFile: path.join(REPO_ROOT, 'voxr_api/pkgs/email/src/email_i18n/EmailI18nTypes.generated.ts'),
 		isEmail: true,
-		staticMessagesModule: path.join(REPO_ROOT, 'fluxer_api/pkgs/email/src/email_i18n/EmailI18nMessages.ts'),
+		staticMessagesModule: path.join(REPO_ROOT, 'voxr_api/pkgs/email/src/email_i18n/EmailI18nMessages.ts'),
 		staticMessagesExport: 'EMAIL_I18N_MESSAGES',
 	},
 ];

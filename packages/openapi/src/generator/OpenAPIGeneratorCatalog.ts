@@ -15,9 +15,9 @@ import {
 	UnsignedInt64TypeSchema,
 	UsernameTypeSchema,
 	ValidationErrorItemSchema,
-} from '@fluxer/openapi/src/converters/BuiltInSchemas';
-import type {OpenAPISchema, OpenAPISecurityScheme} from '@fluxer/openapi/src/OpenAPITypes';
-import {ERROR_SCHEMA} from '@fluxer/openapi/src/registry/ResponseRegistry';
+} from '@voxr/openapi/src/converters/BuiltInSchemas';
+import type {OpenAPISchema, OpenAPISecurityScheme} from '@voxr/openapi/src/OpenAPITypes';
+import {ERROR_SCHEMA} from '@voxr/openapi/src/registry/ResponseRegistry';
 
 const ORDERED_TAG_NAMES = [
 	'Auth',

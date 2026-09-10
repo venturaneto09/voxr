@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {DateInput} from '@fluxer/date_utils/src/DateTypes';
+import type {DateInput} from '@voxr/date_utils/src/DateTypes';
 
 export function parseDate(input: DateInput): Date {
 	if (input instanceof Date) {

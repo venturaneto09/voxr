@@ -5,12 +5,12 @@ import {
 	MAX_GUILD_STICKER_TAGS,
 	MAX_TEMP_BAN_DURATION_SECONDS,
 	MIN_TEMP_BAN_DURATION_SECONDS,
-} from '@fluxer/constants/src/LimitConstants';
+} from '@voxr/constants/src/LimitConstants';
 import {
 	GuildBanCreateRequest,
 	GuildMemberUpdateRequest,
 	GuildStickerCreateRequest,
-} from '@fluxer/schema/src/domains/guild/GuildRequestSchemas';
+} from '@voxr/schema/src/domains/guild/GuildRequestSchemas';
 import {describe, expect, it} from 'vitest';
 
 describe('GuildBanCreateRequest', () => {

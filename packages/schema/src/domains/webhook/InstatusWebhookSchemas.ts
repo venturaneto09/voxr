@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {createStringType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {createStringType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const InstatusMeta = z.object({

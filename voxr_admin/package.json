@@ -1,0 +1,8 @@
+{
+	"name": "voxr_admin",
+	"private": true,
+	"devDependencies": {
+		"@tailwindcss/cli": "catalog:",
+		"tailwindcss": "catalog:"
+	}
+}

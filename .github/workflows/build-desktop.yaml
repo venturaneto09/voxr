@@ -17,7 +17,7 @@ on:
         default: false
         type: boolean
       build_version:
-        description: Explicit Fluxer CalVer build version (YYYY.MDD.MICRO, UTC HHMMSS without leading zeroes) to use instead of automatic UTC clock allocation.
+        description: Explicit Voxr CalVer build version (YYYY.MDD.MICRO, UTC HHMMSS without leading zeroes) to use instead of automatic UTC clock allocation.
         required: false
         default: ""
         type: string
@@ -71,16 +71,16 @@ jobs:
         id: create-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
-          client-id: ${{ vars.FLUXER_CI_APP_ID }}
-          private-key: ${{ secrets.FLUXER_CI_APP_KEY }}
-          owner: fluxerapp
-          repositories: fluxer
+          client-id: ${{ vars.VOXR_CI_APP_ID }}
+          private-key: ${{ secrets.VOXR_CI_APP_KEY }}
+          owner: voxrapp
+          repositories: voxr
           permission-contents: read
       - name: Set metadata
         id: meta
         env:
           GH_TOKEN: ${{ steps.create-token.outputs.token }}
-          FLUXER_BUILD_VERSION: ${{ inputs.build_version }}
+          VOXR_BUILD_VERSION: ${{ inputs.build_version }}
         run: >-
           cargo run --locked --quiet --manifest-path tools/ci/Cargo.toml -- build-desktop
           --step set_metadata
@@ -273,19 +273,19 @@ jobs:
           --step install_rust_windows_targets
 
       - name: Install dependencies
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         run: >-
           cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
           --step install_dependencies
 
       - name: Update version
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         run: >-
           cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
           --step update_version
 
       - name: Set build channel
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
         run: >-
@@ -293,7 +293,7 @@ jobs:
           --step set_build_channel
 
       - name: Build Electron main process
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
         run: >-
@@ -308,14 +308,14 @@ jobs:
 
       - name: Install Velopack CLI
         if: matrix.platform == 'windows'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         run: >-
           cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
           --step install_velopack_cli
 
       - name: Build Electron app (macOS)
         if: matrix.platform == 'macos'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
           CSC_LINK: ${{ secrets.APPLE_CERTIFICATE }}
@@ -329,7 +329,7 @@ jobs:
 
       - name: Verify macOS artifact (bundle ID + profile + signature)
         if: matrix.platform == 'macos'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
         run: >-
@@ -338,7 +338,7 @@ jobs:
 
       - name: Build Electron app (Windows)
         if: matrix.platform == 'windows'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
           TEMP: C:\t
@@ -385,7 +385,7 @@ jobs:
       - name: Resolve unpacked Windows app directory
         id: resolve_unpacked
         if: matrix.platform == 'windows'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
         run: >-
@@ -409,7 +409,7 @@ jobs:
 
       - name: Verify unpacked Windows signatures
         if: matrix.platform == 'windows'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
         run: >-
@@ -418,7 +418,7 @@ jobs:
 
       - name: Create portable ZIP (Windows)
         if: matrix.platform == 'windows'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
         run: >-
@@ -427,7 +427,7 @@ jobs:
 
       - name: Package Windows app with Velopack
         if: matrix.platform == 'windows'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
         run: >-
@@ -436,7 +436,7 @@ jobs:
 
       - name: Analyze Velopack nupkg for long paths
         if: matrix.platform == 'windows'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_VERSION: ${{ env.VERSION }}
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
@@ -448,7 +448,7 @@ jobs:
 
       - name: Build Electron app (Linux)
         if: matrix.platform == 'linux'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
           USE_SYSTEM_FPM: true
@@ -458,7 +458,7 @@ jobs:
 
       - name: Verify signed Windows artifacts
         if: matrix.platform == 'windows'
-        working-directory: ${{ env.WORKDIR }}/fluxer_desktop
+        working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
         run: >-
@@ -527,7 +527,7 @@ jobs:
       DESKTOP_RELEASE_ASSETS_PREFIX: _handoff/desktop-release-assets/${{ needs.meta.outputs.build_channel }}/${{ needs.meta.outputs.version }}/${{ needs.meta.outputs.source_sha }}
       S3_ENDPOINT: ${{ vars.DOWNLOADS_S3_ENDPOINT }}
       S3_BUCKET: ${{ vars.DOWNLOADS_S3_BUCKET }}
-      PUBLIC_DL_BASE: https://api.fluxer.app/dl
+      PUBLIC_DL_BASE: https://api.voxr.app/dl
       AWS_ACCESS_KEY_ID: ${{ secrets.DOWNLOADS_AWS_ACCESS_KEY_ID || secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.DOWNLOADS_AWS_SECRET_ACCESS_KEY || secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
@@ -627,10 +627,10 @@ jobs:
         id: create-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
-          client-id: ${{ vars.FLUXER_CI_APP_ID }}
-          private-key: ${{ secrets.FLUXER_CI_APP_KEY }}
-          owner: fluxerapp
-          repositories: fluxer
+          client-id: ${{ vars.VOXR_CI_APP_ID }}
+          private-key: ${{ secrets.VOXR_CI_APP_KEY }}
+          owner: voxrapp
+          repositories: voxr
           permission-contents: write
       - name: Publish GitHub desktop release
         env:
@@ -643,7 +643,7 @@ jobs:
           set -euo pipefail
           release_args=(
             release publish
-            --component "fluxer-desktop-${CHANNEL}"
+            --component "voxr-desktop-${CHANNEL}"
             --build-version "${VERSION}"
             --source-sha "${SOURCE_SHA}"
             --previous-sha "${RELEASE_BASELINE_SHA}"

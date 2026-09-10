@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-const DOCS_ENDPOINT = 'https://fluxer.dev';
+const DOCS_ENDPOINT = 'https://voxr.dev';
 
 export interface DomainConfig {
 	base_domain: string;

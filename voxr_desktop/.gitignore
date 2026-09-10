@@ -1,0 +1,11 @@
+/.velopack/
+/dist-electron/
+
+/native/**/*.node
+/native/webauthn/*.so*
+/native/win-game-capture/voxr-game-hook.*.dll
+/native/win-game-capture/voxr-inject-helper.*.exe
+/native/win-game-capture/voxr-vulkan-layer.*.dll
+/native/win-game-capture/voxr-vulkan-layer.*.json
+
+/src/common/BuildChannel.ts

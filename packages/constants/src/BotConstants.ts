@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {PublicUserFlags} from '@fluxer/constants/src/UserConstants';
+import {PublicUserFlags} from '@voxr/constants/src/UserConstants';
 
 export const ApplicationFlags = {} as const;
 export const BotFlags = {

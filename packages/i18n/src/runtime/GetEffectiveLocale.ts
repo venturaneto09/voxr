@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {hasLocaleFile} from '@fluxer/i18n/src/io/LocaleFilePath';
-import type {I18nState} from '@fluxer/i18n/src/runtime/I18nTypes';
+import {hasLocaleFile} from '@voxr/i18n/src/io/LocaleFilePath';
+import type {I18nState} from '@voxr/i18n/src/runtime/I18nTypes';
 
 export function getEffectiveLocale<TKey extends string, TValue, TVariables>(
 	state: I18nState<TKey, TValue, TVariables>,

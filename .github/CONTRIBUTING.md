@@ -1,4 +1,4 @@
-# Contributing to Fluxer
+# Contributing to Voxr
 
 This policy applies to all issues, discussions, commits and pull requests.
 
@@ -6,7 +6,7 @@ This policy applies to all issues, discussions, commits and pull requests.
 
 To prevent spam, only approved contributors may submit pull requests.
 
-To request approval, comment on an existing issue and ask to implement it. For work that extends beyond a defect fix, open a [discussion](https://github.com/orgs/fluxerapp/discussions) first.
+To request approval, comment on an existing issue and ask to implement it. For work that extends beyond a defect fix, open a [discussion](https://github.com/orgs/voxrapp/discussions) first.
 
 Every pull request must:
 
@@ -25,7 +25,7 @@ Closes #456
 
 You must understand every line you submit and be able to explain why the change is correct.
 
-The [LLM usage policy](https://github.com/fluxerapp/fluxer/blob/main/.github/LLM_USAGE_POLICY.md) defines the authorship requirements for contributors who do not have write access.
+The [LLM usage policy](https://github.com/voxrapp/voxr/blob/main/.github/LLM_USAGE_POLICY.md) defines the authorship requirements for contributors who do not have write access.
 
 Each contribution must contain one coherent change. Do not include unrelated fixes, refactoring or formatting changes.
 
@@ -36,7 +36,7 @@ Every commit made by a contributor must include:
 - A Developer Certificate of Origin sign-off.
 - A cryptographic signature that GitHub marks as verified.
 
-Pull requests opened by Fluxer repository automation are exempt from these commit requirements.
+Pull requests opened by Voxr repository automation are exempt from these commit requirements.
 
 Read the [Developer Certificate of Origin 1.1](https://developercertificate.org) before contributing. Add a `Signed-off-by` trailer by creating the commit with `git commit -s`. The name and email address in the trailer must match those of the commit author or committer.
 
@@ -78,32 +78,32 @@ Complete every section of the pull request template. Clearly describe:
 
 ## Reports and other contributions
 
-Use the [bug report form](https://github.com/fluxerapp/fluxer/issues/new?template=bug-report.yaml) to report reproducible defects.
+Use the [bug report form](https://github.com/voxrapp/voxr/issues/new?template=bug-report.yaml) to report reproducible defects.
 
-Report security vulnerabilities privately through the channels specified in the [security policy](https://github.com/fluxerapp/fluxer/blob/main/.github/SECURITY.md). Do not report vulnerabilities in public issues or discussions.
+Report security vulnerabilities privately through the channels specified in the [security policy](https://github.com/voxrapp/voxr/blob/main/.github/SECURITY.md). Do not report vulnerabilities in public issues or discussions.
 
-Use [discussions](https://github.com/orgs/fluxerapp/discussions) for feature proposals and self-hosting questions.
+Use [discussions](https://github.com/orgs/voxrapp/discussions) for feature proposals and self-hosting questions.
 
-Submit translations through [Weblate](https://weblate.fluxer.tools), not through pull requests.
+Submit translations through [Weblate](https://weblate.voxr.tools), not through pull requests.
 
-All repository activity is governed by the [Code of Conduct](https://github.com/fluxerapp/fluxer/blob/main/.github/CODE_OF_CONDUCT.md).
+All repository activity is governed by the [Code of Conduct](https://github.com/voxrapp/voxr/blob/main/.github/CODE_OF_CONDUCT.md).
 
-Fluxer is distributed under the [GNU Affero General Public License, version 3.0 or later](https://github.com/fluxerapp/fluxer/blob/main/LICENSE). By adding a DCO sign-off, you certify that you have the right to submit the contribution under that licence.
+Voxr is distributed under the [GNU Affero General Public License, version 3.0 or later](https://github.com/voxrapp/voxr/blob/main/LICENSE). By adding a DCO sign-off, you certify that you have the right to submit the contribution under that licence.
 
 ## Private marketing project
 
-The marketing implementation is maintained in a private repository at the `fluxer_marketing` submodule path. The public workspace, bootstrap, checks, and development stack work without initializing it.
+The marketing implementation is maintained in a private repository at the `voxr_marketing` submodule path. The public workspace, bootstrap, checks, and development stack work without initializing it.
 
 Authorized maintainers can initialize only that submodule and install its independent dependencies:
 
 ```sh
 ./scripts/setup-private-marketing.sh
-pnpm --dir fluxer_marketing install --frozen-lockfile
-cargo metadata --locked --manifest-path fluxer_marketing/Cargo.toml
+pnpm --dir voxr_marketing install --frozen-lockfile
+cargo metadata --locked --manifest-path voxr_marketing/Cargo.toml
 ```
 
 To run the private marketing service in the local development stack and direct application links to it, add this override to the ignored `config/env/local.env` file:
 
 ```sh
-FLUXER_MARKETING_ENDPOINT=http://localhost:8088/marketing
+VOXR_MARKETING_ENDPOINT=http://localhost:8088/marketing
 ```

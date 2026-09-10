@@ -2,5 +2,5 @@
 **/pnpm-lock.yaml
 **/rebar.lock
 
-/fluxer_static/
+/voxr_static/
 /packages/fonts/files/

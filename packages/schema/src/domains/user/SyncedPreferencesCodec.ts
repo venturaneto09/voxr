@@ -4,11 +4,11 @@ import {create, fromBinary, toBinary, toJson} from '@bufbuild/protobuf';
 import {
 	type SyncedPreferences,
 	SyncedPreferencesSchema,
-} from '@fluxer/schema/src/gen/fluxer/user/preferences/v1/preferences_pb';
+} from '@voxr/schema/src/gen/voxr/user/preferences/v1/preferences_pb';
 import {base64ToUint8Array, uint8ArrayToBase64} from 'uint8array-extras';
 
-export type {SyncedPreferences} from '@fluxer/schema/src/gen/fluxer/user/preferences/v1/preferences_pb';
-export {SyncedPreferencesSchema} from '@fluxer/schema/src/gen/fluxer/user/preferences/v1/preferences_pb';
+export type {SyncedPreferences} from '@voxr/schema/src/gen/voxr/user/preferences/v1/preferences_pb';
+export {SyncedPreferencesSchema} from '@voxr/schema/src/gen/voxr/user/preferences/v1/preferences_pb';
 
 export const EMPTY_SYNCED_PREFERENCES_ENCODED = '';
 export const SYNCED_PREFERENCES_MAX_BYTES = 256 * 1024;

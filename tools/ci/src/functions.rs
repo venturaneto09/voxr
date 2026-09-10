@@ -67,11 +67,11 @@ mod tests {
         let temp = tempfile::tempdir().unwrap();
         let path = temp.path().join("nested").join("manifest.json");
 
-        write_json_pretty(&path, &json!({ "name": "fluxer", "version": 1 })).unwrap();
+        write_json_pretty(&path, &json!({ "name": "voxr", "version": 1 })).unwrap();
 
         assert_eq!(
             fs::read_to_string(path).unwrap(),
-            "{\n  \"name\": \"fluxer\",\n  \"version\": 1\n}\n"
+            "{\n  \"name\": \"voxr\",\n  \"version\": 1\n}\n"
         );
     }
 }

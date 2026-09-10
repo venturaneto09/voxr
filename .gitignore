@@ -8,7 +8,7 @@
 
 /.claude/
 /.direnv/
-/.fluxer/
+/.voxr/
 /.pnpm-store/
 
 **/*.css.d.ts
@@ -23,22 +23,22 @@
 **/target/
 **/test-results.json
 
-/fluxer_app/.devserver-cache.json
-/fluxer_app/pkgs/libfluxcore/
-/fluxer_app/src/features/i18n/locales/*/messages.mjs
-/fluxer_app/src/features/messaging/utils/markdown/parser/MarkdownParserWasmBytes.ts
-/fluxer_app/src/features/theme/styles/generated/
-/fluxer_app/src/features/ui/components/SVGMasks.tsx
-/fluxer_app/src/features/ui/constants/AvatarStatusGeometry.ts
-/fluxer_gateway/priv/
+/voxr_app/.devserver-cache.json
+/voxr_app/pkgs/libfluxcore/
+/voxr_app/src/features/i18n/locales/*/messages.mjs
+/voxr_app/src/features/messaging/utils/markdown/parser/MarkdownParserWasmBytes.ts
+/voxr_app/src/features/theme/styles/generated/
+/voxr_app/src/features/ui/components/SVGMasks.tsx
+/voxr_app/src/features/ui/constants/AvatarStatusGeometry.ts
+/voxr_gateway/priv/
 
-/fluxer_desktop/native/rust/fuzz/artifacts/
-/fluxer_desktop/native/rust/fuzz/corpus/
+/voxr_desktop/native/rust/fuzz/artifacts/
+/voxr_desktop/native/rust/fuzz/corpus/
 /packages/markdown_parser/rust/fuzz/artifacts/
 /packages/markdown_parser/rust/fuzz/corpus/
 
-/fluxer_media_proxy/.benchmark-cache/
-/fluxer_media_proxy/bench-results/
+/voxr_media_proxy/.benchmark-cache/
+/voxr_media_proxy/bench-results/
 
 /app-dist-output/
 /artifacts/

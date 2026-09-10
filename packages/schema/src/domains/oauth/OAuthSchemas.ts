@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ApplicationFlags, BotFlags, BotFlagsDescriptions} from '@fluxer/constants/src/BotConstants';
-import {AVATAR_MAX_SIZE, MAX_APPLICATION_REDIRECT_URIS} from '@fluxer/constants/src/LimitConstants';
+import {ApplicationFlags, BotFlags, BotFlagsDescriptions} from '@voxr/constants/src/BotConstants';
+import {AVATAR_MAX_SIZE, MAX_APPLICATION_REDIRECT_URIS} from '@voxr/constants/src/LimitConstants';
 import {
 	PublicUserFlags,
 	PublicUserFlagsDescriptions,
 	UserAuthenticatorTypes,
 	UserAuthenticatorTypesDescriptions,
-} from '@fluxer/constants/src/UserConstants';
-import {UserPartialResponse} from '@fluxer/schema/src/domains/user/UserResponseSchemas';
-import {base64LengthForBytes, createBase64StringType} from '@fluxer/schema/src/primitives/FileValidators';
+} from '@voxr/constants/src/UserConstants';
+import {UserPartialResponse} from '@voxr/schema/src/domains/user/UserResponseSchemas';
+import {base64LengthForBytes, createBase64StringType} from '@voxr/schema/src/primitives/FileValidators';
 import {
 	createBitflagInt32Type,
 	createInt32EnumType,
@@ -20,8 +20,8 @@ import {
 	SnowflakeStringType,
 	SnowflakeType,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {DiscriminatorType, UsernameType} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {DiscriminatorType, UsernameType} from '@voxr/schema/src/primitives/UserValidators';
 import {z} from 'zod';
 
 const RedirectURIString = createStringType(1).refine((value) => {

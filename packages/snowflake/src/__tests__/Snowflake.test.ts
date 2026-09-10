@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {FLUXER_EPOCH as FLUXER_EPOCH_NUMBER} from '@fluxer/constants/src/Core';
+import {VOXR_EPOCH as VOXR_EPOCH_NUMBER} from '@voxr/constants/src/Core';
 import {
 	createSnowflake,
 	createSnowflakeFromTimestamp,
 	createSnowflakeGenerator,
-	FLUXER_EPOCH,
+	VOXR_EPOCH,
 	generateSnowflake,
 	isValidSnowflake,
 	MAX_WORKER_ID,
@@ -14,7 +14,7 @@ import {
 	SnowflakeGenerator,
 	setDefaultSnowflakeGenerator,
 	snowflakeToDate,
-} from '@fluxer/snowflake/src/Snowflake';
+} from '@voxr/snowflake/src/Snowflake';
 import {beforeEach, describe, expect, it} from 'vitest';
 
 const WORKER_ID_BITS = 10n;
@@ -23,13 +23,13 @@ const TIMESTAMP_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS;
 const WORKER_ID_SHIFT = SEQUENCE_BITS;
 const MAX_SEQUENCE = (1n << SEQUENCE_BITS) - 1n;
 
-describe('FLUXER_EPOCH', () => {
-	it('should match the epoch constant from @fluxer/constants', () => {
-		expect(FLUXER_EPOCH).toBe(BigInt(FLUXER_EPOCH_NUMBER));
+describe('VOXR_EPOCH', () => {
+	it('should match the epoch constant from @voxr/constants', () => {
+		expect(VOXR_EPOCH).toBe(BigInt(VOXR_EPOCH_NUMBER));
 	});
 	it('should equal January 1, 2015 00:00:00 UTC', () => {
 		const expectedDate = new Date('2015-01-01T00:00:00.000Z');
-		expect(Number(FLUXER_EPOCH)).toBe(expectedDate.getTime());
+		expect(Number(VOXR_EPOCH)).toBe(expectedDate.getTime());
 	});
 });
 
@@ -151,7 +151,7 @@ describe('SnowflakeGenerator', () => {
 			expect(snowflakes.size).toBe(count);
 		});
 		it('should remain monotonic when the clock moves backwards', () => {
-			const baseTime = Number(FLUXER_EPOCH) + 1000;
+			const baseTime = Number(VOXR_EPOCH) + 1000;
 			const times = [baseTime + 2, baseTime + 1, baseTime + 3];
 			let index = 0;
 			const generator = new SnowflakeGenerator({
@@ -227,7 +227,7 @@ describe('createSnowflakeGenerator', () => {
 
 describe('createSnowflake', () => {
 	it('should create a snowflake with explicit worker and sequence', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		const snowflake = createSnowflake({
 			timestamp,
 			workerId: 3,
@@ -239,7 +239,7 @@ describe('createSnowflake', () => {
 		expect(parsed.sequence).toBe(77);
 	});
 	it('should throw error for out-of-range sequence', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		expect(() =>
 			createSnowflake({
 				timestamp,
@@ -251,52 +251,52 @@ describe('createSnowflake', () => {
 
 describe('createSnowflakeFromTimestamp', () => {
 	it('should create a snowflake from a numeric timestamp', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		const snowflake = createSnowflakeFromTimestamp(timestamp);
 		const date = snowflakeToDate(snowflake);
 		expect(date.getTime()).toBe(timestamp);
 	});
 	it('should create a snowflake from a bigint timestamp', () => {
-		const timestamp = FLUXER_EPOCH + 1000000n;
+		const timestamp = VOXR_EPOCH + 1000000n;
 		const snowflake = createSnowflakeFromTimestamp(timestamp);
 		const date = snowflakeToDate(snowflake);
 		expect(date.getTime()).toBe(Number(timestamp));
 	});
 	it('should create a snowflake with default worker ID of 0', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		const snowflake = createSnowflakeFromTimestamp(timestamp);
 		const parsed = parseSnowflake(snowflake);
 		expect(parsed.workerId).toBe(0);
 	});
 	it('should create a snowflake with specified worker ID', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		const snowflake = createSnowflakeFromTimestamp(timestamp, 100);
 		const parsed = parseSnowflake(snowflake);
 		expect(parsed.workerId).toBe(100);
 	});
 	it('should create a snowflake with sequence of 0', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		const snowflake = createSnowflakeFromTimestamp(timestamp);
 		const parsed = parseSnowflake(snowflake);
 		expect(parsed.sequence).toBe(0);
 	});
 	it('should throw error for timestamp before epoch', () => {
-		const timestamp = Number(FLUXER_EPOCH) - 1;
-		expect(() => createSnowflakeFromTimestamp(timestamp)).toThrow('Timestamp must be on or after the Fluxer epoch');
+		const timestamp = Number(VOXR_EPOCH) - 1;
+		expect(() => createSnowflakeFromTimestamp(timestamp)).toThrow('Timestamp must be on or after the Voxr epoch');
 	});
 	it('should accept timestamp exactly at epoch', () => {
-		const timestamp = Number(FLUXER_EPOCH);
+		const timestamp = Number(VOXR_EPOCH);
 		const snowflake = createSnowflakeFromTimestamp(timestamp);
 		const date = snowflakeToDate(snowflake);
 		expect(date.getTime()).toBe(timestamp);
 	});
 	it('should throw error for invalid worker ID', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		expect(() => createSnowflakeFromTimestamp(timestamp, -1)).toThrow('Worker ID must be between 0 and 1023');
 		expect(() => createSnowflakeFromTimestamp(timestamp, 1024)).toThrow('Worker ID must be between 0 and 1023');
 	});
 	it('should create different snowflakes for different worker IDs at same timestamp', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		const snowflake1 = createSnowflakeFromTimestamp(timestamp, 0);
 		const snowflake2 = createSnowflakeFromTimestamp(timestamp, 1);
 		expect(snowflake1).not.toBe(snowflake2);
@@ -313,7 +313,7 @@ describe('snowflakeToDate', () => {
 		expect(date.getTime()).toBeLessThanOrEqual(after);
 	});
 	it('should extract correct date from a snowflake created from timestamp', () => {
-		const expectedTimestamp = Number(FLUXER_EPOCH) + 86400000;
+		const expectedTimestamp = Number(VOXR_EPOCH) + 86400000;
 		const snowflake = createSnowflakeFromTimestamp(expectedTimestamp);
 		const date = snowflakeToDate(snowflake);
 		expect(date.getTime()).toBe(expectedTimestamp);
@@ -321,10 +321,10 @@ describe('snowflakeToDate', () => {
 	it('should handle snowflake at epoch', () => {
 		const snowflake = 0n;
 		const date = snowflakeToDate(snowflake);
-		expect(date.getTime()).toBe(Number(FLUXER_EPOCH));
+		expect(date.getTime()).toBe(Number(VOXR_EPOCH));
 	});
 	it('should handle large snowflake values', () => {
-		const futureTimestamp = Number(FLUXER_EPOCH) + 10 * 365 * 24 * 60 * 60 * 1000;
+		const futureTimestamp = Number(VOXR_EPOCH) + 10 * 365 * 24 * 60 * 60 * 1000;
 		const snowflake = createSnowflakeFromTimestamp(futureTimestamp);
 		const date = snowflakeToDate(snowflake);
 		expect(date.getTime()).toBe(futureTimestamp);
@@ -361,7 +361,7 @@ describe('parseSnowflake', () => {
 		expect(parsed.timestamp.getTime()).toBeLessThanOrEqual(after);
 	});
 	it('should extract sequence starting from 0', () => {
-		const timestamp = Number(FLUXER_EPOCH) + 1000000;
+		const timestamp = Number(VOXR_EPOCH) + 1000000;
 		const snowflake = createSnowflakeFromTimestamp(timestamp);
 		const parsed = parseSnowflake(snowflake);
 		expect(parsed.sequence).toBe(0);
@@ -378,7 +378,7 @@ describe('parseSnowflake', () => {
 		const sequence = 100n;
 		const snowflake = (relativeTimestamp << TIMESTAMP_SHIFT) | (workerId << WORKER_ID_SHIFT) | sequence;
 		const parsed = parseSnowflake(snowflake);
-		expect(parsed.timestamp.getTime()).toBe(Number(FLUXER_EPOCH) + Number(relativeTimestamp));
+		expect(parsed.timestamp.getTime()).toBe(Number(VOXR_EPOCH) + Number(relativeTimestamp));
 		expect(parsed.workerId).toBe(Number(workerId));
 		expect(parsed.sequence).toBe(Number(sequence));
 	});
@@ -421,12 +421,12 @@ describe('isValidSnowflake', () => {
 			expect(isValidSnowflake(invalidSnowflake)).toBe(false);
 		});
 		it('should return false for snowflake with timestamp too far in the future', () => {
-			const farFutureTimestamp = BigInt(Date.now() + 86400000 + 1000) - FLUXER_EPOCH;
+			const farFutureTimestamp = BigInt(Date.now() + 86400000 + 1000) - VOXR_EPOCH;
 			const invalidSnowflake = farFutureTimestamp << TIMESTAMP_SHIFT;
 			expect(isValidSnowflake(invalidSnowflake)).toBe(false);
 		});
 		it('should return true for snowflake with timestamp within 24 hours in the future', () => {
-			const nearFutureTimestamp = BigInt(Date.now() + 3600000) - FLUXER_EPOCH;
+			const nearFutureTimestamp = BigInt(Date.now() + 3600000) - VOXR_EPOCH;
 			const validSnowflake = nearFutureTimestamp << TIMESTAMP_SHIFT;
 			expect(isValidSnowflake(validSnowflake)).toBe(true);
 		});
@@ -450,7 +450,7 @@ describe('snowflake bit structure', () => {
 		const sequence = 3456n;
 		const snowflake = (relativeTimestamp << TIMESTAMP_SHIFT) | (workerId << WORKER_ID_SHIFT) | sequence;
 		const parsed = parseSnowflake(snowflake);
-		expect(parsed.timestamp.getTime()).toBe(Number(FLUXER_EPOCH) + Number(relativeTimestamp));
+		expect(parsed.timestamp.getTime()).toBe(Number(VOXR_EPOCH) + Number(relativeTimestamp));
 		expect(parsed.workerId).toBe(Number(workerId));
 		expect(parsed.sequence).toBe(Number(sequence));
 	});
@@ -514,6 +514,6 @@ describe('edge cases and boundaries', () => {
 		const parsed = parseSnowflake(snowflake);
 		expect(parsed.workerId).toBe(0);
 		expect(parsed.sequence).toBe(0);
-		expect(parsed.timestamp.getTime()).toBe(Number(FLUXER_EPOCH));
+		expect(parsed.timestamp.getTime()).toBe(Number(VOXR_EPOCH));
 	});
 });

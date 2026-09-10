@@ -3,10 +3,10 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {getErrorMessageResult} from '@fluxer/errors/src/i18n/ErrorI18n';
-import {ERROR_I18N_LOCALE_MESSAGES} from '@fluxer/errors/src/i18n/ErrorI18nLocales';
-import {ERROR_I18N_MESSAGES} from '@fluxer/errors/src/i18n/ErrorI18nMessages';
-import {extractMessageTemplateVariables} from '@fluxer/i18n/src/runtime/MessageCatalogTypes';
+import {getErrorMessageResult} from '@voxr/errors/src/i18n/ErrorI18n';
+import {ERROR_I18N_LOCALE_MESSAGES} from '@voxr/errors/src/i18n/ErrorI18nLocales';
+import {ERROR_I18N_MESSAGES} from '@voxr/errors/src/i18n/ErrorI18nMessages';
+import {extractMessageTemplateVariables} from '@voxr/i18n/src/runtime/MessageCatalogTypes';
 import {parse, type Token} from '@messageformat/parser';
 import {describe, expect, it} from 'vitest';
 

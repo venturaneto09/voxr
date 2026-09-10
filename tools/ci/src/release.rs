@@ -11,8 +11,8 @@ use std::fs::{self, File};
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
-pub(crate) const RELEASE_REPOSITORY: &str = "fluxerapp/fluxer";
-const RELEASE_COMPARE_URL: &str = "https://github.com/fluxerapp/fluxer/compare";
+pub(crate) const RELEASE_REPOSITORY: &str = "voxrapp/voxr";
+const RELEASE_COMPARE_URL: &str = "https://github.com/voxrapp/voxr/compare";
 pub(crate) const DESKTOP_RELEASE_DESCRIPTOR_SCHEMA_VERSION: u8 = 1;
 pub(crate) const DESKTOP_RELEASE_ROUTE_COUNT: usize = 28;
 pub(crate) const DESKTOP_RELEASE_ASSET_COUNT: usize = 24;
@@ -37,8 +37,8 @@ pub(crate) struct DesktopReleaseDescriptor {
 
 pub(crate) fn desktop_release_product(channel: &str) -> Result<&'static str> {
     match channel {
-        "stable" => Ok("Fluxer"),
-        "canary" => Ok("Fluxer-Canary"),
+        "stable" => Ok("Voxr"),
+        "canary" => Ok("Voxr-Canary"),
         other => bail!("Unsupported desktop release channel {other:?}"),
     }
 }
@@ -104,7 +104,7 @@ pub(crate) fn validate_desktop_release_descriptor(
         descriptor.version
     );
     ensure!(
-        descriptor.release_tag == format!("fluxer-desktop-{channel}@{version}"),
+        descriptor.release_tag == format!("voxr-desktop-{channel}@{version}"),
         "Desktop release descriptor tag {:?} is invalid",
         descriptor.release_tag
     );
@@ -496,7 +496,7 @@ fn validate_component(component: &str) -> Result<()> {
         "Invalid release component {component:?}: expected lowercase letters, digits, and single hyphen separators"
     );
     ensure!(
-        component != "fluxer-marketing" && component != "marketing",
+        component != "voxr-marketing" && component != "marketing",
         "Marketing must not publish a public GitHub Release"
     );
     Ok(())
@@ -1008,5 +1008,5 @@ fn release_body(previous_sha: &str, source_sha: &str) -> String {
 }
 
 fn desktop_channel(component: &str) -> Option<&str> {
-    component.strip_prefix("fluxer-desktop-")
+    component.strip_prefix("voxr-desktop-")
 }

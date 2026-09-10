@@ -48,7 +48,7 @@ export const MAX_KATEX_RENDER_CONTROL_SEQUENCE_COUNT = 64;
 export const MAX_CODE_HIGHLIGHT_SOURCE_LENGTH = 50_000;
 export const MAX_CODE_HIGHLIGHT_OUTPUT_LENGTH = 200_000;
 
-import {ASSET_FORMAT_POLICY} from '@fluxer/constants/src/AssetFormatPolicy';
+import {ASSET_FORMAT_POLICY} from '@voxr/constants/src/AssetFormatPolicy';
 
 export const MAX_BIO_LENGTH = 320;
 export const AVATAR_MAX_SIZE = ASSET_FORMAT_POLICY.avatar.maxBytes;

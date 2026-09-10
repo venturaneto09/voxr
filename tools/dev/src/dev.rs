@@ -45,9 +45,9 @@ const OBJECT_STORE_TASKS: &[&str] = &["api", "worker", "media"];
 const CLOUDFLARE_TUNNEL_TASK: &str = "cloudflare-tunnel";
 const OBJECT_STORE_STARTUP_REPAIR_TIMEOUT_SECS: u64 = 60;
 const DEFAULT_OBJECT_STORE_MONITOR_INTERVAL_SECS: u64 = 15;
-const MARKETING_MANIFEST: &str = "fluxer_marketing/Cargo.toml";
+const MARKETING_MANIFEST: &str = "voxr_marketing/Cargo.toml";
 const MARKETING_INITIALIZE_COMMAND: &str =
-    "git -c submodule.fluxer_marketing.update=checkout submodule update --init -- fluxer_marketing";
+    "git -c submodule.voxr_marketing.update=checkout submodule update --init -- voxr_marketing";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum MarketingAvailability {
@@ -283,7 +283,7 @@ async fn monitor_object_store_dependency() -> Result<()> {
             .await
     {
         bail!(
-            "Dev object store is unreachable and automatic repair failed: {error}\nRun `fluxer-dev media-proxy doctor --repair` inside the devcontainer, then restart `fluxer-dev dev`."
+            "Dev object store is unreachable and automatic repair failed: {error}\nRun `voxr-dev media-proxy doctor --repair` inside the devcontainer, then restart `voxr-dev dev`."
         );
     }
     println!("Dev object store recovered.");
@@ -351,15 +351,15 @@ fn task_table_for_availability(
     marketing_availability: MarketingAvailability,
 ) -> Result<BTreeMap<&'static str, DevTask>> {
     let self_tool = self_tool_command()?;
-    let api_dir = ROOT.join("fluxer_api");
+    let api_dir = ROOT.join("voxr_api");
     let api_tsx = api_dir.join("node_modules/.bin/tsx");
-    let app_dir = ROOT.join("fluxer_app");
+    let app_dir = ROOT.join("voxr_app");
     let app_dev_server = ROOT.join("tools/ci/run.sh");
     let public_url = public_url();
-    let marketing_endpoint = std::env::var("FLUXER_MARKETING_ENDPOINT")
+    let marketing_endpoint = std::env::var("VOXR_MARKETING_ENDPOINT")
         .unwrap_or_else(|_| format!("{public_url}/marketing"));
     let admin_endpoint =
-        std::env::var("FLUXER_ADMIN_ENDPOINT").unwrap_or_else(|_| format!("{public_url}/admin"));
+        std::env::var("VOXR_ADMIN_ENDPOINT").unwrap_or_else(|_| format!("{public_url}/admin"));
     let mut tasks = BTreeMap::new();
     let mut insert = |task: DevTask| {
         tasks.insert(task.name, task);
@@ -387,22 +387,22 @@ fn task_table_for_availability(
         cwd: api_dir.clone(),
         env: vec![
             (
-                "FLUXER_S3_PUBLIC_ENDPOINT".to_owned(),
+                "VOXR_S3_PUBLIC_ENDPOINT".to_owned(),
                 Some(public_url.clone()),
             ),
             (
-                "FLUXER_S3_FORCE_PATH_STYLE".to_owned(),
+                "VOXR_S3_FORCE_PATH_STYLE".to_owned(),
                 Some(
-                    std::env::var("FLUXER_S3_FORCE_PATH_STYLE")
+                    std::env::var("VOXR_S3_FORCE_PATH_STYLE")
                         .unwrap_or_else(|_| "true".to_owned()),
                 ),
             ),
             (
-                "FLUXER_DISABLE_RATE_LIMITS".to_owned(),
+                "VOXR_DISABLE_RATE_LIMITS".to_owned(),
                 Some("true".to_owned()),
             ),
             (
-                "FLUXER_RELAX_REGISTRATION_RATE_LIMITS".to_owned(),
+                "VOXR_RELAX_REGISTRATION_RATE_LIMITS".to_owned(),
                 Some("true".to_owned()),
             ),
         ],
@@ -428,9 +428,9 @@ fn task_table_for_availability(
         env: vec![
             ("TOKIO_WORKER_THREADS".to_owned(), Some("4".to_owned())),
             ("RAYON_NUM_THREADS".to_owned(), Some("4".to_owned())),
-            ("FLUXER_APP_DEV_PORT".to_owned(), Some(APP_PORT.to_string())),
+            ("VOXR_APP_DEV_PORT".to_owned(), Some(APP_PORT.to_string())),
             (
-                "FLUXER_STATIC_CDN_ENDPOINT".to_owned(),
+                "VOXR_STATIC_CDN_ENDPOINT".to_owned(),
                 Some(public_url.clone()),
             ),
             (
@@ -441,30 +441,30 @@ fn task_table_for_availability(
     });
     insert(DevTask {
         name: "app-proxy",
-        args: strings(&["cargo", "run", "-p", "fluxer_app_proxy"]),
+        args: strings(&["cargo", "run", "-p", "voxr_app_proxy"]),
         cwd: ROOT.clone(),
         env: vec![
             (
                 "DISCOVERY_UPSTREAM_URL".to_owned(),
                 Some(format!(
-                    "http://{LOOPBACK_HOST}:{DEV_PROXY_PORT}/api/.well-known/fluxer"
+                    "http://{LOOPBACK_HOST}:{DEV_PROXY_PORT}/api/.well-known/voxr"
                 )),
             ),
             (
-                "FLUXER_APP_PROXY_INDEX_UPSTREAM_URL".to_owned(),
+                "VOXR_APP_PROXY_INDEX_UPSTREAM_URL".to_owned(),
                 Some(format!("http://{LOOPBACK_HOST}:{APP_PORT}/")),
             ),
             (
-                "FLUXER_APP_PROXY_PORT".to_owned(),
+                "VOXR_APP_PROXY_PORT".to_owned(),
                 Some(APP_PROXY_PORT.to_string()),
             ),
             (
-                "FLUXER_STATIC_CDN_ENDPOINT".to_owned(),
+                "VOXR_STATIC_CDN_ENDPOINT".to_owned(),
                 Some(public_url.clone()),
             ),
             (
-                "FLUXER_STATIC_DIR".to_owned(),
-                Some("fluxer_static".to_owned()),
+                "VOXR_STATIC_DIR".to_owned(),
+                Some("voxr_static".to_owned()),
             ),
             ("RELEASE_CHANNEL".to_owned(), Some("canary".to_owned())),
         ],
@@ -475,9 +475,9 @@ fn task_table_for_availability(
             "cargo",
             "run",
             "-p",
-            "fluxer-media-proxy",
+            "voxr-media-proxy",
             "--bin",
-            "fluxer-media-proxy",
+            "voxr-media-proxy",
             "--",
             "--bind-host",
             ANY_HOST,
@@ -502,7 +502,7 @@ fn task_table_for_availability(
         args: tool_args(&self_tool, &["gateway"]),
         cwd: ROOT.clone(),
         env: vec![(
-            "FLUXER_DISABLE_RATE_LIMITS".to_owned(),
+            "VOXR_DISABLE_RATE_LIMITS".to_owned(),
             Some("true".to_owned()),
         )],
     });
@@ -511,7 +511,7 @@ fn task_table_for_availability(
         args: tool_args(&self_tool, &["gateway", "single"]),
         cwd: ROOT.clone(),
         env: vec![(
-            "FLUXER_DISABLE_RATE_LIMITS".to_owned(),
+            "VOXR_DISABLE_RATE_LIMITS".to_owned(),
             Some("true".to_owned()),
         )],
     });
@@ -523,27 +523,27 @@ fn task_table_for_availability(
                 "watch",
                 "--no-dot-ignores",
                 "-w",
-                "fluxer_marketing/src",
+                "voxr_marketing/src",
                 "-w",
                 MARKETING_MANIFEST,
                 "-w",
-                "fluxer_marketing/build.rs",
+                "voxr_marketing/build.rs",
                 "-w",
-                "fluxer_marketing/content",
+                "voxr_marketing/content",
                 "-w",
-                "fluxer_marketing/Cargo.lock",
+                "voxr_marketing/Cargo.lock",
                 "-w",
-                "fluxer_marketing/package.json",
+                "voxr_marketing/package.json",
                 "-w",
-                "fluxer_marketing/pnpm-lock.yaml",
+                "voxr_marketing/pnpm-lock.yaml",
                 "-w",
-                "fluxer_marketing/pnpm-workspace.yaml",
+                "voxr_marketing/pnpm-workspace.yaml",
                 "-w",
-                "fluxer_marketing/static",
+                "voxr_marketing/static",
                 "-w",
                 "Cargo.toml",
                 "-w",
-                "fluxer_common",
+                "voxr_common",
                 "-w",
                 "packages/fonts/manifest.json",
                 "-w",
@@ -553,27 +553,27 @@ fn task_table_for_availability(
                 "-w",
                 "packages/fonts/css/locale-fallbacks.css",
                 "-w",
-                "packages/fonts/files/FluxerSans",
+                "packages/fonts/files/VoxrSans",
                 "-w",
-                "packages/fonts/files/FluxerMono",
+                "packages/fonts/files/VoxrMono",
                 "-w",
                 "packages/i18n/marketing",
                 "-x",
-                "run --manifest-path fluxer_marketing/Cargo.toml -p fluxer_marketing",
+                "run --manifest-path voxr_marketing/Cargo.toml -p voxr_marketing",
             ]),
             cwd: ROOT.clone(),
             env: vec![
-                ("FLUXER_APP_ENDPOINT".to_owned(), Some(public_url.clone())),
+                ("VOXR_APP_ENDPOINT".to_owned(), Some(public_url.clone())),
                 (
-                    "FLUXER_MARKETING_BASE_PATH".to_owned(),
+                    "VOXR_MARKETING_BASE_PATH".to_owned(),
                     Some("/marketing".to_owned()),
                 ),
                 (
-                    "FLUXER_MARKETING_ENDPOINT".to_owned(),
+                    "VOXR_MARKETING_ENDPOINT".to_owned(),
                     Some(marketing_endpoint),
                 ),
                 (
-                    "FLUXER_STATIC_CDN_ENDPOINT".to_owned(),
+                    "VOXR_STATIC_CDN_ENDPOINT".to_owned(),
                     Some(public_url.clone()),
                 ),
             ],
@@ -586,36 +586,36 @@ fn task_table_for_availability(
             "watch",
             "--no-dot-ignores",
             "-w",
-            "fluxer_admin/src",
+            "voxr_admin/src",
             "-w",
-            "fluxer_admin/Cargo.toml",
+            "voxr_admin/Cargo.toml",
             "-w",
-            "fluxer_admin/build.rs",
+            "voxr_admin/build.rs",
             "-w",
-            "fluxer_admin/openapi-admin.json",
+            "voxr_admin/openapi-admin.json",
             "-w",
-            "fluxer_admin/static",
+            "voxr_admin/static",
             "-x",
-            "run -p fluxer_admin",
+            "run -p voxr_admin",
         ]),
         cwd: ROOT.clone(),
         env: vec![
             (
-                "FLUXER_ADMIN_BASE_PATH".to_owned(),
+                "VOXR_ADMIN_BASE_PATH".to_owned(),
                 Some("/admin".to_owned()),
             ),
-            ("FLUXER_ADMIN_ENDPOINT".to_owned(), Some(admin_endpoint)),
-            ("FLUXER_ADMIN_PORT".to_owned(), Some(ADMIN_PORT.to_string())),
+            ("VOXR_ADMIN_ENDPOINT".to_owned(), Some(admin_endpoint)),
+            ("VOXR_ADMIN_PORT".to_owned(), Some(ADMIN_PORT.to_string())),
             (
-                "FLUXER_API_ENDPOINT".to_owned(),
+                "VOXR_API_ENDPOINT".to_owned(),
                 Some(format!("{public_url}/api")),
             ),
-            ("FLUXER_APP_ENDPOINT".to_owned(), Some(public_url.clone())),
+            ("VOXR_APP_ENDPOINT".to_owned(), Some(public_url.clone())),
             (
-                "FLUXER_MEDIA_ENDPOINT".to_owned(),
+                "VOXR_MEDIA_ENDPOINT".to_owned(),
                 Some(format!("{public_url}/media")),
             ),
-            ("FLUXER_STATIC_CDN_ENDPOINT".to_owned(), Some(public_url)),
+            ("VOXR_STATIC_CDN_ENDPOINT".to_owned(), Some(public_url)),
             ("RELEASE_CHANNEL".to_owned(), Some("canary".to_owned())),
         ],
     });
@@ -629,7 +629,7 @@ fn task_table_for_availability(
 }
 
 fn marketing_availability() -> Result<MarketingAvailability> {
-    let marketing_path = ROOT.join("fluxer_marketing");
+    let marketing_path = ROOT.join("voxr_marketing");
     let manifest_path = ROOT.join(MARKETING_MANIFEST);
     if manifest_path.is_file() {
         ensure_marketing_manifest(&manifest_path)?;
@@ -679,7 +679,7 @@ fn ensure_marketing_manifest(path: &Path) -> Result<()> {
         .canonicalize()
         .with_context(|| format!("failed to resolve {}", path.display()))?;
     let valid_package = packages.iter().any(|package| {
-        package["name"].as_str() == Some("fluxer_marketing")
+        package["name"].as_str() == Some("voxr_marketing")
             && package["manifest_path"]
                 .as_str()
                 .map(Path::new)
@@ -689,7 +689,7 @@ fn ensure_marketing_manifest(path: &Path) -> Result<()> {
     });
     if !valid_package {
         bail!(
-            "The initialized private marketing manifest {} does not define the root package fluxer_marketing",
+            "The initialized private marketing manifest {} does not define the root package voxr_marketing",
             path.display()
         );
     }
@@ -706,9 +706,9 @@ async fn wait_for_search_backend_if_needed(selected: &[String]) -> Result<()> {
     let env = merged_env(None, true)?;
     let backend = SearchBackend::from_env(&env)?;
     let search_url = env
-        .get("FLUXER_SEARCH_URL")
+        .get("VOXR_SEARCH_URL")
         .filter(|url| !url.trim().is_empty())
-        .context("Missing FLUXER_SEARCH_URL for the selected search backend")?;
+        .context("Missing VOXR_SEARCH_URL for the selected search backend")?;
     wait_http(backend.label(), search_url, 120).await
 }
 
@@ -720,14 +720,14 @@ enum SearchBackend {
 
 impl SearchBackend {
     fn from_env(env: &BTreeMap<String, String>) -> Result<Self> {
-        match env.get("FLUXER_SEARCH_ENGINE").map(String::as_str) {
+        match env.get("VOXR_SEARCH_ENGINE").map(String::as_str) {
             Some("elasticsearch") => Ok(Self::Elasticsearch),
             Some("meilisearch") => Ok(Self::Meilisearch),
             Some(engine) => bail!(
-                "Unsupported FLUXER_SEARCH_ENGINE value {engine:?}; expected `meilisearch` or `elasticsearch`"
+                "Unsupported VOXR_SEARCH_ENGINE value {engine:?}; expected `meilisearch` or `elasticsearch`"
             ),
             None => {
-                bail!("Missing FLUXER_SEARCH_ENGINE; expected `meilisearch` or `elasticsearch`")
+                bail!("Missing VOXR_SEARCH_ENGINE; expected `meilisearch` or `elasticsearch`")
             }
         }
     }
@@ -755,7 +755,7 @@ fn strings(args: &[&str]) -> Vec<String> {
 }
 
 fn public_url() -> String {
-    std::env::var("FLUXER_PUBLIC_URL")
+    std::env::var("VOXR_PUBLIC_URL")
         .unwrap_or_else(|_| format!("http://localhost:{DEV_PROXY_PORT}"))
 }
 
@@ -782,7 +782,7 @@ async fn ensure_js_dependencies_if_needed(
         }
     }
     if selected.iter().any(|name| name == "marketing") {
-        let marketing_dir = ROOT.join("fluxer_marketing");
+        let marketing_dir = ROOT.join("voxr_marketing");
         match run_command_interruptible(
             &["pnpm", "install", "--frozen-lockfile"],
             RunOptions {
@@ -817,7 +817,7 @@ fn selected_needs_object_store(selected: &[String]) -> bool {
 }
 
 fn object_store_monitor_interval() -> Duration {
-    let seconds = std::env::var("FLUXER_DEV_OBJECT_STORE_MONITOR_INTERVAL_SECS")
+    let seconds = std::env::var("VOXR_DEV_OBJECT_STORE_MONITOR_INTERVAL_SECS")
         .ok()
         .and_then(|value| value.parse::<u64>().ok())
         .filter(|value| *value > 0)
@@ -850,7 +850,7 @@ fn start_task(task: &DevTask) -> Result<Child> {
 }
 
 async fn wait_for_rust_services(processes: &mut [Child]) -> Result<()> {
-    let timeout = std::env::var("FLUXER_DEV_RUST_SERVICE_READY_TIMEOUT")
+    let timeout = std::env::var("VOXR_DEV_RUST_SERVICE_READY_TIMEOUT")
         .ok()
         .and_then(|value| value.parse().ok())
         .unwrap_or(240);
@@ -876,7 +876,7 @@ async fn wait_for_rust_services(processes: &mut [Child]) -> Result<()> {
 }
 
 async fn wait_for_gateway(processes: &mut [Child], port: u16) -> Result<()> {
-    let timeout = std::env::var("FLUXER_DEV_GATEWAY_READY_TIMEOUT")
+    let timeout = std::env::var("VOXR_DEV_GATEWAY_READY_TIMEOUT")
         .ok()
         .and_then(|value| value.parse().ok())
         .unwrap_or(180);
@@ -895,7 +895,7 @@ async fn wait_for_gateway(processes: &mut [Child], port: u16) -> Result<()> {
 }
 
 async fn wait_for_api(processes: &mut [Child]) -> Result<()> {
-    let timeout = std::env::var("FLUXER_DEV_API_READY_TIMEOUT")
+    let timeout = std::env::var("VOXR_DEV_API_READY_TIMEOUT")
         .ok()
         .and_then(|value| value.parse().ok())
         .unwrap_or(180);
@@ -917,7 +917,7 @@ async fn wait_for_cloudflare_tunnel_routes(
     processes: &mut [Child],
     selected: &[String],
 ) -> Result<()> {
-    let timeout = std::env::var("FLUXER_CLOUDFLARE_TUNNEL_ROUTE_READY_TIMEOUT")
+    let timeout = std::env::var("VOXR_CLOUDFLARE_TUNNEL_ROUTE_READY_TIMEOUT")
         .ok()
         .and_then(|value| value.parse().ok())
         .unwrap_or(300);
@@ -1186,7 +1186,7 @@ mod tests {
             tasks["gateway"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_DISABLE_RATE_LIMITS")
+                .find(|(key, _)| key == "VOXR_DISABLE_RATE_LIMITS")
                 .unwrap()
                 .1
                 .as_deref(),
@@ -1196,7 +1196,7 @@ mod tests {
             tasks["gateway-single"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_DISABLE_RATE_LIMITS")
+                .find(|(key, _)| key == "VOXR_DISABLE_RATE_LIMITS")
                 .unwrap()
                 .1
                 .as_deref(),
@@ -1206,7 +1206,7 @@ mod tests {
             tasks["api"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_S3_PUBLIC_ENDPOINT")
+                .find(|(key, _)| key == "VOXR_S3_PUBLIC_ENDPOINT")
                 .unwrap()
                 .1
                 .as_deref(),
@@ -1216,14 +1216,14 @@ mod tests {
             tasks["api"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_S3_FORCE_PATH_STYLE")
+                .find(|(key, _)| key == "VOXR_S3_FORCE_PATH_STYLE")
                 .unwrap()
                 .1
                 .as_deref(),
             Some("true")
         );
         assert!(crate::manifest::PROXY_ROUTES.iter().any(|route| {
-            route.prefix == "/fluxer-uploads" && route.host == LOOPBACK_HOST && route.port == 8333
+            route.prefix == "/voxr-uploads" && route.host == LOOPBACK_HOST && route.port == 8333
         }));
         assert!(crate::manifest::PROXY_ROUTES.iter().any(|route| {
             route.prefix == "/admin"
@@ -1235,7 +1235,7 @@ mod tests {
             tasks["app"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_APP_DEV_PORT")
+                .find(|(key, _)| key == "VOXR_APP_DEV_PORT")
                 .unwrap()
                 .1
                 .as_deref(),
@@ -1245,7 +1245,7 @@ mod tests {
             tasks["app"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_STATIC_CDN_ENDPOINT")
+                .find(|(key, _)| key == "VOXR_STATIC_CDN_ENDPOINT")
                 .unwrap()
                 .1
                 .as_deref(),
@@ -1255,7 +1255,7 @@ mod tests {
             tasks["app-proxy"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_APP_PROXY_INDEX_UPSTREAM_URL")
+                .find(|(key, _)| key == "VOXR_APP_PROXY_INDEX_UPSTREAM_URL")
                 .unwrap()
                 .1
                 .as_deref(),
@@ -1285,7 +1285,7 @@ mod tests {
             "cargo".to_owned(),
             "run".to_owned(),
             "-p".to_owned(),
-            "fluxer-media-proxy".to_owned()
+            "voxr-media-proxy".to_owned()
         ]));
         assert_eq!(
             tasks["marketing"].args,
@@ -1294,27 +1294,27 @@ mod tests {
                 "watch".to_owned(),
                 "--no-dot-ignores".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/src".to_owned(),
+                "voxr_marketing/src".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/Cargo.toml".to_owned(),
+                "voxr_marketing/Cargo.toml".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/build.rs".to_owned(),
+                "voxr_marketing/build.rs".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/content".to_owned(),
+                "voxr_marketing/content".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/Cargo.lock".to_owned(),
+                "voxr_marketing/Cargo.lock".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/package.json".to_owned(),
+                "voxr_marketing/package.json".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/pnpm-lock.yaml".to_owned(),
+                "voxr_marketing/pnpm-lock.yaml".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/pnpm-workspace.yaml".to_owned(),
+                "voxr_marketing/pnpm-workspace.yaml".to_owned(),
                 "-w".to_owned(),
-                "fluxer_marketing/static".to_owned(),
+                "voxr_marketing/static".to_owned(),
                 "-w".to_owned(),
                 "Cargo.toml".to_owned(),
                 "-w".to_owned(),
-                "fluxer_common".to_owned(),
+                "voxr_common".to_owned(),
                 "-w".to_owned(),
                 "packages/fonts/manifest.json".to_owned(),
                 "-w".to_owned(),
@@ -1324,13 +1324,13 @@ mod tests {
                 "-w".to_owned(),
                 "packages/fonts/css/locale-fallbacks.css".to_owned(),
                 "-w".to_owned(),
-                "packages/fonts/files/FluxerSans".to_owned(),
+                "packages/fonts/files/VoxrSans".to_owned(),
                 "-w".to_owned(),
-                "packages/fonts/files/FluxerMono".to_owned(),
+                "packages/fonts/files/VoxrMono".to_owned(),
                 "-w".to_owned(),
                 "packages/i18n/marketing".to_owned(),
                 "-x".to_owned(),
-                "run --manifest-path fluxer_marketing/Cargo.toml -p fluxer_marketing".to_owned()
+                "run --manifest-path voxr_marketing/Cargo.toml -p voxr_marketing".to_owned()
             ]
         );
         assert_eq!(
@@ -1340,24 +1340,24 @@ mod tests {
                 "watch".to_owned(),
                 "--no-dot-ignores".to_owned(),
                 "-w".to_owned(),
-                "fluxer_admin/src".to_owned(),
+                "voxr_admin/src".to_owned(),
                 "-w".to_owned(),
-                "fluxer_admin/Cargo.toml".to_owned(),
+                "voxr_admin/Cargo.toml".to_owned(),
                 "-w".to_owned(),
-                "fluxer_admin/build.rs".to_owned(),
+                "voxr_admin/build.rs".to_owned(),
                 "-w".to_owned(),
-                "fluxer_admin/openapi-admin.json".to_owned(),
+                "voxr_admin/openapi-admin.json".to_owned(),
                 "-w".to_owned(),
-                "fluxer_admin/static".to_owned(),
+                "voxr_admin/static".to_owned(),
                 "-x".to_owned(),
-                "run -p fluxer_admin".to_owned()
+                "run -p voxr_admin".to_owned()
             ]
         );
         assert_eq!(
             tasks["admin"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_ADMIN_BASE_PATH")
+                .find(|(key, _)| key == "VOXR_ADMIN_BASE_PATH")
                 .unwrap()
                 .1
                 .as_deref(),
@@ -1367,7 +1367,7 @@ mod tests {
             tasks["admin"]
                 .env
                 .iter()
-                .find(|(key, _)| key == "FLUXER_ADMIN_PORT")
+                .find(|(key, _)| key == "VOXR_ADMIN_PORT")
                 .unwrap()
                 .1
                 .as_deref(),

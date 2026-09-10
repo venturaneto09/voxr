@@ -51,14 +51,14 @@ struct BuiltNodeAddon {
 
 const LINUX_AUDIO_CAPTURE_PKG_CONFIG: &[PkgConfigRequirement] = &[PkgConfigRequirement {
     package: "libpipewire-0.3",
-    message: "@fluxer/linux-audio-capture requires libpipewire-0.3-dev (or your distro's equivalent: `apt install libpipewire-0.3-dev`, `dnf install pipewire-devel`, `apk add pipewire-dev`) to build. Install it on the build host, then re-run `pnpm build`.",
+    message: "@voxr/linux-audio-capture requires libpipewire-0.3-dev (or your distro's equivalent: `apt install libpipewire-0.3-dev`, `dnf install pipewire-devel`, `apk add pipewire-dev`) to build. Install it on the build host, then re-run `pnpm build`.",
 }];
 
 const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     DesktopNativeAddon {
         package_dir: "hardware-encoder",
-        package_name: "@fluxer/hardware-encoder",
-        crate_name: "fluxer_hardware_encoder",
+        package_name: "@voxr/hardware-encoder",
+        crate_name: "voxr_hardware_encoder",
         node_file_stem: "hardware-encoder",
         required_platform: None,
         features: &[],
@@ -67,8 +67,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "linux-audio-capture",
-        package_name: "@fluxer/linux-audio-capture",
-        crate_name: "fluxer_linux_audio_capture",
+        package_name: "@voxr/linux-audio-capture",
+        crate_name: "voxr_linux_audio_capture",
         node_file_stem: "linux-audio-capture",
         required_platform: Some("linux"),
         features: &[],
@@ -77,8 +77,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "linux-evdev",
-        package_name: "@fluxer/linux-evdev",
-        crate_name: "fluxer_linux_evdev",
+        package_name: "@voxr/linux-evdev",
+        crate_name: "voxr_linux_evdev",
         node_file_stem: "linux-evdev",
         required_platform: Some("linux"),
         features: &[],
@@ -87,8 +87,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "linux-input-hook",
-        package_name: "@fluxer/linux-input-hook",
-        crate_name: "fluxer_linux_input_hook",
+        package_name: "@voxr/linux-input-hook",
+        crate_name: "voxr_linux_input_hook",
         node_file_stem: "linux-input-hook",
         required_platform: Some("linux"),
         features: &[],
@@ -97,8 +97,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "linux-notifications",
-        package_name: "@fluxer/linux-notifications",
-        crate_name: "fluxer_linux_notifications",
+        package_name: "@voxr/linux-notifications",
+        crate_name: "voxr_linux_notifications",
         node_file_stem: "linux-notifications",
         required_platform: Some("linux"),
         features: &[],
@@ -107,8 +107,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "linux-portals",
-        package_name: "@fluxer/linux-portals",
-        crate_name: "fluxer_linux_portals",
+        package_name: "@voxr/linux-portals",
+        crate_name: "voxr_linux_portals",
         node_file_stem: "linux-portals",
         required_platform: Some("linux"),
         features: &[],
@@ -117,8 +117,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "linux-screen-capture",
-        package_name: "@fluxer/linux-screen-capture",
-        crate_name: "fluxer_linux_screen_capture",
+        package_name: "@voxr/linux-screen-capture",
+        crate_name: "voxr_linux_screen_capture",
         node_file_stem: "linux-screen-capture",
         required_platform: Some("linux"),
         features: &[],
@@ -127,8 +127,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "mac-app-audio",
-        package_name: "@fluxer/mac-app-audio",
-        crate_name: "fluxer_mac_app_audio",
+        package_name: "@voxr/mac-app-audio",
+        crate_name: "voxr_mac_app_audio",
         node_file_stem: "mac-app-audio",
         required_platform: Some("darwin"),
         features: &[],
@@ -137,8 +137,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "mac-clipboard",
-        package_name: "@fluxer/mac-clipboard",
-        crate_name: "fluxer_mac_clipboard",
+        package_name: "@voxr/mac-clipboard",
+        crate_name: "voxr_mac_clipboard",
         node_file_stem: "mac-clipboard",
         required_platform: Some("darwin"),
         features: &[],
@@ -147,8 +147,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "mac-screen-capture",
-        package_name: "@fluxer/mac-screen-capture",
-        crate_name: "fluxer_mac_screen_capture",
+        package_name: "@voxr/mac-screen-capture",
+        crate_name: "voxr_mac_screen_capture",
         node_file_stem: "mac-screen-capture",
         required_platform: Some("darwin"),
         features: &[],
@@ -157,8 +157,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "mac-sysctl",
-        package_name: "@fluxer/mac-sysctl",
-        crate_name: "fluxer_mac_sysctl",
+        package_name: "@voxr/mac-sysctl",
+        crate_name: "voxr_mac_sysctl",
         node_file_stem: "mac-sysctl",
         required_platform: Some("darwin"),
         features: &[],
@@ -167,8 +167,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "mac-tcc",
-        package_name: "@fluxer/mac-tcc",
-        crate_name: "fluxer_mac_tcc",
+        package_name: "@voxr/mac-tcc",
+        crate_name: "voxr_mac_tcc",
         node_file_stem: "mac-tcc",
         required_platform: Some("darwin"),
         features: &[],
@@ -177,8 +177,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "macos-input-hook",
-        package_name: "@fluxer/macos-input-hook",
-        crate_name: "fluxer_macos_input_hook",
+        package_name: "@voxr/macos-input-hook",
+        crate_name: "voxr_macos_input_hook",
         node_file_stem: "macos-input-hook",
         required_platform: Some("darwin"),
         features: &[],
@@ -187,8 +187,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "platform-info",
-        package_name: "@fluxer/platform-info",
-        crate_name: "fluxer_platform_info",
+        package_name: "@voxr/platform-info",
+        crate_name: "voxr_platform_info",
         node_file_stem: "platform-info",
         required_platform: None,
         features: &[],
@@ -197,8 +197,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "system-hunspell",
-        package_name: "@fluxer/system-hunspell",
-        crate_name: "fluxer_system_hunspell",
+        package_name: "@voxr/system-hunspell",
+        crate_name: "voxr_system_hunspell",
         node_file_stem: "system-hunspell",
         required_platform: Some("linux"),
         features: &[],
@@ -207,8 +207,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "webauthn",
-        package_name: "@fluxer/webauthn",
-        crate_name: "fluxer_webauthn",
+        package_name: "@voxr/webauthn",
+        crate_name: "voxr_webauthn",
         node_file_stem: "webauthn",
         required_platform: None,
         features: &[],
@@ -217,8 +217,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "win-clipboard",
-        package_name: "@fluxer/win-clipboard",
-        crate_name: "fluxer_win_clipboard",
+        package_name: "@voxr/win-clipboard",
+        crate_name: "voxr_win_clipboard",
         node_file_stem: "win-clipboard",
         required_platform: Some("win32"),
         features: &[],
@@ -227,8 +227,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "win-game-capture",
-        package_name: "@fluxer/win-game-capture",
-        crate_name: "fluxer_win_game_capture",
+        package_name: "@voxr/win-game-capture",
+        crate_name: "voxr_win_game_capture",
         node_file_stem: "win-game-capture",
         required_platform: Some("win32"),
         features: &[],
@@ -237,8 +237,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "win-process-loopback",
-        package_name: "@fluxer/win-process-loopback",
-        crate_name: "fluxer_win_process_loopback",
+        package_name: "@voxr/win-process-loopback",
+        crate_name: "voxr_win_process_loopback",
         node_file_stem: "win-process-loopback",
         required_platform: Some("win32"),
         features: &[],
@@ -247,8 +247,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "win-shell",
-        package_name: "@fluxer/win-shell",
-        crate_name: "fluxer_win_shell",
+        package_name: "@voxr/win-shell",
+        crate_name: "voxr_win_shell",
         node_file_stem: "win-shell",
         required_platform: Some("win32"),
         features: &[],
@@ -257,8 +257,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "win-toast",
-        package_name: "@fluxer/win-toast",
-        crate_name: "fluxer_win_toast",
+        package_name: "@voxr/win-toast",
+        crate_name: "voxr_win_toast",
         node_file_stem: "win-toast",
         required_platform: Some("win32"),
         features: &[],
@@ -267,8 +267,8 @@ const DESKTOP_NATIVE_ADDONS: &[DesktopNativeAddon] = &[
     },
     DesktopNativeAddon {
         package_dir: "windows-input-hook",
-        package_name: "@fluxer/windows-input-hook",
-        crate_name: "fluxer_windows_input_hook",
+        package_name: "@voxr/windows-input-hook",
+        crate_name: "voxr_windows_input_hook",
         node_file_stem: "windows-input-hook",
         required_platform: Some("win32"),
         features: &[],
@@ -575,7 +575,7 @@ fn cargo_target_root_for_build(addon_root: &Path, platform: &str) -> Result<Path
 }
 
 fn default_windows_cargo_target_root(addon_root: &Path) -> Result<PathBuf> {
-    let base = env::var_os("FLUXER_CARGO_TARGET_BASE")
+    let base = env::var_os("VOXR_CARGO_TARGET_BASE")
         .filter(|value| !value.is_empty())
         .map(PathBuf::from)
         .unwrap_or_else(|| {
@@ -691,9 +691,9 @@ fn remove_stale_win_game_capture_outputs(root: &Path, primary_node: &Path) -> Re
         let Some(file_name) = path.file_name().and_then(OsStr::to_str) else {
             return false;
         };
-        file_name.starts_with("fluxer-game-hook.")
-            || file_name.starts_with("fluxer-inject-helper.")
-            || file_name.starts_with("fluxer-vulkan-layer.")
+        file_name.starts_with("voxr-game-hook.")
+            || file_name.starts_with("voxr-inject-helper.")
+            || file_name.starts_with("voxr-vulkan-layer.")
             || (file_name.starts_with("win-game-capture.")
                 && file_name.ends_with(".node")
                 && file_name != primary_node_name)
@@ -715,7 +715,7 @@ fn assert_no_redistributable_runtime_imports(node_file_path: &Path, platform: &s
         return Ok(());
     }
     bail!(
-        "{} imports redistributable Microsoft runtime DLL(s) that are not on a clean Windows install:\n{}\nEnsure the crate is built with +crt-static so the C/C++ runtime is statically linked into the addon.\nSee fluxer_desktop/native/.cargo/config.toml for the cargo configuration that enables this for MSVC targets.",
+        "{} imports redistributable Microsoft runtime DLL(s) that are not on a clean Windows install:\n{}\nEnsure the crate is built with +crt-static so the C/C++ runtime is statically linked into the addon.\nSee voxr_desktop/native/.cargo/config.toml for the cargo configuration that enables this for MSVC targets.",
         node_file_path.display(),
         offenders
             .iter()
@@ -731,7 +731,7 @@ const DISABLED_WIN_GAME_CAPTURE_BINARY_MARKERS: &[&[u8]] = &[
     b"VirtualFreeEx",
     b"WriteProcessMemory",
     b"SetWindowsHookExW",
-    b"fluxer-inject-helper.",
+    b"voxr-inject-helper.",
 ];
 
 const LOAD_LIBRARY_SEARCH_SYSTEM32: u16 = 0x0800;
@@ -762,7 +762,7 @@ fn assert_system32_dependent_load_flag(node_file_path: &Path, platform: &str) ->
     let flags = read_dependent_load_flags(node_file_path);
     ensure!(
         flags.is_some_and(|value| value & LOAD_LIBRARY_SEARCH_SYSTEM32 != 0),
-        "{} does not set LOAD_LIBRARY_SEARCH_SYSTEM32 in its load config DependentLoadFlags (read {}).\nEvery import of a shipped addon must resolve from System32 so a planted DLL cannot be loaded in its place.\nSee fluxer_desktop/native/.cargo/config.toml for the /DEPENDENTLOADFLAG:0x800 link argument that sets it.",
+        "{} does not set LOAD_LIBRARY_SEARCH_SYSTEM32 in its load config DependentLoadFlags (read {}).\nEvery import of a shipped addon must resolve from System32 so a planted DLL cannot be loaded in its place.\nSee voxr_desktop/native/.cargo/config.toml for the /DEPENDENTLOADFLAG:0x800 link argument that sets it.",
         node_file_path.display(),
         flags.map_or_else(
             || "no load config".to_string(),
@@ -1020,16 +1020,16 @@ mod tests {
     #[test]
     fn dynamic_library_names_match_legacy_node_helper() {
         assert_eq!(
-            cargo_dynamic_library_file_name("fluxer_webauthn", "linux").unwrap(),
-            "libfluxer_webauthn.so"
+            cargo_dynamic_library_file_name("voxr_webauthn", "linux").unwrap(),
+            "libvoxr_webauthn.so"
         );
         assert_eq!(
-            cargo_dynamic_library_file_name("fluxer-webauthn", "darwin").unwrap(),
-            "libfluxer_webauthn.dylib"
+            cargo_dynamic_library_file_name("voxr-webauthn", "darwin").unwrap(),
+            "libvoxr_webauthn.dylib"
         );
         assert_eq!(
-            cargo_dynamic_library_file_name("fluxer_webauthn", "win32").unwrap(),
-            "fluxer_webauthn.dll"
+            cargo_dynamic_library_file_name("voxr_webauthn", "win32").unwrap(),
+            "voxr_webauthn.dll"
         );
     }
 

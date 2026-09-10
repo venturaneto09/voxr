@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type {OpenAPIPathItem, OpenAPISchema} from '@fluxer/openapi/src/OpenAPITypes';
+import type {OpenAPIPathItem, OpenAPISchema} from '@voxr/openapi/src/OpenAPITypes';
 
 const OPENAPI_SCHEMA_REF_PATTERN = /#\/components\/schemas\/([A-Za-z0-9_]+)/;
 export function collectReferencedSchemaNames(

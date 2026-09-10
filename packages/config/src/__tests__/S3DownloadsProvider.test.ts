@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {MasterConfig} from '@fluxer/config/src/MasterConfig';
-import {resolveDownloadsProvider} from '@fluxer/config/src/S3DownloadsProvider';
+import type {MasterConfig} from '@voxr/config/src/MasterConfig';
+import {resolveDownloadsProvider} from '@voxr/config/src/S3DownloadsProvider';
 import {describe, expect, test} from 'vitest';
 
 const base: Pick<MasterConfig, 's3' | 's3_downloads'>['s3'] = {

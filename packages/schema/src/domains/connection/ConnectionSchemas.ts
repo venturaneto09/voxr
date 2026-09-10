@@ -4,14 +4,14 @@ import {
 	ConnectionTypes,
 	ConnectionVisibilityFlags,
 	ConnectionVisibilityFlagsDescriptions,
-} from '@fluxer/constants/src/ConnectionConstants';
+} from '@voxr/constants/src/ConnectionConstants';
 import {
 	createBitflagInt32Type,
 	createNamedStringLiteralUnion,
 	Int32Type,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {HostnameType} from '@fluxer/schema/src/primitives/UrlValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {HostnameType} from '@voxr/schema/src/primitives/UrlValidators';
 import {z} from 'zod';
 
 const ConnectionTypeSchema = withOpenApiType(

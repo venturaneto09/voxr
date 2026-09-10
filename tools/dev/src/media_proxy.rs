@@ -12,9 +12,9 @@ use std::time::{Duration, Instant};
 use tokio::time::sleep;
 
 const DEV_S3_BUCKETS: &str =
-    "fluxer,fluxer-uploads,fluxer-downloads,fluxer-reports,fluxer-harvests,fluxer-static";
-const DEV_S3_ACCESS_KEY_ID: &str = "fluxer";
-const DEV_S3_SECRET_ACCESS_KEY: &str = "fluxer-secret";
+    "voxr,voxr-uploads,voxr-downloads,voxr-reports,voxr-harvests,voxr-static";
+const DEV_S3_ACCESS_KEY_ID: &str = "voxr";
+const DEV_S3_SECRET_ACCESS_KEY: &str = "voxr-secret";
 const DEV_S3_HOST: &str = "127.0.0.1";
 const DEV_S3_PORT: u16 = 8333;
 const DEV_SEAWEEDFS_STOP_TIMEOUT: Duration = Duration::from_secs(15);
@@ -32,7 +32,7 @@ pub async fn run_dev_media_doctor(
     if let Some(path) = media_path {
         check_dev_media_path(base_url, path).await?;
     }
-    println!("Fluxer media proxy doctor passed.");
+    println!("Voxr media proxy doctor passed.");
     Ok(())
 }
 
@@ -56,7 +56,7 @@ pub async fn ensure_dev_object_store(repair: bool, repair_timeout_secs: u64) -> 
         }
         Err(error) => {
             bail!(
-                "SeaweedFS S3 is unreachable: {error}\nRun `fluxer-dev media-proxy doctor --repair` to start the local dev object store."
+                "SeaweedFS S3 is unreachable: {error}\nRun `voxr-dev media-proxy doctor --repair` to start the local dev object store."
             );
         }
     }
@@ -65,12 +65,12 @@ pub async fn ensure_dev_object_store(repair: bool, repair_timeout_secs: u64) -> 
 }
 
 pub fn run_rust_stress_smoke() -> Result<()> {
-    crate::proc::run(&["cargo", "test", "-p", "fluxer-media-proxy"])?;
+    crate::proc::run(&["cargo", "test", "-p", "voxr-media-proxy"])?;
     crate::proc::run(&[
         "cargo",
         "bench",
         "-p",
-        "fluxer-media-proxy",
+        "voxr-media-proxy",
         "--bench",
         "core",
         "--",

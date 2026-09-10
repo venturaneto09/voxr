@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {LockedError} from '@fluxer/errors/src/domains/core/LockedError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {LockedError} from '@voxr/errors/src/domains/core/LockedError';
 
 export class ResourceLockedError extends LockedError {
 	constructor(detail?: string) {

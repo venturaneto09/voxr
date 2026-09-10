@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {compileTemplate} from '@fluxer/i18n/src/runtime/CompileTemplate';
-import {getEffectiveLocale} from '@fluxer/i18n/src/runtime/GetEffectiveLocale';
-import type {I18nResult, I18nState, TemplateCompiler} from '@fluxer/i18n/src/runtime/I18nTypes';
-import {loadLocaleIfNotLoaded} from '@fluxer/i18n/src/runtime/LoadLocale';
+import {compileTemplate} from '@voxr/i18n/src/runtime/CompileTemplate';
+import {getEffectiveLocale} from '@voxr/i18n/src/runtime/GetEffectiveLocale';
+import type {I18nResult, I18nState, TemplateCompiler} from '@voxr/i18n/src/runtime/I18nTypes';
+import {loadLocaleIfNotLoaded} from '@voxr/i18n/src/runtime/LoadLocale';
 import MessageFormat from '@messageformat/core';
 
 export function getTemplate<TKey extends string, TValue, TVariables>(

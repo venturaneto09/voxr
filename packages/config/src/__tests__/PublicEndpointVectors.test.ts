@@ -3,7 +3,7 @@
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {normalizePublicEndpoint} from '@fluxer/config/src/EndpointDerivation';
+import {normalizePublicEndpoint} from '@voxr/config/src/EndpointDerivation';
 import {describe, expect, test} from 'vitest';
 
 interface PublicEndpointVector {
@@ -15,7 +15,7 @@ interface PublicEndpointVector {
 
 const VECTORS_PATH = path.resolve(
 	path.dirname(fileURLToPath(import.meta.url)),
-	'../../../../fluxer_common/src/testdata/public_endpoint_vectors.json',
+	'../../../../voxr_common/src/testdata/public_endpoint_vectors.json',
 );
 
 function readVectors(): Array<PublicEndpointVector> {

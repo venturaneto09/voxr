@@ -10,28 +10,28 @@ use std::process::{Command, Stdio};
 use std::time::Duration;
 use url::Url;
 
-const CANARY_APP_NAME: &str = "Fluxer Canary";
-const CANARY_BUNDLE_ID: &str = "app.fluxer.canary";
+const CANARY_APP_NAME: &str = "Voxr Canary";
+const CANARY_BUNDLE_ID: &str = "app.voxr.canary";
 const MACOS_DEV_ELECTRON_USAGE_DESCRIPTIONS: &[(&str, &str)] = &[
     (
         "NSMicrophoneUsageDescription",
-        "Fluxer needs access to your microphone to enable voice chat features.",
+        "Voxr needs access to your microphone to enable voice chat features.",
     ),
     (
         "NSCameraUsageDescription",
-        "Fluxer needs access to your camera to enable video chat features.",
+        "Voxr needs access to your camera to enable video chat features.",
     ),
     (
         "NSAppleEventsUsageDescription",
-        "Fluxer needs access to Apple Events for automation features.",
+        "Voxr needs access to Apple Events for automation features.",
     ),
     (
         "NSAudioCaptureUsageDescription",
-        "Fluxer captures audio from the screen or window you choose to share.",
+        "Voxr captures audio from the screen or window you choose to share.",
     ),
     (
         "NSScreenCaptureUsageDescription",
-        "Fluxer captures the screen or window you choose to share.",
+        "Voxr captures the screen or window you choose to share.",
     ),
 ];
 
@@ -57,7 +57,7 @@ pub fn build_desktop(skip_native: bool) -> Result<()> {
             Some(env::var("BUILD_CHANNEL").unwrap_or_else(|_| "canary".to_owned())),
         ),
         (
-            "FLUXER_SKIP_NATIVE".to_owned(),
+            "VOXR_SKIP_NATIVE".to_owned(),
             if skip_native {
                 Some("true".to_owned())
             } else {
@@ -99,7 +99,7 @@ pub fn electron_args(args: &[String]) -> Vec<String> {
     let mut runtime_args = Vec::new();
     if cfg!(target_os = "linux")
         && Path::new("/.dockerenv").exists()
-        && env::var("FLUXER_ELECTRON_NO_SANDBOX").as_deref() != Ok("0")
+        && env::var("VOXR_ELECTRON_NO_SANDBOX").as_deref() != Ok("0")
     {
         runtime_args.push("--no-sandbox".to_owned());
     }
@@ -224,8 +224,8 @@ pub async fn run_desktop_canary(
 fn run_desktop_process(app_url: &str, extra_args: &[String]) -> Result<()> {
     patch_macos_dev_electron_info_plist()?;
     let mut args = vec![
-        format!("--fluxer-app-url={app_url}"),
-        "--fluxer-log-renderer-console".to_owned(),
+        format!("--voxr-app-url={app_url}"),
+        "--voxr-log-renderer-console".to_owned(),
     ];
     args.extend(extra_args.iter().cloned());
     let command = electron_command(&args);
@@ -392,9 +392,9 @@ pub async fn resolve_desktop_canary_app_url(app_url: Option<&str>) -> Result<Str
         return normalize_desktop_app_url(app_url);
     }
     for key in [
-        "FLUXER_DESKTOP_CANARY_APP_URL",
-        "FLUXER_DESKTOP_APP_URL",
-        "FLUXER_PUBLIC_URL",
+        "VOXR_DESKTOP_CANARY_APP_URL",
+        "VOXR_DESKTOP_APP_URL",
+        "VOXR_PUBLIC_URL",
     ] {
         if let Ok(value) = env::var(key) {
             let value = value.trim();
@@ -485,7 +485,7 @@ mod tests {
         let args = electron_args(&["--flag".to_owned()]);
         if cfg!(target_os = "linux")
             && Path::new("/.dockerenv").exists()
-            && env::var("FLUXER_ELECTRON_NO_SANDBOX").as_deref() != Ok("0")
+            && env::var("VOXR_ELECTRON_NO_SANDBOX").as_deref() != Ok("0")
         {
             assert_eq!(args[0], "--no-sandbox");
         }
@@ -508,13 +508,13 @@ mod tests {
     #[test]
     fn disclaimed_electron_command_re_execs_through_the_launcher() {
         let command = disclaimed_electron_command(
-            Path::new("/tmp/fluxer-dev"),
+            Path::new("/tmp/voxr-dev"),
             Path::new("/tmp/Electron.app/Contents/MacOS/Electron"),
         );
         assert_eq!(
             command,
             vec![
-                "/tmp/fluxer-dev",
+                "/tmp/voxr-dev",
                 "desktop",
                 "exec-disclaimed",
                 "/tmp/Electron.app/Contents/MacOS/Electron",
@@ -526,14 +526,14 @@ mod tests {
     #[test]
     fn dev_electron_binary_path_points_inside_the_dev_bundle() {
         assert!(dev_electron_binary_path().ends_with(
-            "fluxer_desktop/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron"
+            "voxr_desktop/node_modules/electron/dist/Electron.app/Contents/MacOS/Electron"
         ));
     }
 
     #[test]
-    fn dev_electron_plist_path_points_to_fluxer_desktop_electron_app() {
+    fn dev_electron_plist_path_points_to_voxr_desktop_electron_app() {
         assert!(dev_electron_info_plist_path().ends_with(
-            "fluxer_desktop/node_modules/electron/dist/Electron.app/Contents/Info.plist"
+            "voxr_desktop/node_modules/electron/dist/Electron.app/Contents/Info.plist"
         ));
     }
 

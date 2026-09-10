@@ -8,8 +8,8 @@ import path from 'node:path';
 import process from 'node:process';
 
 const repoRoot = path.resolve(new URL('..', import.meta.url).pathname);
-const defaultConfigPath = path.join(repoRoot, '.fluxer', 'remote-hosts.json');
-const defaultControlDir = path.join(repoRoot, '.fluxer', 'remote-ssh');
+const defaultConfigPath = path.join(repoRoot, '.voxr', 'remote-hosts.json');
+const defaultControlDir = path.join(repoRoot, '.voxr', 'remote-ssh');
 
 function usage(exitCode = 0) {
 	console.log(`Usage:
@@ -23,7 +23,7 @@ function usage(exitCode = 0) {
   pnpm remote macos-setup [--pubkey ~/.ssh/id_ed25519.pub]
 
 Global options:
-  --config <path>   Host config path. Defaults to .fluxer/remote-hosts.json.
+  --config <path>   Host config path. Defaults to .voxr/remote-hosts.json.
   --verbose         Print spawned ssh commands.
 `);
 	process.exit(exitCode);
@@ -64,7 +64,7 @@ function loadConfig(configPath) {
 	if (!existsSync(configPath)) {
 		fail(
 			`Remote host config not found: ${configPath}\n` +
-				`Copy scripts/remote/hosts.example.json to .fluxer/remote-hosts.json and edit it.`,
+				`Copy scripts/remote/hosts.example.json to .voxr/remote-hosts.json and edit it.`,
 		);
 	}
 	const config = readJson(configPath);

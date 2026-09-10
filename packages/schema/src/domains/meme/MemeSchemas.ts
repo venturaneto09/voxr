@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {GifMediaFormat} from '@fluxer/schema/src/domains/gif/GifSchemas';
+import {GifMediaFormat} from '@voxr/schema/src/domains/gif/GifSchemas';
 import {
 	createStringType,
 	NonNegativeSafeIntegerType,
 	SnowflakeStringType,
 	SnowflakeType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const FavoriteMemeBase = z.object({

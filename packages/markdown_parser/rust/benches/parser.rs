@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use criterion::{Criterion, criterion_group, criterion_main};
-use fluxer_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
+use voxr_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
 use std::hint::black_box;
 
 fn bench_parser(c: &mut Criterion) {

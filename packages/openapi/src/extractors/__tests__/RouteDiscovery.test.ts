@@ -2,10 +2,10 @@
 
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {discoverControllerFiles, extractRoutesFromControllers} from '@fluxer/openapi/src/extractors/RouteExtractor';
+import {discoverControllerFiles, extractRoutesFromControllers} from '@voxr/openapi/src/extractors/RouteExtractor';
 import {beforeAll, describe, expect, it} from 'vitest';
 
-const API_PACKAGE_PATH = path.join(fileURLToPath(new URL('../../../../../', import.meta.url)), 'fluxer_api');
+const API_PACKAGE_PATH = path.join(fileURLToPath(new URL('../../../../../', import.meta.url)), 'voxr_api');
 
 describe('discoverControllerFiles', () => {
 	let files: Array<string>;

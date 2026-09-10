@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {createErrorHandler as createFluxerErrorHandler} from '@fluxer/errors/src/ErrorHandler';
+import {createErrorHandler as createVoxrErrorHandler} from '@voxr/errors/src/ErrorHandler';
 import type {Context, ErrorHandler} from 'hono';
 
 export interface ErrorHandlerOptions {
@@ -26,7 +26,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorHand
 					}
 				}
 			: undefined;
-	return createFluxerErrorHandler({
+	return createVoxrErrorHandler({
 		includeStack,
 		logError,
 	});

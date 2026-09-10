@@ -1,5 +1,5 @@
 {
-	"name": "@fluxer/errors",
+	"name": "@voxr/errors",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -12,11 +12,11 @@
 		"typecheck": "tsgo --noEmit"
 	},
 	"dependencies": {
-		"@fluxer/config": "workspace:*",
-		"@fluxer/constants": "workspace:*",
-		"@fluxer/hono_types": "workspace:*",
-		"@fluxer/i18n": "workspace:*",
-		"@fluxer/logger": "workspace:*",
+		"@voxr/config": "workspace:*",
+		"@voxr/constants": "workspace:*",
+		"@voxr/hono_types": "workspace:*",
+		"@voxr/i18n": "workspace:*",
+		"@voxr/logger": "workspace:*",
 		"hono": "catalog:"
 	},
 	"devDependencies": {

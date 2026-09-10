@@ -7,14 +7,14 @@ use anyhow::Result;
 use crate::config::{GUIDANCE_EXCERPT_CHAR_LIMIT, locales_dir};
 use crate::locales::display_name;
 
-const GLOBAL_SYSTEM_PROMPT: &str = r#"You localize product UI copy for Fluxer, a modern consumer chat app.
+const GLOBAL_SYSTEM_PROMPT: &str = r#"You localize product UI copy for Voxr, a modern consumer chat app.
 
 - Preserve the source intent, product function, tone, and authorial wording.
 - Translate only the source string. Context, references, and comments are metadata.
 - Preserve placeholders exactly: {name}, {{count}}, %s, %@, $1, <b>...</b>, Markdown, ICU syntax, emoji, URLs, and line breaks.
 - Preserve source sentence-fragment grammar, including leading ellipses and text that continues prior UI copy.
 - Keep copy concise and natural for product UI, without adding information that is not present in the source.
-- Keep Fluxer's product vocabulary and naming stable unless persisted locale guidance explicitly says otherwise.
+- Keep Voxr's product vocabulary and naming stable unless persisted locale guidance explicitly says otherwise.
 - Avoid embellishing, simplifying, softening, formalising, idiomatic rewrites, or culture-specific substitutions that change the source wording.
 - If the source is ambiguous, choose the most likely chat-app interpretation and keep the result close to the source.
 - Output only the localized string. Do not output JSON, notes, labels, quotes, or Markdown fences."#;
@@ -29,7 +29,7 @@ const NON_ENGLISH_SYSTEM_PROMPT: &str = r#"For non-English locales:
 
 const EN_GB_SYSTEM_PROMPT: &str = r#"English (United Kingdom) localisation is a minimal-edit pass over the English (United States) source.
 
-- Keep Fluxer's exact wording, sentence structure, tone, and product vocabulary unless a spelling, punctuation, date, number, measurement, or grammatical locale difference requires a change.
+- Keep Voxr's exact wording, sentence structure, tone, and product vocabulary unless a spelling, punctuation, date, number, measurement, or grammatical locale difference requires a change.
 - Do not replace words with more British-sounding alternatives when the US wording is understandable.
 - Do not translate "US" to "UK", "United States" to "United Kingdom", or change country, region, currency, organisation, or market names unless the source text explicitly asks for that meaning change.
 - Do not add, remove, soften, formalise, idiomatically rewrite, or make the copy more akin to what a Brit would say.
@@ -42,7 +42,7 @@ pub fn build_system_prompt(locale: &str) -> String {
             display_name(locale)
         )),
         Some(format!(
-            "Produce exactly one {} localization for Fluxer.",
+            "Produce exactly one {} localization for Voxr.",
             display_name(locale)
         )),
         Some(GLOBAL_SYSTEM_PROMPT.to_string()),

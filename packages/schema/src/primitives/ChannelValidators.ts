@@ -4,8 +4,8 @@ import {
 	ChannelOverwriteTypes,
 	ChannelOverwriteTypesDescriptions,
 	ChannelTypes,
-} from '@fluxer/constants/src/ChannelConstants';
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
+} from '@voxr/constants/src/ChannelConstants';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
 import {
 	createInt32EnumType,
 	createNamedLiteralUnion,
@@ -15,7 +15,7 @@ import {
 	stripInvisibles,
 	withOpenApiType,
 	withStringLengthRangeValidation,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 export const ChannelTypeSchema = withOpenApiType(

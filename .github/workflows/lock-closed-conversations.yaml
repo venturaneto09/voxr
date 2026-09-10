@@ -41,17 +41,17 @@ concurrency:
 jobs:
   automatic:
     name: Lock closed conversation
-    if: github.repository == 'fluxerapp/fluxer' && github.event_name != 'workflow_dispatch' && github.event_name != 'schedule'
+    if: github.repository == 'voxrapp/voxr' && github.event_name != 'workflow_dispatch' && github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - name: Create token
         id: create-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
-          client-id: ${{ vars.FLUXER_CI_APP_ID }}
-          private-key: ${{ secrets.FLUXER_CI_APP_KEY }}
-          owner: fluxerapp
-          repositories: fluxer
+          client-id: ${{ vars.VOXR_CI_APP_ID }}
+          private-key: ${{ secrets.VOXR_CI_APP_KEY }}
+          owner: voxrapp
+          repositories: voxr
           permission-discussions: write
           permission-issues: write
           permission-pull-requests: write
@@ -155,17 +155,17 @@ jobs:
 
   retroactive:
     name: Lock closed conversations retroactively
-    if: github.repository == 'fluxerapp/fluxer' && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+    if: github.repository == 'voxrapp/voxr' && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
     runs-on: ubuntu-latest
     steps:
       - name: Create token
         id: create-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
-          client-id: ${{ vars.FLUXER_CI_APP_ID }}
-          private-key: ${{ secrets.FLUXER_CI_APP_KEY }}
-          owner: fluxerapp
-          repositories: fluxer
+          client-id: ${{ vars.VOXR_CI_APP_ID }}
+          private-key: ${{ secrets.VOXR_CI_APP_KEY }}
+          owner: voxrapp
+          repositories: voxr
           permission-discussions: write
           permission-issues: write
           permission-pull-requests: write

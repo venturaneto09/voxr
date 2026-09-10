@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {HttpStatus} from '@fluxer/constants/src/HttpConstants';
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
-import {InvalidPhoneNumberError} from '@fluxer/errors/src/domains/auth/InvalidPhoneNumberError';
-import {PhoneCountryNotSupportedError} from '@fluxer/errors/src/domains/auth/PhoneCountryNotSupportedError';
-import {PhoneInboundVerificationRequiredError} from '@fluxer/errors/src/domains/auth/PhoneInboundVerificationRequiredError';
-import {PhoneLookupUnavailableError} from '@fluxer/errors/src/domains/auth/PhoneLookupUnavailableError';
-import {PhoneNumberNotInServiceError} from '@fluxer/errors/src/domains/auth/PhoneNumberNotInServiceError';
-import {PhoneNumberNotMobileError} from '@fluxer/errors/src/domains/auth/PhoneNumberNotMobileError';
-import {PhoneVerificationNeedsReviewError} from '@fluxer/errors/src/domains/auth/PhoneVerificationNeedsReviewError';
-import {UnknownChannelError} from '@fluxer/errors/src/domains/channel/UnknownChannelError';
-import {UnknownMessageError} from '@fluxer/errors/src/domains/channel/UnknownMessageError';
-import {BadRequestError} from '@fluxer/errors/src/domains/core/BadRequestError';
-import {ForbiddenError} from '@fluxer/errors/src/domains/core/ForbiddenError';
-import {InputValidationError} from '@fluxer/errors/src/domains/core/InputValidationError';
-import {InternalServerError} from '@fluxer/errors/src/domains/core/InternalServerError';
-import {NotFoundError} from '@fluxer/errors/src/domains/core/NotFoundError';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {HttpStatus} from '@voxr/constants/src/HttpConstants';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
+import {InvalidPhoneNumberError} from '@voxr/errors/src/domains/auth/InvalidPhoneNumberError';
+import {PhoneCountryNotSupportedError} from '@voxr/errors/src/domains/auth/PhoneCountryNotSupportedError';
+import {PhoneInboundVerificationRequiredError} from '@voxr/errors/src/domains/auth/PhoneInboundVerificationRequiredError';
+import {PhoneLookupUnavailableError} from '@voxr/errors/src/domains/auth/PhoneLookupUnavailableError';
+import {PhoneNumberNotInServiceError} from '@voxr/errors/src/domains/auth/PhoneNumberNotInServiceError';
+import {PhoneNumberNotMobileError} from '@voxr/errors/src/domains/auth/PhoneNumberNotMobileError';
+import {PhoneVerificationNeedsReviewError} from '@voxr/errors/src/domains/auth/PhoneVerificationNeedsReviewError';
+import {UnknownChannelError} from '@voxr/errors/src/domains/channel/UnknownChannelError';
+import {UnknownMessageError} from '@voxr/errors/src/domains/channel/UnknownMessageError';
+import {BadRequestError} from '@voxr/errors/src/domains/core/BadRequestError';
+import {ForbiddenError} from '@voxr/errors/src/domains/core/ForbiddenError';
+import {InputValidationError} from '@voxr/errors/src/domains/core/InputValidationError';
+import {InternalServerError} from '@voxr/errors/src/domains/core/InternalServerError';
+import {NotFoundError} from '@voxr/errors/src/domains/core/NotFoundError';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
 import {describe, expect, it} from 'vitest';
 
 interface ErrorResponse {
@@ -63,9 +63,9 @@ describe('Domain Errors', () => {
 				});
 				expect(error.messageVariables).toEqual({count: 5});
 			});
-			it('should be instance of FluxerError', () => {
+			it('should be instance of VoxrError', () => {
 				const error = new BadRequestError({code: APIErrorCodes.INVALID_REQUEST});
-				expect(error).toBeInstanceOf(FluxerError);
+				expect(error).toBeInstanceOf(VoxrError);
 			});
 		});
 		describe('NotFoundError', () => {
@@ -82,9 +82,9 @@ describe('Domain Errors', () => {
 				});
 				expect(error.messageVariables).toEqual({userId: '12345'});
 			});
-			it('should be instance of FluxerError', () => {
+			it('should be instance of VoxrError', () => {
 				const error = new NotFoundError({code: APIErrorCodes.UNKNOWN_USER});
-				expect(error).toBeInstanceOf(FluxerError);
+				expect(error).toBeInstanceOf(VoxrError);
 			});
 		});
 		describe('ForbiddenError', () => {
@@ -94,9 +94,9 @@ describe('Domain Errors', () => {
 				expect(error.code).toBe(APIErrorCodes.ACCESS_DENIED);
 				expect(error.message).toBe(APIErrorCodes.ACCESS_DENIED);
 			});
-			it('should be instance of FluxerError', () => {
+			it('should be instance of VoxrError', () => {
 				const error = new ForbiddenError({code: APIErrorCodes.ACCESS_DENIED});
-				expect(error).toBeInstanceOf(FluxerError);
+				expect(error).toBeInstanceOf(VoxrError);
 			});
 		});
 		describe('InternalServerError', () => {
@@ -106,9 +106,9 @@ describe('Domain Errors', () => {
 				expect(error.code).toBe(APIErrorCodes.GENERAL_ERROR);
 				expect(error.message).toBe(APIErrorCodes.GENERAL_ERROR);
 			});
-			it('should be instance of FluxerError', () => {
+			it('should be instance of VoxrError', () => {
 				const error = new InternalServerError({code: APIErrorCodes.GENERAL_ERROR});
-				expect(error).toBeInstanceOf(FluxerError);
+				expect(error).toBeInstanceOf(VoxrError);
 			});
 		});
 		describe('InputValidationError', () => {
@@ -178,9 +178,9 @@ describe('Domain Errors', () => {
 				const error = new InvalidPhoneNumberError();
 				expect(error).toBeInstanceOf(BadRequestError);
 			});
-			it('should be instance of FluxerError', () => {
+			it('should be instance of VoxrError', () => {
 				const error = new InvalidPhoneNumberError();
-				expect(error).toBeInstanceOf(FluxerError);
+				expect(error).toBeInstanceOf(VoxrError);
 			});
 		});
 		describe.each([
@@ -220,9 +220,9 @@ describe('Domain Errors', () => {
 				const error = new UnknownChannelError();
 				expect(error).toBeInstanceOf(NotFoundError);
 			});
-			it('should be instance of FluxerError', () => {
+			it('should be instance of VoxrError', () => {
 				const error = new UnknownChannelError();
-				expect(error).toBeInstanceOf(FluxerError);
+				expect(error).toBeInstanceOf(VoxrError);
 			});
 		});
 		describe('UnknownMessageError', () => {
@@ -296,7 +296,7 @@ describe('Domain Errors', () => {
 			const error = new InvalidPhoneNumberError();
 			expect(error).toBeInstanceOf(InvalidPhoneNumberError);
 			expect(error).toBeInstanceOf(BadRequestError);
-			expect(error).toBeInstanceOf(FluxerError);
+			expect(error).toBeInstanceOf(VoxrError);
 			expect(error).toBeInstanceOf(Error);
 		});
 		it('should be catchable at any level of the chain', () => {
@@ -311,7 +311,7 @@ describe('Domain Errors', () => {
 			try {
 				throw error;
 			} catch (e) {
-				if (e instanceof FluxerError) {
+				if (e instanceof VoxrError) {
 					expect(e.status).toBe(404);
 				}
 			}

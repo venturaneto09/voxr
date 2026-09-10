@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {Locales} from '@fluxer/constants/src/Locales';
+import {Locales} from '@voxr/constants/src/Locales';
 
 export const DEFAULT_LOCALE = Locales.EN_US;
 export const MS_PER_SECOND = 1000;

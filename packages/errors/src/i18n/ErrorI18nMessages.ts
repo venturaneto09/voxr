@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {defineStaticLocaleMessages} from '@fluxer/i18n/src/runtime/MessageCatalogTypes';
+import {defineStaticLocaleMessages} from '@voxr/i18n/src/runtime/MessageCatalogTypes';
 
 export const ERROR_I18N_MESSAGES = {
 	'account.communication_disabled': 'Communication is disabled.',
@@ -428,9 +428,9 @@ export const ERROR_I18N_MESSAGES = {
 	'names_and_normalization.channel_name_empty_after_normalization': "Channel name can't be empty after normalization.",
 	'names_and_normalization.name_empty_after_normalization': "Name can't be empty after normalization.",
 	'permissions.global_ip_banned':
-		'Your IP address {ipAddress} has been permanently blocked from the Fluxer API by platform administrators. If you believe this is a mistake, contact support@fluxer.app to appeal. Include this IP address in your appeal.',
+		'Your IP address {ipAddress} has been permanently blocked from the Voxr API by platform administrators. If you believe this is a mistake, contact support@voxr.app to appeal. Include this IP address in your appeal.',
 	'permissions.global_ip_temporarily_banned':
-		'Your IP address {ipAddress} has been temporarily blocked from the Fluxer API for 24 hours because of abusive or unusual access patterns. We usually do not provide appeals for temporary API bans. Change IP addresses or wait for the ban to expire, and review the Fluxer API access patterns coming from your client.',
+		'Your IP address {ipAddress} has been temporarily blocked from the Voxr API for 24 hours because of abusive or unusual access patterns. We usually do not provide appeals for temporary API bans. Change IP addresses or wait for the ban to expire, and review the Voxr API access patterns coming from your client.',
 	'permissions.missing_access': "You don't have access to this resource or feature.",
 	'permissions.missing_permissions': "You don't have the permissions required to perform this action.",
 	'permissions.user_banned_from_guild': 'This user is banned from this community.',
@@ -440,7 +440,7 @@ export const ERROR_I18N_MESSAGES = {
 	'permissions.user_owns_guilds': 'This user owns communities.',
 	'phone.add_not_eligible': 'You are not eligible to add a phone number to your account.',
 	'phone.country_not_supported':
-		"We don't send verification texts to this country. Use a mobile number from another country, or email support@fluxer.app and a person will review your account.",
+		"We don't send verification texts to this country. Use a mobile number from another country, or email support@voxr.app and a person will review your account.",
 	'phone.inbound_verification_required':
 		'This number is verified by texting us instead of us texting you. Start phone verification again to get the code and the number to text.',
 	'phone.invalid_number': 'Invalid phone number.',
@@ -449,12 +449,12 @@ export const ERROR_I18N_MESSAGES = {
 	'phone.number_already_used': 'Phone number is already in use.',
 	'phone.number_format_required': 'Phone number must be in E.164 format (for example, +1234567890).',
 	'phone.number_not_in_service':
-		"Your carrier says this number isn't in service. Check the number and try again, or email support@fluxer.app if it's correct.",
+		"Your carrier says this number isn't in service. Check the number and try again, or email support@voxr.app if it's correct.",
 	'phone.number_not_mobile':
-		"This isn't a mobile number, so it can't receive our text. Use a mobile number, or email support@fluxer.app if you think that's wrong.",
+		"This isn't a mobile number, so it can't receive our text. Use a mobile number, or email support@voxr.app if you think that's wrong.",
 	'phone.verification_code_invalid': 'Invalid phone verification code.',
 	'phone.verification_needs_review':
-		"We couldn't verify this number automatically. Email support@fluxer.app and a person will review your account.",
+		"We couldn't verify this number automatically. Email support@voxr.app and a person will review your account.",
 	'phone.verification_required': 'Phone verification is required.',
 	'premium_and_plans.animated_avatars_require_premium': 'Animated avatars require Premium.',
 	'premium_and_plans.banners_require_premium': 'Banners require Premium.',
@@ -552,11 +552,11 @@ export const ERROR_I18N_MESSAGES = {
 		'Username can only contain Latin letters (a-z, A-Z), numbers (0-9), and underscores (_).',
 	'usernames_and_tags.username_length_invalid': 'Username must be between {min} and {max} characters.',
 	'usernames_and_tags.username_not_available': 'This username is not available.',
-	'usernames_and_tags.username_reserved_terms': 'Username can\'t contain "fluxer" or "system message".',
+	'usernames_and_tags.username_reserved_terms': 'Username can\'t contain "voxr" or "system message".',
 	'usernames_and_tags.username_reserved_value': 'Username can\'t be "everyone" or "here".',
 	'vanity_urls.vanity_url_already_taken': 'This vanity URL is already taken.',
 	'vanity_urls.vanity_url_code_already_taken': 'Vanity URL code is already taken.',
-	'vanity_urls.vanity_url_code_cannot_contain_fluxer': 'Vanity URL code can\'t contain "fluxer".',
+	'vanity_urls.vanity_url_code_cannot_contain_voxr': 'Vanity URL code can\'t contain "voxr".',
 	'vanity_urls.vanity_url_code_length_invalid': 'Vanity URL code must be between {min} and {max} characters.',
 	'vanity_urls.vanity_url_invalid_characters':
 		'Vanity URL can only contain lowercase letters (a-z), digits (0-9), and hyphens (-).',

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {APIErrorCode} from '@fluxer/constants/src/ApiErrorCodes';
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import type {ValidationErrorCode} from '@fluxer/constants/src/ValidationErrorCodes';
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
-import type {ErrorI18nKey} from '@fluxer/errors/src/i18n/ErrorI18nMessages';
+import type {APIErrorCode} from '@voxr/constants/src/ApiErrorCodes';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import type {ValidationErrorCode} from '@voxr/constants/src/ValidationErrorCodes';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
+import type {ErrorI18nKey} from '@voxr/errors/src/i18n/ErrorI18nMessages';
 
 type AllErrorCodes = APIErrorCode | ValidationErrorCode;
 
@@ -211,7 +211,7 @@ export const ErrorCodeToI18nKey = {
 	[APIErrorCodes.NO_ACTIVE_SUBSCRIPTION]: 'premium_and_plans.no_active_subscription',
 	[APIErrorCodes.NO_PASSKEYS_REGISTERED]: 'mfa_and_passkeys.no_passkeys_registered',
 	[APIErrorCodes.NO_PENDING_DELETION]: 'misc.invalid_request_generic',
-	[APIErrorCodes.NO_USERS_WITH_FLUXERTAG_EXIST]: 'usernames_and_tags.too_many_users_with_this_username',
+	[APIErrorCodes.NO_USERS_WITH_VOXRTAG_EXIST]: 'usernames_and_tags.too_many_users_with_this_username',
 	[APIErrorCodes.NOT_A_BOT_APPLICATION]: 'bots.not_a_bot_application',
 	[APIErrorCodes.NOT_FOUND]: 'http.not_found',
 	[APIErrorCodes.NOT_FRIENDS_WITH_USER]: 'friends_and_dms.not_friends',
@@ -504,7 +504,7 @@ export const ErrorCodeToI18nKey = {
 	[ValidationErrorCodes.VANITY_URL_REQUIRES_FEATURE]: 'channels_and_guilds.vanity_url_requires_feature',
 	[ValidationErrorCodes.THIS_VANITY_URL_IS_ALREADY_TAKEN]: 'vanity_urls.vanity_url_already_taken',
 	[ValidationErrorCodes.VANITY_URL_CODE_ALREADY_TAKEN]: 'vanity_urls.vanity_url_code_already_taken',
-	[ValidationErrorCodes.VANITY_URL_CODE_CANNOT_CONTAIN_FLUXER]: 'vanity_urls.vanity_url_code_cannot_contain_fluxer',
+	[ValidationErrorCodes.VANITY_URL_CODE_CANNOT_CONTAIN_VOXR]: 'vanity_urls.vanity_url_code_cannot_contain_voxr',
 	[ValidationErrorCodes.VANITY_URL_CODE_LENGTH_INVALID]: 'vanity_urls.vanity_url_code_length_invalid',
 	[ValidationErrorCodes.VANITY_URL_INVALID_CHARACTERS]: 'vanity_urls.vanity_url_invalid_characters',
 	[ValidationErrorCodes.WEBHOOK_NAME_LENGTH_INVALID]: 'webhooks.webhook_name_length_invalid',

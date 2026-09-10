@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {getConfig} from '@fluxer/config/src/ConfigLoader';
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {BadRequestError} from '@fluxer/errors/src/domains/core/BadRequestError';
+import {getConfig} from '@voxr/config/src/ConfigLoader';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {BadRequestError} from '@voxr/errors/src/domains/core/BadRequestError';
 
 export class MaxBookmarksError extends BadRequestError {
 	constructor(params: {

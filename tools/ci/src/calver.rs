@@ -48,8 +48,8 @@ fn resolve_calver_from_env() -> Result<String> {
     resolve_calver(
         &CalverEnv {
             build_version: trim_option(env::var("BUILD_VERSION").ok()),
-            fluxer_build_version: trim_option(env::var("FLUXER_BUILD_VERSION").ok()),
-            fluxer_build_date: trim_option(env::var("FLUXER_BUILD_DATE").ok()),
+            voxr_build_version: trim_option(env::var("VOXR_BUILD_VERSION").ok()),
+            voxr_build_date: trim_option(env::var("VOXR_BUILD_DATE").ok()),
         },
         Utc::now(),
     )
@@ -123,7 +123,7 @@ mod tests {
     fn calver_date_only_override_matches_legacy_shell() {
         let version = resolve_calver(
             &CalverEnv {
-                fluxer_build_date: Some("2026-01-09".to_string()),
+                voxr_build_date: Some("2026-01-09".to_string()),
                 ..CalverEnv::default()
             },
             Utc.with_ymd_and_hms(2026, 5, 20, 1, 2, 3).single().unwrap(),

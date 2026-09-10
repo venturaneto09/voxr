@@ -148,7 +148,7 @@ impl RuntimeConfig {
             ),
             CatalogName::ApiContent => (
                 repo_root
-                    .join("fluxer_api")
+                    .join("voxr_api")
                     .join("src")
                     .join("api")
                     .join("content_i18n")
@@ -157,7 +157,7 @@ impl RuntimeConfig {
                 CatalogLayout::StaticJson(StaticJsonCatalogConfig {
                     kind: StaticTsCatalogKind::SimpleMessages,
                     source_path: repo_root
-                        .join("fluxer_api")
+                        .join("voxr_api")
                         .join("src")
                         .join("api")
                         .join("content_i18n")
@@ -167,7 +167,7 @@ impl RuntimeConfig {
             ),
             CatalogName::Email => (
                 repo_root
-                    .join("fluxer_api")
+                    .join("voxr_api")
                     .join("pkgs")
                     .join("email")
                     .join("src")
@@ -177,7 +177,7 @@ impl RuntimeConfig {
                 CatalogLayout::StaticJson(StaticJsonCatalogConfig {
                     kind: StaticTsCatalogKind::EmailTemplates,
                     source_path: repo_root
-                        .join("fluxer_api")
+                        .join("voxr_api")
                         .join("pkgs")
                         .join("email")
                         .join("src")
@@ -216,7 +216,7 @@ impl RuntimeConfig {
             DEFAULT_OPENROUTER_APP_TITLE,
         );
         let request_timeout_seconds = positive_float_env(
-            "FLUXER_AUTO_I18N_REQUEST_TIMEOUT",
+            "VOXR_AUTO_I18N_REQUEST_TIMEOUT",
             DEFAULT_REQUEST_TIMEOUT_SECONDS,
             env_overrides,
         );
@@ -354,7 +354,7 @@ fn normalize_args(raw: RawTranslateArgs, env_overrides: &EnvOverlay) -> Result<T
     }
     let progress_interval_seconds = raw.progress_interval.unwrap_or_else(|| {
         positive_float_env(
-            "FLUXER_AUTO_I18N_PROGRESS_INTERVAL",
+            "VOXR_AUTO_I18N_PROGRESS_INTERVAL",
             DEFAULT_PROGRESS_INTERVAL_SECONDS,
             env_overrides,
         )
@@ -394,7 +394,7 @@ fn normalize_args(raw: RawTranslateArgs, env_overrides: &EnvOverlay) -> Result<T
             .string_concurrency
             .unwrap_or_else(|| {
                 positive_int_env(
-                    "FLUXER_AUTO_I18N_STRING_CONCURRENCY",
+                    "VOXR_AUTO_I18N_STRING_CONCURRENCY",
                     DEFAULT_STRING_CONCURRENCY,
                     env_overrides,
                 )
@@ -404,7 +404,7 @@ fn normalize_args(raw: RawTranslateArgs, env_overrides: &EnvOverlay) -> Result<T
             .locale_concurrency
             .unwrap_or_else(|| {
                 positive_int_env(
-                    "FLUXER_AUTO_I18N_LOCALE_CONCURRENCY",
+                    "VOXR_AUTO_I18N_LOCALE_CONCURRENCY",
                     DEFAULT_LOCALE_CONCURRENCY,
                     env_overrides,
                 )
@@ -2305,12 +2305,12 @@ pub fn run_self_test() -> Result<()> {
     );
     if !masked_prompt
         .user_prompt
-        .contains("Source string:\n{FLUXER_TOKEN_0} needs {FLUXER_TOKEN_1}.")
+        .contains("Source string:\n{VOXR_TOKEN_0} needs {VOXR_TOKEN_1}.")
     {
         bail!("Failed to mask preserved tokens in source prompt");
     }
     if restore_masked_tokens(
-        "{FLUXER_TOKEN_0} a besoin de {FLUXER_TOKEN_1}.",
+        "{VOXR_TOKEN_0} a besoin de {VOXR_TOKEN_1}.",
         &masked_prompt.token_aliases,
     ) != "{productName} a besoin de {permissionName}."
     {

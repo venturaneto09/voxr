@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
 import {
 	MAX_STRING_PROCESSING_LENGTH,
 	normalizeString,
@@ -10,12 +10,12 @@ import {
 	stripVariationSelectors,
 	withOpenApiType,
 	withStringLengthRangeValidation,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 const EMAIL_LOCAL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+$/;
 const DISCRIMINATOR_REGEX = /^\d{1,4}$/;
-const FLUXER_TAG_REGEX = /^[a-zA-Z0-9_]+$/;
+const VOXR_TAG_REGEX = /^[a-zA-Z0-9_]+$/;
 export const PHONE_E164_REGEX = /^\+[1-9]\d{1,14}$/;
 
 function sanitizeUsername(value: string): string {
@@ -65,14 +65,14 @@ export const UsernameType = withOpenApiType(
 		.string()
 		.transform((value) => value.trim())
 		.pipe(withStringLengthRangeValidation(z.string(), 1, 32, ValidationErrorCodes.USERNAME_LENGTH_INVALID))
-		.refine((value) => FLUXER_TAG_REGEX.test(value), ValidationErrorCodes.USERNAME_INVALID_CHARACTERS)
+		.refine((value) => VOXR_TAG_REGEX.test(value), ValidationErrorCodes.USERNAME_INVALID_CHARACTERS)
 		.refine((value) => {
 			const lowerValue = value.toLowerCase();
 			return lowerValue !== 'everyone' && lowerValue !== 'here';
 		}, ValidationErrorCodes.USERNAME_RESERVED_VALUE)
 		.refine((value) => {
 			const lowerValue = value.toLowerCase();
-			return !lowerValue.includes('fluxer') && !lowerValue.includes('system message');
+			return !lowerValue.includes('voxr') && !lowerValue.includes('system message');
 		}, ValidationErrorCodes.USERNAME_CANNOT_CONTAIN_RESERVED_TERMS),
 	'UsernameType',
 );

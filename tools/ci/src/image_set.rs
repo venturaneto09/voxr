@@ -13,13 +13,13 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 const SCHEMA_VERSION: u8 = 1;
-const DEFAULT_REGISTRY: &str = "ghcr.io/fluxerapp";
+const DEFAULT_REGISTRY: &str = "ghcr.io/voxrapp";
 const DEFAULT_MOVING_TAGS: &str = "v1,latest";
 const DEFAULT_FROM_TAG: &str = "v1";
 const DEFAULT_OUT_DIR: &str = "release-out";
-const RELEASE_COMPONENT: &str = "fluxer-release";
+const RELEASE_COMPONENT: &str = "voxr-release";
 const COMPOSE_IMAGE_PREFIX: &str =
-    "${FLUXER_REGISTRY:-ghcr.io/${FLUXER_REGISTRY_OWNER:-fluxerapp}}";
+    "${VOXR_REGISTRY:-ghcr.io/${VOXR_REGISTRY_OWNER:-voxrapp}}";
 const OCI_INDEX_MEDIA_TYPE: &str = "application/vnd.oci.image.index.v1+json";
 const DOCKER_MANIFEST_LIST_MEDIA_TYPE: &str =
     "application/vnd.docker.distribution.manifest.list.v2+json";
@@ -33,55 +33,55 @@ struct Component {
 
 const COMPONENTS: &[Component] = &[
     Component {
-        image: "fluxer-admin",
+        image: "voxr-admin",
         services: &["admin"],
     },
     Component {
-        image: "fluxer-api",
+        image: "voxr-api",
         services: &["api", "worker"],
     },
     Component {
-        image: "fluxer-app-proxy",
+        image: "voxr-app-proxy",
         services: &[],
     },
     Component {
-        image: "fluxer-app-proxy-self-hosted",
+        image: "voxr-app-proxy-self-hosted",
         services: &["app-proxy"],
     },
     Component {
-        image: "fluxer-docs",
+        image: "voxr-docs",
         services: &[],
     },
     Component {
-        image: "fluxer-gateway",
+        image: "voxr-gateway",
         services: &["gateway"],
     },
     Component {
-        image: "fluxer-gifs",
+        image: "voxr-gifs",
         services: &["gifs", "gifs-shard"],
     },
     Component {
-        image: "fluxer-media-proxy",
+        image: "voxr-media-proxy",
         services: &["media-proxy"],
     },
     Component {
-        image: "fluxer-messages",
+        image: "voxr-messages",
         services: &["messages", "messages-shard"],
     },
     Component {
-        image: "fluxer-snowflakes",
+        image: "voxr-snowflakes",
         services: &["snowflakes", "snowflakes-shard"],
     },
     Component {
-        image: "fluxer-static",
+        image: "voxr-static",
         services: &["static-proxy"],
     },
     Component {
-        image: "fluxer-unfurl",
+        image: "voxr-unfurl",
         services: &["unfurl", "unfurl-shard"],
     },
     Component {
-        image: "fluxer-users",
+        image: "voxr-users",
         services: &["users", "users-shard"],
     },
 ];
@@ -634,7 +634,7 @@ fn component(image: &str) -> Result<&'static Component> {
 }
 
 fn workflow_suffix(image: &str) -> &str {
-    image.strip_prefix("fluxer-").unwrap_or(image)
+    image.strip_prefix("voxr-").unwrap_or(image)
 }
 
 fn digest_env_name(component: &str) -> String {
@@ -808,7 +808,7 @@ mod tests {
     use super::*;
     use std::cmp::Ordering;
 
-    const COMPOSE_IMAGE_TAG: &str = "${FLUXER_IMAGE_TAG:-v1}";
+    const COMPOSE_IMAGE_TAG: &str = "${VOXR_IMAGE_TAG:-v1}";
     const RELEASE_VERSION: &str = "2026.901.120000";
     const COMPONENT_TAG: &str = "2026.830.191141";
 
@@ -874,12 +874,12 @@ mod tests {
             let Some(reference) = trimmed.strip_prefix("image: ") else {
                 continue;
             };
-            if !reference.starts_with("${FLUXER_REGISTRY") {
+            if !reference.starts_with("${VOXR_REGISTRY") {
                 continue;
             }
             let image = compose_component(reference)
-                .unwrap_or_else(|| panic!("Unexpected Fluxer image line: {trimmed}"));
-            let service = service.expect("a Fluxer image line must follow a service header");
+                .unwrap_or_else(|| panic!("Unexpected Voxr image line: {trimmed}"));
+            let service = service.expect("a Voxr image line must follow a service header");
             observed.insert((image, service));
         }
 
@@ -929,18 +929,18 @@ mod tests {
     #[test]
     fn manifest_requires_every_component() {
         let mut resolved = resolved_set();
-        resolved.retain(|entry| entry.component != "fluxer-api");
+        resolved.retain(|entry| entry.component != "voxr-api");
         let error = build_manifest(RELEASE_VERSION, DEFAULT_REGISTRY, &resolved, true)
             .unwrap_err()
             .to_string();
         assert!(error.contains("missing components"), "{error}");
-        assert!(error.contains("fluxer-api"), "{error}");
+        assert!(error.contains("voxr-api"), "{error}");
     }
 
     #[test]
     fn manifest_rejects_unknown_and_duplicate_components() {
         let mut unknown = resolved_set();
-        unknown[0].component = "fluxer-unknown".to_string();
+        unknown[0].component = "voxr-unknown".to_string();
         let error = build_manifest(RELEASE_VERSION, DEFAULT_REGISTRY, &unknown, true)
             .unwrap_err()
             .to_string();
@@ -962,7 +962,7 @@ mod tests {
             "{:?}",
             build_manifest(RELEASE_VERSION, DEFAULT_REGISTRY, &resolved, true).unwrap_err()
         );
-        assert!(error.contains("fluxer-admin"), "{error}");
+        assert!(error.contains("voxr-admin"), "{error}");
         assert!(error.contains("Invalid image digest"), "{error}");
     }
 
@@ -986,12 +986,12 @@ mod tests {
         let error = build_manifest(RELEASE_VERSION, DEFAULT_REGISTRY, &resolved, false)
             .unwrap_err()
             .to_string();
-        assert!(error.contains("fluxer-admin@2026.830.191141"), "{error}");
+        assert!(error.contains("voxr-admin@2026.830.191141"), "{error}");
         assert!(error.contains("--allow-unreleased"), "{error}");
 
         let manifest = build_manifest(RELEASE_VERSION, DEFAULT_REGISTRY, &resolved, true).unwrap();
         assert_eq!(manifest.components[0].source_sha, None);
-        assert_eq!(manifest.release_tag, "fluxer-release@2026.901.120000");
+        assert_eq!(manifest.release_tag, "voxr-release@2026.901.120000");
         assert_eq!(manifest.components.len(), COMPONENTS.len());
     }
 
@@ -1010,12 +1010,12 @@ mod tests {
         let api = manifest
             .components
             .iter()
-            .find(|entry| entry.component == "fluxer-api")
+            .find(|entry| entry.component == "voxr-api")
             .unwrap();
         for service in ["api", "worker"] {
             assert!(
                 rendered.contains(&format!(
-                    "  {service}:\n    image: {COMPOSE_IMAGE_PREFIX}/fluxer-api@${{FLUXER_API_IMAGE_DIGEST:-{}}}\n",
+                    "  {service}:\n    image: {COMPOSE_IMAGE_PREFIX}/voxr-api@${{VOXR_API_IMAGE_DIGEST:-{}}}\n",
                     api.digest
                 )),
                 "{rendered}"
@@ -1025,19 +1025,19 @@ mod tests {
         let app_proxy = manifest
             .components
             .iter()
-            .find(|entry| entry.component == "fluxer-app-proxy-self-hosted")
+            .find(|entry| entry.component == "voxr-app-proxy-self-hosted")
             .unwrap();
         assert!(
             rendered.contains(&format!(
-                "  app-proxy:\n    image: {COMPOSE_IMAGE_PREFIX}/fluxer-app-proxy-self-hosted@${{FLUXER_APP_PROXY_SELF_HOSTED_IMAGE_DIGEST:-{}}}\n",
+                "  app-proxy:\n    image: {COMPOSE_IMAGE_PREFIX}/voxr-app-proxy-self-hosted@${{VOXR_APP_PROXY_SELF_HOSTED_IMAGE_DIGEST:-{}}}\n",
                 app_proxy.digest
             )),
             "{rendered}"
         );
-        assert!(!rendered.contains("fluxer-docs"), "{rendered}");
+        assert!(!rendered.contains("voxr-docs"), "{rendered}");
         assert!(
             rendered.starts_with(
-                "# fluxer-release@2026.901.120000 image set\n# docker compose -f docker-compose.yml -f fluxer-release-2026.901.120000.yml up -d\nservices:\n"
+                "# voxr-release@2026.901.120000 image set\n# docker compose -f docker-compose.yml -f voxr-release-2026.901.120000.yml up -d\nservices:\n"
             ),
             "{rendered}"
         );
@@ -1073,7 +1073,7 @@ mod tests {
     fn promote_command_targets_the_digest() {
         let digest = format!("sha256:{}", "0".repeat(64));
         let spec = promote_command(
-            "ghcr.io/fluxerapp/fluxer-api",
+            "ghcr.io/voxrapp/voxr-api",
             &digest,
             &["v1".to_string(), "latest".to_string()],
         );
@@ -1085,10 +1085,10 @@ mod tests {
                 "imagetools",
                 "create",
                 "-t",
-                "ghcr.io/fluxerapp/fluxer-api:v1",
+                "ghcr.io/voxrapp/voxr-api:v1",
                 "-t",
-                "ghcr.io/fluxerapp/fluxer-api:latest",
-                &format!("ghcr.io/fluxerapp/fluxer-api@{digest}"),
+                "ghcr.io/voxrapp/voxr-api:latest",
+                &format!("ghcr.io/voxrapp/voxr-api@{digest}"),
             ]
         );
     }
@@ -1115,16 +1115,16 @@ mod tests {
 
     #[test]
     fn parse_component_versions_rejects_junk() {
-        let pins = parse_component_versions(&["fluxer-api=2026.830.191141".to_string()]).unwrap();
-        assert_eq!(pins["fluxer-api"], "2026.830.191141");
+        let pins = parse_component_versions(&["voxr-api=2026.830.191141".to_string()]).unwrap();
+        assert_eq!(pins["voxr-api"], "2026.830.191141");
 
-        assert!(parse_component_versions(&["fluxer-api".to_string()]).is_err());
-        assert!(parse_component_versions(&["fluxer-nope=2026.830.191141".to_string()]).is_err());
-        assert!(parse_component_versions(&["fluxer-api=v1".to_string()]).is_err());
+        assert!(parse_component_versions(&["voxr-api".to_string()]).is_err());
+        assert!(parse_component_versions(&["voxr-nope=2026.830.191141".to_string()]).is_err());
+        assert!(parse_component_versions(&["voxr-api=v1".to_string()]).is_err());
         assert!(
             parse_component_versions(&[
-                "fluxer-api=2026.830.191141".to_string(),
-                "fluxer-api=2026.830.191142".to_string(),
+                "voxr-api=2026.830.191141".to_string(),
+                "voxr-api=2026.830.191142".to_string(),
             ])
             .is_err()
         );
@@ -1140,7 +1140,7 @@ mod tests {
         let error = verify_resolved(&manifest, &resolved)
             .unwrap_err()
             .to_string();
-        assert!(error.contains("fluxer-api"), "{error}");
+        assert!(error.contains("voxr-api"), "{error}");
         assert!(error.contains("drifted"), "{error}");
 
         let mut retagged = resolved_set();
@@ -1153,21 +1153,21 @@ mod tests {
 
     #[test]
     fn digest_env_name_matches_component() {
-        assert_eq!(digest_env_name("fluxer-api"), "FLUXER_API_IMAGE_DIGEST");
+        assert_eq!(digest_env_name("voxr-api"), "VOXR_API_IMAGE_DIGEST");
         assert_eq!(
-            digest_env_name("fluxer-app-proxy-self-hosted"),
-            "FLUXER_APP_PROXY_SELF_HOSTED_IMAGE_DIGEST"
+            digest_env_name("voxr-app-proxy-self-hosted"),
+            "VOXR_APP_PROXY_SELF_HOSTED_IMAGE_DIGEST"
         );
     }
 
     #[test]
     fn validate_registry_rejects_image_references() {
         validate_registry(DEFAULT_REGISTRY).unwrap();
-        validate_registry("registry.example.com:5000/fluxer").unwrap();
+        validate_registry("registry.example.com:5000/voxr").unwrap();
         assert!(validate_registry("").is_err());
-        assert!(validate_registry("ghcr.io/fluxerapp/").is_err());
-        assert!(validate_registry("ghcr.io/fluxerapp/fluxer-api:v1").is_err());
-        assert!(validate_registry("ghcr.io/ fluxerapp").is_err());
+        assert!(validate_registry("ghcr.io/voxrapp/").is_err());
+        assert!(validate_registry("ghcr.io/voxrapp/voxr-api:v1").is_err());
+        assert!(validate_registry("ghcr.io/ voxrapp").is_err());
     }
 
     fn linear_compare<'a>(
@@ -1197,31 +1197,31 @@ mod tests {
             history[2].as_str(),
         ];
         let candidates = [
-            ("fluxer-api", history[2]),
-            ("fluxer-gateway", history[0]),
-            ("fluxer-users", history[1]),
+            ("voxr-api", history[2]),
+            ("voxr-gateway", history[0]),
+            ("voxr-users", history[1]),
         ];
         assert_eq!(
             oldest_common_commit(&candidates, linear_compare(&history)).unwrap(),
-            ("fluxer-gateway", history[0])
+            ("voxr-gateway", history[0])
         );
 
-        let single = [("fluxer-api", history[2])];
+        let single = [("voxr-api", history[2])];
         assert_eq!(
             oldest_common_commit(&single, linear_compare(&history)).unwrap(),
-            ("fluxer-api", history[2])
+            ("voxr-api", history[2])
         );
     }
 
     #[test]
     fn oldest_common_commit_refuses_divergent_component_builds() {
-        let candidates = [("fluxer-api", "aa"), ("fluxer-gateway", "bb")];
+        let candidates = [("voxr-api", "aa"), ("voxr-gateway", "bb")];
         let error =
             oldest_common_commit(&candidates, |_: &str, _: &str| Ok(CommitCompare::Diverged))
                 .unwrap_err()
                 .to_string();
-        assert!(error.contains("fluxer-api"), "{error}");
-        assert!(error.contains("fluxer-gateway"), "{error}");
+        assert!(error.contains("voxr-api"), "{error}");
+        assert!(error.contains("voxr-gateway"), "{error}");
         assert!(error.contains("divergent branches"), "{error}");
     }
 
@@ -1281,11 +1281,11 @@ mod tests {
     fn release_filenames_are_stable() {
         assert_eq!(
             manifest_filename(RELEASE_VERSION),
-            "fluxer-release-2026.901.120000.json"
+            "voxr-release-2026.901.120000.json"
         );
         assert_eq!(
             compose_filename(RELEASE_VERSION),
-            "fluxer-release-2026.901.120000.yml"
+            "voxr-release-2026.901.120000.yml"
         );
     }
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {normalizeRegionCode} from '@fluxer/geo_utils/src/RegionCodeValidation';
-import {resolveRegionDisplayName, resolveRegionDisplayNames} from '@fluxer/geo_utils/src/RegionDisplayNameResolver';
+import {normalizeRegionCode} from '@voxr/geo_utils/src/RegionCodeValidation';
+import {resolveRegionDisplayName, resolveRegionDisplayNames} from '@voxr/geo_utils/src/RegionDisplayNameResolver';
 
 interface RegionDisplayNameOptions {
 	locale?: string;

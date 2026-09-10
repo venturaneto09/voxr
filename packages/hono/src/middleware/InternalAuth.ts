@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {timingSafeEqual} from 'node:crypto';
-import {UnauthorizedError} from '@fluxer/errors/src/domains/core/UnauthorizedError';
-import {matchesAnyExactOrNestedPath} from '@fluxer/hono/src/middleware/utils/PathMatchers';
+import {UnauthorizedError} from '@voxr/errors/src/domains/core/UnauthorizedError';
+import {matchesAnyExactOrNestedPath} from '@voxr/hono/src/middleware/utils/PathMatchers';
 import type {MiddlewareHandler} from 'hono';
 
 interface InternalAuthOptions {

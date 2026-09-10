@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {HexString16Type} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {HexString16Type} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 export const ThemeCreateRequest = z.object({

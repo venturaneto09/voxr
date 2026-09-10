@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {applyFluxerVersionHeader} from '@fluxer/hono/src/middleware/VersionHeader';
+import {applyVoxrVersionHeader} from '@voxr/hono/src/middleware/VersionHeader';
 import {type Http2Bindings, type HttpBindings, type ServerType, serve} from '@hono/node-server';
 import type {Env, Hono} from 'hono';
 
@@ -22,7 +22,7 @@ interface ServerOptions {
 type NodeFetchCallback = (request: Request, env: HttpBindings | Http2Bindings) => Promise<unknown> | unknown;
 
 function createVersionedFetch<E extends Env>(app: Hono<E>): NodeFetchCallback {
-	return async (request, env) => applyFluxerVersionHeader(await app.fetch(request, env as E['Bindings']));
+	return async (request, env) => applyVoxrVersionHeader(await app.fetch(request, env as E['Bindings']));
 }
 
 export function createServer<E extends Env = Env>(app: Hono<E>, options: ServerOptions): ServerType {

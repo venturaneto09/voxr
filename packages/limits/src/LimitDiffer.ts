@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {LimitKey} from '@fluxer/constants/src/LimitConfigMetadata';
-import type {ILimitConfigCodec} from '@fluxer/limits/src/ILimitConfigCodec';
-import {LimitConfigCodec} from '@fluxer/limits/src/LimitConfigCodec';
-import type {LimitConfigSnapshot, LimitConfigWireFormat} from '@fluxer/limits/src/LimitTypes';
+import type {LimitKey} from '@voxr/constants/src/LimitConfigMetadata';
+import type {ILimitConfigCodec} from '@voxr/limits/src/ILimitConfigCodec';
+import {LimitConfigCodec} from '@voxr/limits/src/LimitConfigCodec';
+import type {LimitConfigSnapshot, LimitConfigWireFormat} from '@voxr/limits/src/LimitTypes';
 
 const defaultLimitConfigCodec = new LimitConfigCodec();
 

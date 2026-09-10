@@ -1707,7 +1707,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-ci"
+name = "voxr-ci"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1730,7 +1730,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-content-update-frozen-snapshot"
+name = "voxr-content-update-frozen-snapshot"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1740,14 +1740,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-dev"
+name = "voxr-dev"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
  "base64",
  "clap",
- "fluxer_common",
+ "voxr_common",
  "hmac 0.13.0",
  "hyper",
  "hyper-util",
@@ -1765,13 +1765,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-gifs"
+name = "voxr-gifs"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "base64",
- "fluxer-svc",
- "fluxer_common",
+ "voxr-svc",
+ "voxr_common",
  "hmac 0.13.0",
  "moka",
  "reqwest",
@@ -1785,7 +1785,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-i18n-auto"
+name = "voxr-i18n-auto"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1798,7 +1798,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-media-proxy"
+name = "voxr-media-proxy"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1808,7 +1808,7 @@ dependencies = [
  "cc",
  "clap",
  "criterion",
- "fluxer_common",
+ "voxr_common",
  "futures-util",
  "hex",
  "hmac 0.13.0",
@@ -1841,16 +1841,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-messages"
+name = "voxr-messages"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "base64",
  "chrono",
  "criterion",
- "fluxer-svc",
- "fluxer_common",
- "fluxer_markdown_parser",
+ "voxr-svc",
+ "voxr_common",
+ "voxr_markdown_parser",
  "futures",
  "hmac 0.13.0",
  "linkify",
@@ -1867,11 +1867,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-snowflakes"
+name = "voxr-snowflakes"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "fluxer-svc",
+ "voxr-svc",
  "rmp-serde",
  "serde",
  "serde_json",
@@ -1880,7 +1880,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-svc"
+name = "voxr-svc"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1907,7 +1907,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-unfurl"
+name = "voxr-unfurl"
 version = "0.1.0"
 dependencies = [
  "ammonia",
@@ -1916,8 +1916,8 @@ dependencies = [
  "chrono",
  "encoding_rs",
  "entities",
- "fluxer-svc",
- "fluxer_common",
+ "voxr-svc",
+ "voxr_common",
  "hmac 0.13.0",
  "infer",
  "moka",
@@ -1934,12 +1934,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer-users"
+name = "voxr-users"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "chrono",
- "fluxer-svc",
+ "voxr-svc",
  "futures",
  "moka",
  "rmp-serde",
@@ -1951,7 +1951,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer_admin"
+name = "voxr_admin"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1959,7 +1959,7 @@ dependencies = [
  "base64",
  "chrono",
  "cookie",
- "fluxer_common",
+ "voxr_common",
  "hmac 0.13.0",
  "maud",
  "openapiv3",
@@ -1984,13 +1984,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer_app_proxy"
+name = "voxr_app_proxy"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
  "base64",
- "fluxer_common",
+ "voxr_common",
  "hex",
  "rand 0.10.1",
  "reqwest",
@@ -2005,7 +2005,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer_common"
+name = "voxr_common"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -2027,7 +2027,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer_markdown_parser"
+name = "voxr_markdown_parser"
 version = "0.1.0"
 dependencies = [
  "criterion",

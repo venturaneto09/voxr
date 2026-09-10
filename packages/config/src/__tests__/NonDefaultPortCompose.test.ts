@@ -3,9 +3,9 @@
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {loadConfig, resetConfig} from '@fluxer/config/src/ConfigLoader';
-import {normalizePublicEndpoint} from '@fluxer/config/src/EndpointDerivation';
-import type {MasterConfig} from '@fluxer/config/src/MasterConfig';
+import {loadConfig, resetConfig} from '@voxr/config/src/ConfigLoader';
+import {normalizePublicEndpoint} from '@voxr/config/src/EndpointDerivation';
+import type {MasterConfig} from '@voxr/config/src/MasterConfig';
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
 
 const SELF_HOSTING = path.join(fileURLToPath(new URL('../../../../', import.meta.url)), 'deploy/self-hosting');
@@ -18,41 +18,41 @@ const PUBLIC_PORT = '19080';
 const ORIGIN_PORT = '29080';
 
 const SECRETS: Record<string, string> = {
-	FLUXER_DOMAIN: DOMAIN,
+	VOXR_DOMAIN: DOMAIN,
 	POSTGRES_PASSWORD: 'postgres-password',
 	MEILI_MASTER_KEY: 'meili-master-key',
-	FLUXER_S3_ACCESS_KEY: 's3-access-key',
-	FLUXER_S3_SECRET_KEY: 's3-secret-key',
+	VOXR_S3_ACCESS_KEY: 's3-access-key',
+	VOXR_S3_SECRET_KEY: 's3-secret-key',
 	LIVEKIT_API_KEY: 'livekit-api-key',
 	LIVEKIT_API_SECRET: 'livekit-api-secret',
-	FLUXER_ERLANG_COOKIE: 'erlang-cookie',
-	FLUXER_SUDO_MODE_SECRET: 'sudo-mode-secret',
-	FLUXER_CONNECTION_INITIATION_SECRET: 'connection-initiation-secret',
-	FLUXER_GATEWAY_RPC_AUTH_TOKEN: 'gateway-rpc-auth-token',
-	FLUXER_MEDIA_PROXY_SECRET_KEY: 'media-proxy-secret-key',
-	FLUXER_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=',
-	FLUXER_ADMIN_SECRET_KEY_BASE: 'admin-secret-key-base',
-	FLUXER_ADMIN_OAUTH_CLIENT_SECRET: 'admin-oauth-client-secret',
-	FLUXER_VAPID_PUBLIC_KEY: 'BB76bTFIuoqmxJtTfZX0yGTn1f_qu9H03B_nkj8OyExJFkN7Y-HBZZzShnHZoEhXKc5ZRy3jFu7OkBbnaQG-4aw',
-	FLUXER_VAPID_PRIVATE_KEY: 'Xgi-3P8J-I3Q6U1HlCcXMuc_tKLGAM9nIfznX3Hz68o',
+	VOXR_ERLANG_COOKIE: 'erlang-cookie',
+	VOXR_SUDO_MODE_SECRET: 'sudo-mode-secret',
+	VOXR_CONNECTION_INITIATION_SECRET: 'connection-initiation-secret',
+	VOXR_GATEWAY_RPC_AUTH_TOKEN: 'gateway-rpc-auth-token',
+	VOXR_MEDIA_PROXY_SECRET_KEY: 'media-proxy-secret-key',
+	VOXR_MEDIA_PROXY_UPLOAD_RELAY_SECRET_BASE64: 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=',
+	VOXR_ADMIN_SECRET_KEY_BASE: 'admin-secret-key-base',
+	VOXR_ADMIN_OAUTH_CLIENT_SECRET: 'admin-oauth-client-secret',
+	VOXR_VAPID_PUBLIC_KEY: 'BB76bTFIuoqmxJtTfZX0yGTn1f_qu9H03B_nkj8OyExJFkN7Y-HBZZzShnHZoEhXKc5ZRy3jFu7OkBbnaQG-4aw',
+	VOXR_VAPID_PRIVATE_KEY: 'Xgi-3P8J-I3Q6U1HlCcXMuc_tKLGAM9nIfznX3Hz68o',
 };
 
 const PORT_ONLY_ENV: Record<string, string> = {
 	...SECRETS,
-	FLUXER_PUBLIC_SCHEME: 'http',
-	FLUXER_PUBLIC_PORT: PUBLIC_PORT,
+	VOXR_PUBLIC_SCHEME: 'http',
+	VOXR_PUBLIC_PORT: PUBLIC_PORT,
 };
 
 const DOCUMENTED_RECIPE_ENV: Record<string, string> = {
 	...PORT_ONLY_ENV,
-	FLUXER_PUBLIC_ORIGIN: `http://${DOMAIN}:${PUBLIC_PORT}`,
-	FLUXER_HTTP_PORT: PUBLIC_PORT,
+	VOXR_PUBLIC_ORIGIN: `http://${DOMAIN}:${PUBLIC_PORT}`,
+	VOXR_HTTP_PORT: PUBLIC_PORT,
 };
 
 const ORIGIN_ONLY_ENV: Record<string, string> = {
 	...SECRETS,
-	FLUXER_PUBLIC_ORIGIN: `https://${DOMAIN}:${ORIGIN_PORT}`,
-	FLUXER_HTTPS_PORT: ORIGIN_PORT,
+	VOXR_PUBLIC_ORIGIN: `https://${DOMAIN}:${ORIGIN_PORT}`,
+	VOXR_HTTPS_PORT: ORIGIN_PORT,
 };
 
 const indentOf = (line: string): number => line.length - line.trimStart().length;
@@ -220,12 +220,12 @@ function publicUrlNames(environment: Record<string, string>): Array<string> {
 
 function repairedPublicUrls(service: string, env: Record<string, string>): Array<[string, string]> {
 	const environment = expandedEnvironment(service, env);
-	const publicPort = Number.parseInt(environment.FLUXER_PUBLIC_PORT ?? '', 10);
+	const publicPort = Number.parseInt(environment.VOXR_PUBLIC_PORT ?? '', 10);
 	return publicUrlNames(environment).map((name) => [
 		`${service}.${name}`,
 		normalizePublicEndpoint(
 			environment[name],
-			environment.FLUXER_BASE_DOMAIN ?? '',
+			environment.VOXR_BASE_DOMAIN ?? '',
 			Number.isNaN(publicPort) ? undefined : publicPort,
 		),
 	]);
@@ -259,12 +259,12 @@ function browserFacingUrls(config: MasterConfig): Array<[string, string]> {
 
 async function loadApiConfig(env: Record<string, string>): Promise<MasterConfig | Error> {
 	for (const key of Object.keys(process.env)) {
-		if (key.startsWith('FLUXER_')) {
+		if (key.startsWith('VOXR_')) {
 			vi.stubEnv(key, undefined);
 		}
 	}
 	for (const [key, value] of Object.entries(expandedEnvironment('api', env))) {
-		if (key.startsWith('FLUXER_')) {
+		if (key.startsWith('VOXR_')) {
 			vi.stubEnv(key, value);
 		}
 	}
@@ -282,7 +282,7 @@ describe('the shipped compose stack expanded on a non-default port', () => {
 			.filter((service) => {
 				const environment = expandedEnvironment(service, PORT_ONLY_ENV);
 				return (
-					publicUrlNames(environment).length > 0 && (!environment.FLUXER_BASE_DOMAIN || !environment.FLUXER_PUBLIC_PORT)
+					publicUrlNames(environment).length > 0 && (!environment.VOXR_BASE_DOMAIN || !environment.VOXR_PUBLIC_PORT)
 				);
 			});
 		expect(starved).toEqual([]);
@@ -297,7 +297,7 @@ describe('the shipped compose stack expanded on a non-default port', () => {
 
 	test('the edge listens on its scheme default whatever the public port is', () => {
 		const environment = expandedEnvironment('edge', PORT_ONLY_ENV);
-		expect(environment.FLUXER_EDGE_SITE_ADDRESS).toBe(`http://${DOMAIN}`);
+		expect(environment.VOXR_EDGE_SITE_ADDRESS).toBe(`http://${DOMAIN}`);
 		expect(publishedPorts(PORT_ONLY_ENV)).not.toContain(PUBLIC_PORT);
 	});
 
@@ -306,7 +306,7 @@ describe('the shipped compose stack expanded on a non-default port', () => {
 	});
 });
 
-describe('a public origin carrying a port while FLUXER_PUBLIC_PORT stays standard', () => {
+describe('a public origin carrying a port while VOXR_PUBLIC_PORT stays standard', () => {
 	beforeEach(() => {
 		resetConfig();
 	});

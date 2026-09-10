@@ -6,8 +6,8 @@ import {
 	SnowflakeStringType,
 	SnowflakeType,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {EmailType} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {EmailType} from '@voxr/schema/src/primitives/UserValidators';
 import {z} from 'zod';
 
 const MessageReportCategoryEnum = withOpenApiType(
@@ -82,13 +82,13 @@ export const TicketResponse = z.object({
 
 export type TicketResponse = z.infer<typeof TicketResponse>;
 
-const FLUXER_TAG_REGEX = /^([^#]{1,32})#([0-9]{4})$/;
-const FLUXER_TAG_TYPE = z
+const VOXR_TAG_REGEX = /^([^#]{1,32})#([0-9]{4})$/;
+const VOXR_TAG_TYPE = z
 	.string()
 	.min(3)
 	.max(37)
-	.refine((value) => FLUXER_TAG_REGEX.test(value), 'Fluxer tag must be in the format username#1234')
-	.describe('A Fluxer username tag in the format username#1234');
+	.refine((value) => VOXR_TAG_REGEX.test(value), 'Voxr tag must be in the format username#1234')
+	.describe('A Voxr username tag in the format username#1234');
 const EU_COUNTRY_CODE_ENUM = createNamedStringLiteralUnion(
 	[
 		['AT', 'AT', 'Austria'],
@@ -169,20 +169,20 @@ const DsaReportBase = z.object({
 	additional_info: z.optional(createStringType(0, 1000)).describe('Additional context or details about the report'),
 	reporter_full_legal_name: createStringType(1, 160).describe('Full legal name of the person filing the report'),
 	reporter_country_of_residence: EU_COUNTRY_CODE_ENUM.describe('EU country code of the reporter residence'),
-	reporter_fluxer_tag: z.optional(FLUXER_TAG_TYPE).describe('Fluxer tag of the reporter if they have an account'),
+	reporter_voxr_tag: z.optional(VOXR_TAG_TYPE).describe('Voxr tag of the reporter if they have an account'),
 });
 const DsaReportMessageRequest = DsaReportBase.extend({
 	report_type: z.literal('message').describe('Type of report'),
 	category: MessageReportCategoryEnum,
 	message_link: createStringType(1, 2048).describe('Link to the message being reported'),
-	reported_user_tag: z.optional(FLUXER_TAG_TYPE).describe('Fluxer tag of the user who sent the message'),
+	reported_user_tag: z.optional(VOXR_TAG_TYPE).describe('Voxr tag of the user who sent the message'),
 });
 
 const DsaReportUserRequest = DsaReportBase.extend({
 	report_type: z.literal('user').describe('Type of report'),
 	category: UserReportCategoryEnum,
 	user_id: SnowflakeType.optional().describe('ID of the user being reported'),
-	user_tag: z.optional(FLUXER_TAG_TYPE).describe('Fluxer tag of the user being reported'),
+	user_tag: z.optional(VOXR_TAG_TYPE).describe('Voxr tag of the user being reported'),
 }).superRefine((value, ctx) => {
 	if (!value.user_id && !value.user_tag) {
 		ctx.addIssue({

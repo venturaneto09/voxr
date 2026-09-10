@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
 import {HTTPException} from 'hono/http-exception';
 
 const apiErrorCodeSet = new Set<string>(Object.values(APIErrorCodes));
@@ -22,7 +22,7 @@ export function getErrorRecord(err: unknown): Record<string, unknown> | null {
 }
 
 export function resolveApiErrorCode(err: unknown): string | null {
-	if (err instanceof FluxerError) {
+	if (err instanceof VoxrError) {
 		return err.code;
 	}
 	if (err instanceof HTTPException && 'code' in err && typeof err.code === 'string') {
@@ -44,7 +44,7 @@ export function resolveApiErrorCode(err: unknown): string | null {
 }
 
 export function resolveErrorStatus(err: unknown): number | null {
-	if (err instanceof FluxerError || err instanceof HTTPException) {
+	if (err instanceof VoxrError || err instanceof HTTPException) {
 		return err.status;
 	}
 	const record = getErrorRecord(err);

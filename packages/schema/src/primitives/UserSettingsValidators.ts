@@ -21,8 +21,8 @@ import {
 	UserNotificationSettingsDescriptions,
 	UserPremiumTypes,
 	UserPremiumTypesDescriptions,
-} from '@fluxer/constants/src/UserConstants';
-import {createInt32EnumType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/constants/src/UserConstants';
+import {createInt32EnumType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 
 export const StickerAnimationOptionsSchema = createInt32EnumType(
 	[

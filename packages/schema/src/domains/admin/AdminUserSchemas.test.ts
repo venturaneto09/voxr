@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {AdminACLs} from '@fluxer/constants/src/AdminACLs';
-import {SetUserAclsRequest} from '@fluxer/schema/src/domains/admin/AdminUserSchemas';
+import {AdminACLs} from '@voxr/constants/src/AdminACLs';
+import {SetUserAclsRequest} from '@voxr/schema/src/domains/admin/AdminUserSchemas';
 import {describe, expect, test} from 'vitest';
 
 describe('SetUserAclsRequest', () => {

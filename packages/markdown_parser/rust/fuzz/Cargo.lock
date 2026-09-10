@@ -33,7 +33,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5baebc0774151f905a1a2cc41989300b1e6fbb29aff0ceffa1064fdd3088d582"
 
 [[package]]
-name = "fluxer_markdown_parser"
+name = "voxr_markdown_parser"
 version = "0.1.0"
 dependencies = [
  "serde",
@@ -41,10 +41,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "fluxer_markdown_parser_fuzz"
+name = "voxr_markdown_parser_fuzz"
 version = "0.0.0"
 dependencies = [
- "fluxer_markdown_parser",
+ "voxr_markdown_parser",
  "libfuzzer-sys",
  "serde_json",
 ]

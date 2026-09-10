@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {LimitKey} from '@fluxer/constants/src/LimitConfigMetadata';
-import type {ILimitEvaluator} from '@fluxer/limits/src/ILimitEvaluator';
-import {DEFAULT_FREE_LIMITS} from '@fluxer/limits/src/LimitDefaults';
-import {applyRuleToResolvedLimits, ruleMatches, sortRulesBySpecificity} from '@fluxer/limits/src/LimitRuleRuntime';
+import type {LimitKey} from '@voxr/constants/src/LimitConfigMetadata';
+import type {ILimitEvaluator} from '@voxr/limits/src/ILimitEvaluator';
+import {DEFAULT_FREE_LIMITS} from '@voxr/limits/src/LimitDefaults';
+import {applyRuleToResolvedLimits, ruleMatches, sortRulesBySpecificity} from '@voxr/limits/src/LimitRuleRuntime';
 import type {
 	LimitConfigSnapshot,
 	LimitEvaluationOptions,
 	LimitEvaluationResult,
 	LimitMatchContext,
 	LimitRule,
-} from '@fluxer/limits/src/LimitTypes';
+} from '@voxr/limits/src/LimitTypes';
 
 export class LimitEvaluator implements ILimitEvaluator {
 	private readonly sortedRules: Array<LimitRule>;

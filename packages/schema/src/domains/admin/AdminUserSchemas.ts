@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {DeletionReasons} from '@fluxer/constants/src/Core';
+import {DeletionReasons} from '@voxr/constants/src/Core';
 import {
 	PremiumFlags,
 	PremiumFlagsDescriptions,
@@ -8,10 +8,10 @@ import {
 	SuspiciousActivityFlagsDescriptions,
 	UserFlags,
 	UserFlagsDescriptions,
-} from '@fluxer/constants/src/UserConstants';
-import {ADMIN_ACL_COUNT, AdminAclType} from '@fluxer/schema/src/domains/admin/AdminAclType';
-import {NSFWLevelSchema} from '@fluxer/schema/src/primitives/GuildValidators';
-import {createQueryIntegerType, QueryBooleanType} from '@fluxer/schema/src/primitives/QueryValidators';
+} from '@voxr/constants/src/UserConstants';
+import {ADMIN_ACL_COUNT, AdminAclType} from '@voxr/schema/src/domains/admin/AdminAclType';
+import {NSFWLevelSchema} from '@voxr/schema/src/primitives/GuildValidators';
+import {createQueryIntegerType, QueryBooleanType} from '@voxr/schema/src/primitives/QueryValidators';
 import {
 	createBitflagInt32Type,
 	createBitflagStringType,
@@ -22,8 +22,8 @@ import {
 	SnowflakeStringType,
 	SnowflakeType,
 	withFieldDescription,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {DiscriminatorType, EmailType, UsernameType} from '@fluxer/schema/src/primitives/UserValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {DiscriminatorType, EmailType, UsernameType} from '@voxr/schema/src/primitives/UserValidators';
 import {z} from 'zod';
 
 export const UserAdminResponseSchema = z.object({

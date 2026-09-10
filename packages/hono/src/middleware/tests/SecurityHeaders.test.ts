@@ -4,7 +4,7 @@ import {
 	LOCKED_DOWN_PERMISSIONS_POLICY,
 	STRICT_TRANSPORT_SECURITY_PRELOAD,
 	securityHeaders,
-} from '@fluxer/hono/src/middleware/SecurityHeaders';
+} from '@voxr/hono/src/middleware/SecurityHeaders';
 import {Hono} from 'hono';
 import {describe, expect, test} from 'vitest';
 

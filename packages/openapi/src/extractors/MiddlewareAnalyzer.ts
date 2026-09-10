@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type {ExtractedRoute} from '@fluxer/openapi/src/Types';
+import type {ExtractedRoute} from '@voxr/openapi/src/Types';
 
 interface SecurityRequirement {
 	type: 'bearer' | 'none';

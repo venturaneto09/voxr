@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type {OpenAPIDocument} from '@fluxer/openapi/src/Types';
+import type {OpenAPIDocument} from '@voxr/openapi/src/Types';
 
 type ValidatableOpenAPISpec =
 	| OpenAPIDocument

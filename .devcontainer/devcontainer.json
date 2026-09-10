@@ -1,8 +1,8 @@
 {
-	"name": "Fluxer",
+	"name": "Voxr",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "workspace",
-	"workspaceFolder": "/workspaces/fluxer",
+	"workspaceFolder": "/workspaces/voxr",
 	"shutdownAction": "stopCompose",
 	"remoteUser": "vscode",
 	"hostRequirements": {
@@ -17,24 +17,24 @@
 	"forwardPorts": [3000, 8088, 8080, 8771, 8082, 8773, 3010, 3020, 8333],
 	"portsAttributes": {
 		"8088": {
-			"label": "Fluxer dev proxy",
+			"label": "Voxr dev proxy",
 			"onAutoForward": "notify"
 		},
 		"3000": {
 			"label": "Rspack dev server"
 		},
 		"3020": {
-			"label": "Fluxer admin"
+			"label": "Voxr admin"
 		},
 		"8333": {
 			"label": "SeaweedFS S3"
 		},
 		"8773": {
-			"label": "Fluxer app proxy"
+			"label": "Voxr app proxy"
 		}
 	},
-	"postCreateCommand": "bash /workspaces/fluxer/.devcontainer/fix-docker-socket.sh && bash /workspaces/fluxer/.devcontainer/fix-workspace-permissions.sh && cargo run -p fluxer-dev -- bootstrap",
-	"postStartCommand": "bash /workspaces/fluxer/.devcontainer/fix-docker-socket.sh && bash /workspaces/fluxer/.devcontainer/fix-workspace-permissions.sh && cargo run -p fluxer-dev -- post-start",
+	"postCreateCommand": "bash /workspaces/voxr/.devcontainer/fix-docker-socket.sh && bash /workspaces/voxr/.devcontainer/fix-workspace-permissions.sh && cargo run -p voxr-dev -- bootstrap",
+	"postStartCommand": "bash /workspaces/voxr/.devcontainer/fix-docker-socket.sh && bash /workspaces/voxr/.devcontainer/fix-workspace-permissions.sh && cargo run -p voxr-dev -- post-start",
 	"customizations": {
 		"vscode": {
 			"settings": {

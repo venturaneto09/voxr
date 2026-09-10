@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
 import {
 	sanitizeRetryAfterDecimalSeconds,
 	sanitizeRetryAfterSeconds,
-} from '@fluxer/errors/src/domains/core/RetryAfterSeconds';
-import {ThrottledError} from '@fluxer/errors/src/domains/core/ThrottledError';
-import type {FluxerErrorData} from '@fluxer/errors/src/FluxerError';
+} from '@voxr/errors/src/domains/core/RetryAfterSeconds';
+import {ThrottledError} from '@voxr/errors/src/domains/core/ThrottledError';
+import type {VoxrErrorData} from '@voxr/errors/src/VoxrError';
 
 type RateLimitScope = 'global' | 'shared' | 'user';
 
@@ -63,7 +63,7 @@ export class RateLimitError extends ThrottledError {
 				? safeRetryAfterDecimal
 				: resetAfterDecimal;
 		const safeScope = sanitizeRateLimitScope(scope, global);
-		const data: FluxerErrorData = {
+		const data: VoxrErrorData = {
 			global,
 			retry_after: safeRetryAfterDecimal,
 		};

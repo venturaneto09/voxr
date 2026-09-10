@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {PricingModeEnum} from '@fluxer/schema/src/domains/premium/PremiumSchemas';
-import {UserPartialResponse} from '@fluxer/schema/src/domains/user/UserResponseSchemas';
-import {createStringType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {PricingModeEnum} from '@voxr/schema/src/domains/premium/PremiumSchemas';
+import {UserPartialResponse} from '@voxr/schema/src/domains/user/UserResponseSchemas';
+import {createStringType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 export const CheckoutPaymentMethodEnum = z.enum(['card', 'pix', 'upi']);

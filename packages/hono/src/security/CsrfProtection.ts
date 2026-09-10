@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {createHmac, randomBytes, timingSafeEqual} from 'node:crypto';
-import {CSRF_COOKIE_NAME, CSRF_FORM_FIELD, CSRF_HEADER_NAME} from '@fluxer/constants/src/Cookies';
+import {CSRF_COOKIE_NAME, CSRF_FORM_FIELD, CSRF_HEADER_NAME} from '@voxr/constants/src/Cookies';
 import type {Context, MiddlewareHandler} from 'hono';
 import {getCookie, setCookie} from 'hono/cookie';
 

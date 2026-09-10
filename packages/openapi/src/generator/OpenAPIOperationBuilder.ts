@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import {SnowflakeTypeRef} from '@fluxer/openapi/src/converters/BuiltInSchemas';
-import {analyzeSecurityRequirements} from '@fluxer/openapi/src/extractors/MiddlewareAnalyzer';
+import {SnowflakeTypeRef} from '@voxr/openapi/src/converters/BuiltInSchemas';
+import {analyzeSecurityRequirements} from '@voxr/openapi/src/extractors/MiddlewareAnalyzer';
 import type {
 	ExtractedRoute,
 	ExtractedValidator,
@@ -10,11 +10,11 @@ import type {
 	OpenAPIResponse,
 	OpenAPISchema,
 	OpenAPISchemaOrRef,
-} from '@fluxer/openapi/src/OpenAPITypes';
-import {extractPathParameters} from '@fluxer/openapi/src/registry/ParameterRegistry';
-import {getErrorResponses, getNoContentResponse} from '@fluxer/openapi/src/registry/ResponseRegistry';
-import type {LoadedSchema} from '@fluxer/openapi/src/registry/SchemaLoader';
-import type {SchemaRegistry} from '@fluxer/openapi/src/registry/SchemaRegistry';
+} from '@voxr/openapi/src/OpenAPITypes';
+import {extractPathParameters} from '@voxr/openapi/src/registry/ParameterRegistry';
+import {getErrorResponses, getNoContentResponse} from '@voxr/openapi/src/registry/ResponseRegistry';
+import type {LoadedSchema} from '@voxr/openapi/src/registry/SchemaLoader';
+import type {SchemaRegistry} from '@voxr/openapi/src/registry/SchemaRegistry';
 
 interface OpenAPIOperationBuilderDependencies {
 	readonly schemaRegistry: SchemaRegistry;

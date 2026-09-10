@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {GifMediaFormat} from '@fluxer/schema/src/domains/gif/GifSchemas';
+import {GifMediaFormat} from '@voxr/schema/src/domains/gif/GifSchemas';
 import {z} from 'zod';
 
 export const ResolveGifUrlsBodySchema = z.object({

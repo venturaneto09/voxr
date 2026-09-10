@@ -4,11 +4,11 @@ import {
 	getRegisteredDiscriminatedUnionBranchSchemas,
 	getRegisteredInt32EnumSchemas,
 	getRegisteredNamedObjectSchemas,
-} from '@fluxer/openapi/src/converters/ZodToOpenAPI';
-import {OpenAPIGeneratorCatalog} from '@fluxer/openapi/src/generator/OpenAPIGeneratorCatalog';
-import {type LoadedSchema, loadSchemas} from '@fluxer/openapi/src/registry/SchemaLoader';
-import type {SchemaRegistry} from '@fluxer/openapi/src/registry/SchemaRegistry';
-import {CustomSchemaType} from '@fluxer/openapi/src/schemas/CustomSchemaType';
+} from '@voxr/openapi/src/converters/ZodToOpenAPI';
+import {OpenAPIGeneratorCatalog} from '@voxr/openapi/src/generator/OpenAPIGeneratorCatalog';
+import {type LoadedSchema, loadSchemas} from '@voxr/openapi/src/registry/SchemaLoader';
+import type {SchemaRegistry} from '@voxr/openapi/src/registry/SchemaRegistry';
+import {CustomSchemaType} from '@voxr/openapi/src/schemas/CustomSchemaType';
 
 interface OpenAPISchemaRegistryLoadResult {
 	readonly loadedSchemas: Map<string, LoadedSchema>;

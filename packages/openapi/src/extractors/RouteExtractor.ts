@@ -5,8 +5,8 @@ import {
 	StaticPathResolver,
 	type StaticValue,
 	UNRESOLVED,
-} from '@fluxer/openapi/src/extractors/StaticPathResolver';
-import type {ExtractedRoute, ExtractedValidator, HttpMethod, ValidatorTarget} from '@fluxer/openapi/src/Types';
+} from '@voxr/openapi/src/extractors/StaticPathResolver';
+import type {ExtractedRoute, ExtractedValidator, HttpMethod, ValidatorTarget} from '@voxr/openapi/src/Types';
 import {type CallExpression, type FunctionDeclaration, Node, Project, type SourceFile} from 'ts-morph';
 
 const HTTP_METHODS: ReadonlySet<string> = new Set(['get', 'post', 'put', 'patch', 'delete']);

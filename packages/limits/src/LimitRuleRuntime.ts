@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {LIMIT_KEY_SCOPES, LIMIT_KEYS, type LimitKey, type LimitScope} from '@fluxer/constants/src/LimitConfigMetadata';
-import type {EvaluationContext, LimitFilter, LimitMatchContext, LimitRule} from '@fluxer/limits/src/LimitTypes';
+import {LIMIT_KEY_SCOPES, LIMIT_KEYS, type LimitKey, type LimitScope} from '@voxr/constants/src/LimitConfigMetadata';
+import type {EvaluationContext, LimitFilter, LimitMatchContext, LimitRule} from '@voxr/limits/src/LimitTypes';
 
 interface RankedRule {
 	rule: LimitRule;

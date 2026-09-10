@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use fluxer_markdown_parser::binary::{FORMAT_VERSION, write_ast_binary};
-use fluxer_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
+use voxr_markdown_parser::binary::{FORMAT_VERSION, write_ast_binary};
+use voxr_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
 
 fn encode(input: &str) -> Vec<u8> {
     let mut parser = MarkdownParser::new(ParserFlags::ALL, EmojiContext::parse(""));

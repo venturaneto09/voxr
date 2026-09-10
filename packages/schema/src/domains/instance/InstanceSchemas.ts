@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {SsoStatusResponse} from '@fluxer/schema/src/domains/auth/AuthSchemas';
+import {SsoStatusResponse} from '@voxr/schema/src/domains/auth/AuthSchemas';
 import {z} from 'zod';
 
 const LimitFilterResponse = z.object({
@@ -54,7 +54,7 @@ const AppPublicConfigResponse = z.object({
 		.describe('Public registration field collection policy'),
 });
 
-export const WellKnownFluxerResponse = z.object({
+export const WellKnownVoxrResponse = z.object({
 	api_code_version: z.number().int().describe('Version of the API server code'),
 	endpoints: z
 		.object({
@@ -135,4 +135,4 @@ export const WellKnownFluxerResponse = z.object({
 	app_public: AppPublicConfigResponse.describe('Public application configuration for client-side features'),
 });
 
-export type WellKnownFluxerResponse = z.infer<typeof WellKnownFluxerResponse>;
+export type WellKnownVoxrResponse = z.infer<typeof WellKnownVoxrResponse>;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {Headers} from '@fluxer/constants/src/Headers';
-import {REQUEST_ID_KEY, requestId} from '@fluxer/hono/src/middleware/RequestId';
+import {Headers} from '@voxr/constants/src/Headers';
+import {REQUEST_ID_KEY, requestId} from '@voxr/hono/src/middleware/RequestId';
 import {Hono} from 'hono';
 import {describe, expect, test, vi} from 'vitest';
 

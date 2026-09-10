@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {isValidSingleUnicodeEmoji} from '@fluxer/schema/src/primitives/EmojiValidators';
+import {isValidSingleUnicodeEmoji} from '@voxr/schema/src/primitives/EmojiValidators';
 import {describe, expect, it} from 'vitest';
 
 describe('isValidSingleUnicodeEmoji', () => {

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {isSameDay} from '@fluxer/date_utils/src/DateComparison';
-import {DEFAULT_LOCALE} from '@fluxer/date_utils/src/DateConstants';
-import {getDateFormatter} from '@fluxer/date_utils/src/DateFormatterCache';
-import {localeUses12Hour} from '@fluxer/date_utils/src/DateHourCycle';
-import {parseDate} from '@fluxer/date_utils/src/DateParsing';
-import type {DateInput} from '@fluxer/date_utils/src/DateTypes';
+import {isSameDay} from '@voxr/date_utils/src/DateComparison';
+import {DEFAULT_LOCALE} from '@voxr/date_utils/src/DateConstants';
+import {getDateFormatter} from '@voxr/date_utils/src/DateFormatterCache';
+import {localeUses12Hour} from '@voxr/date_utils/src/DateHourCycle';
+import {parseDate} from '@voxr/date_utils/src/DateParsing';
+import type {DateInput} from '@voxr/date_utils/src/DateTypes';
 
 function resolveHour12(locale: string, hour12?: boolean): boolean {
 	return hour12 ?? localeUses12Hour(locale);

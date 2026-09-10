@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type {OpenAPIRef, OpenAPISchema} from '@fluxer/openapi/src/Types';
+import type {OpenAPIRef, OpenAPISchema} from '@voxr/openapi/src/Types';
 export class SchemaRegistry {
 	private schemas: Map<string, OpenAPISchema> = new Map();
 	private references: Set<string> = new Set();

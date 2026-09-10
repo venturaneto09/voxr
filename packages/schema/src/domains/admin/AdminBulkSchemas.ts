@@ -3,13 +3,13 @@
 import {
 	BulkAddGuildMembersRequest,
 	BulkUpdateGuildFeaturesRequest,
-} from '@fluxer/schema/src/domains/admin/AdminGuildSchemas';
-import {BulkDeleteUserMessagesRequest} from '@fluxer/schema/src/domains/admin/AdminMessageSchemas';
+} from '@voxr/schema/src/domains/admin/AdminGuildSchemas';
+import {BulkDeleteUserMessagesRequest} from '@voxr/schema/src/domains/admin/AdminMessageSchemas';
 import {
 	BulkScheduleUserDeletionRequest,
 	BulkUpdateSuspiciousActivityFlagsRequest,
 	BulkUpdateUserFlagsRequest,
-} from '@fluxer/schema/src/domains/admin/AdminUserSchemas';
+} from '@voxr/schema/src/domains/admin/AdminUserSchemas';
 import {z} from 'zod';
 
 export const AdminBulkTaskType = {

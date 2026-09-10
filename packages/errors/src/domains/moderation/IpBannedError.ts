@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {ForbiddenError} from '@fluxer/errors/src/domains/core/ForbiddenError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {ForbiddenError} from '@voxr/errors/src/domains/core/ForbiddenError';
 
 type GlobalIpBanKind = 'permanent' | 'temporary_24h';
 
@@ -11,7 +11,7 @@ interface IpBannedErrorOptions {
 	expiresAt?: Date | null;
 }
 
-const SUPPORT_EMAIL = 'support@fluxer.app';
+const SUPPORT_EMAIL = 'support@voxr.app';
 
 export class IpBannedError extends ForbiddenError {
 	constructor(options: IpBannedErrorOptions) {

@@ -1,5 +1,5 @@
 {
-	"name": "@fluxer/date_utils",
+	"name": "@voxr/date_utils",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -10,7 +10,7 @@
 		"typecheck": "tsgo --noEmit"
 	},
 	"dependencies": {
-		"@fluxer/constants": "workspace:*",
+		"@voxr/constants": "workspace:*",
 		"@vvo/tzdb": "catalog:"
 	},
 	"devDependencies": {

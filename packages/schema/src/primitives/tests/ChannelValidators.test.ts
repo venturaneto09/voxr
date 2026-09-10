@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
 import {
 	AuditLogReasonType,
 	ChannelNameType,
 	GeneralChannelNameType,
 	VanityURLCodeType,
-} from '@fluxer/schema/src/primitives/ChannelValidators';
+} from '@voxr/schema/src/primitives/ChannelValidators';
 import {describe, expect, it} from 'vitest';
 
 describe('ChannelNameType', () => {

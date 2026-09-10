@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {calculateSpecificity, compareSpecificity} from '@fluxer/limits/src/LimitSpecificity';
+import {calculateSpecificity, compareSpecificity} from '@voxr/limits/src/LimitSpecificity';
 import {describe, expect, test} from 'vitest';
 
 describe('LimitSpecificity', () => {

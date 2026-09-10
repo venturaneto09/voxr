@@ -1,0 +1,306 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import {setupGracefulShutdown} from '@voxr/hono/src/Server';
+import {BACKGROUND_READ_TIMEOUT_MS, initCassandra, shutdownCassandra} from '@pkgs/cassandra/src/Client';
+import {JetStreamConnectionManager} from '@pkgs/nats/src/JetStreamConnectionManager';
+import {getDefaultPostgresClient, initPostgres, shutdownPostgres} from '@pkgs/postgres/src/Client';
+import type {WorkerTaskHandler} from '@pkgs/worker/src/contracts/WorkerTask';
+import {ms} from 'itty-time';
+import {Config} from '../Config';
+import {setDatabaseQueryExecutor} from '../database/CassandraQueryExecution';
+import {ensurePostgresKvSchema, PostgresKvQueryExecutor} from '../database/PostgresKvQueryExecutor';
+import type {ISnowflakeService} from '../infrastructure/ISnowflakeService';
+import {JobLedgerRepository} from '../jobs/JobLedgerRepository';
+import {Logger} from '../Logger';
+import {
+	createSnowflakeService,
+	setInjectedSnowflakeService,
+	setInjectedWorkerService,
+} from '../middleware/ServiceRegistry';
+import {getCacheService} from '../middleware/ServiceSingletons';
+import {initializeSearch, shutdownSearch} from '../SearchFactory';
+import {CronScheduler} from './CronScheduler';
+import {JetStreamWorkerQueue} from './JetStreamWorkerQueue';
+import {clearWorkerDependencies, setWorkerDependencies} from './WorkerContext';
+import {initializeWorkerDependencies, shutdownWorkerDependencies, type WorkerDependencies} from './WorkerDependencies';
+import {WorkerHeartbeat} from './WorkerHeartbeat';
+import {
+	resolveCronSchedulerEnabled,
+	resolveWorkerLanes,
+	validateLaneCompleteness,
+	type WorkerLaneDefinition,
+} from './WorkerLaneConfig';
+import {createWorkerProcessErrorHandler} from './WorkerProcessErrorHandler';
+import {WorkerQueueOverflowError} from './WorkerQueueOverflowError';
+import {WorkerRunner} from './WorkerRunner';
+import {WorkerService} from './WorkerService';
+import {workerTasks} from './WorkerTaskRegistry';
+
+const SEARCH_REQUIRED_TASKS = new Set<string>([
+	'indexChannelMessages',
+	'indexGuildMembers',
+	'refreshSearchIndex',
+	'syncDiscoveryIndex',
+]);
+
+function registerCronJobs(cron: CronScheduler): void {
+	cron.upsert('processAssetDeletionQueue', 'processAssetDeletionQueue', {}, '0 */5 * * * *', {ledger: false});
+	if (Config.bunny.purgeEnabled) {
+		cron.upsert('processBunnyPurgeQueue', 'processBunnyPurgeQueue', {}, '*/10 * * * * *', {ledger: false});
+	}
+	cron.upsert('processPendingBulkMessageDeletions', 'processPendingBulkMessageDeletions', {}, '0 */10 * * * *', {
+		ledger: false,
+	});
+	cron.upsert('userProcessPendingDeletions', 'userProcessPendingDeletions', {}, '0 * * * * *', {ledger: false});
+	cron.upsert('processPremiumStateReconciliationQueue', 'processPremiumStateReconciliationQueue', {}, '0 * * * * *', {
+		ledger: false,
+	});
+	if (!Config.instance.selfHosted) {
+		cron.upsert('processExpiredPremiumSweep', 'processExpiredPremiumSweep', {}, '0 0 * * * *', {ledger: false});
+	}
+	cron.upsert('processInactivityDeletions', 'processInactivityDeletions', {}, '0 0 */6 * * *', {ledger: false});
+	cron.upsert('expireAttachments', 'expireAttachments', {}, '0 0 */12 * * *', {ledger: false});
+	cron.upsert('prunePostgresKvTtl', 'prunePostgresKvTtl', {}, '0 */5 * * * *', {ledger: false});
+	cron.upsert('syncDiscoveryIndex', 'syncDiscoveryIndex', {}, '0 */15 * * * *', {ledger: false});
+	if (Config.blocklistFeeds.enabled) {
+		cron.upsert('syncDisposableEmailDomains', 'syncDisposableEmailDomains', {}, '0 0 */6 * * *', {ledger: true});
+		cron.upsert('syncUrlBlocklists', 'syncUrlBlocklists', {}, '0 0 */6 * * *', {ledger: true});
+		cron.upsert('syncFileShaBlocklists', 'syncFileShaBlocklists', {}, '0 0 */12 * * *', {ledger: true});
+	}
+	cron.upsert('flushUserActivityBuffer', 'flushUserActivityBuffer', {}, '*/10 * * * * *', {ledger: false});
+	Logger.info(
+		{
+			blocklistFeeds: Config.blocklistFeeds.enabled,
+			bunnyPurge: Config.bunny.purgeEnabled,
+			selfHosted: Config.instance.selfHosted,
+		},
+		'Cron jobs registered successfully',
+	);
+}
+
+function workerLanesRequireSearch(activeWorkerLanes: ReadonlyArray<WorkerLaneDefinition>): boolean {
+	return activeWorkerLanes.some((lane) => lane.taskTypes.some((taskType) => SEARCH_REQUIRED_TASKS.has(taskType)));
+}
+
+export async function startWorkerMain(): Promise<void> {
+	Logger.info('Starting worker backend...');
+	let cassandraInitialized = false;
+	let postgresInitialized = false;
+	let jsConnectionManager: JetStreamConnectionManager | null = null;
+	let snowflakeService: ISnowflakeService | null = null;
+	let dependencies: WorkerDependencies | null = null;
+	let cron: CronScheduler | null = null;
+	const heartbeat = new WorkerHeartbeat({logger: Logger});
+	const runners: Array<WorkerRunner> = [];
+	let searchInitialized = false;
+	let shuttingDown = false;
+
+	const cleanupStep = async (label: string, fn: () => Promise<void> | void): Promise<void> => {
+		try {
+			await fn();
+		} catch (error) {
+			Logger.error({err: error}, `Error during worker shutdown step: ${label}`);
+		}
+	};
+
+	const shutdown = async (): Promise<void> => {
+		if (shuttingDown) {
+			return;
+		}
+		shuttingDown = true;
+		Logger.info('Shutting down worker backend...');
+		await cleanupStep('heartbeat', () => heartbeat.stop());
+		await cleanupStep('cron', () => cron?.stop());
+		await cleanupStep('runners', async () => {
+			await Promise.all(runners.map((runner) => runner.stop()));
+		});
+		await cleanupStep('jetstream', async () => {
+			await jsConnectionManager?.drain();
+			jsConnectionManager = null;
+		});
+		await cleanupStep('worker dependencies', async () => {
+			if (dependencies) {
+				await shutdownWorkerDependencies(dependencies);
+				dependencies = null;
+			}
+			clearWorkerDependencies();
+			setInjectedWorkerService(undefined);
+		});
+		await cleanupStep('search', async () => {
+			if (searchInitialized) {
+				await shutdownSearch();
+				searchInitialized = false;
+			}
+		});
+		await cleanupStep('cassandra', async () => {
+			if (cassandraInitialized) {
+				await shutdownCassandra();
+				cassandraInitialized = false;
+			}
+		});
+		await cleanupStep('postgres', async () => {
+			if (postgresInitialized) {
+				setDatabaseQueryExecutor(null);
+				await shutdownPostgres();
+				postgresInitialized = false;
+			}
+		});
+		await cleanupStep('snowflake', async () => {
+			if (snowflakeService) {
+				await snowflakeService.shutdown();
+				snowflakeService = null;
+			}
+			setInjectedSnowflakeService(undefined);
+		});
+	};
+
+	try {
+		if (Config.database.backend === 'postgres') {
+			await initPostgres(Config.postgres);
+			const postgres = getDefaultPostgresClient();
+			await ensurePostgresKvSchema(postgres);
+			setDatabaseQueryExecutor(new PostgresKvQueryExecutor(postgres));
+			postgresInitialized = true;
+			Logger.info('Postgres KV client initialised for worker backend');
+		}
+		if (Config.database.backend === 'cassandra') {
+			await initCassandra({
+				hosts: Config.cassandra.hosts.split(',').filter(Boolean),
+				port: Config.cassandra.port,
+				keyspace: Config.cassandra.keyspace,
+				localDc: Config.cassandra.localDc,
+				username: Config.cassandra.username || undefined,
+				password: Config.cassandra.password || undefined,
+				readTimeoutMs: BACKGROUND_READ_TIMEOUT_MS,
+			});
+			cassandraInitialized = true;
+			Logger.info('Cassandra client initialised for worker backend');
+		}
+		validateLaneCompleteness(workerTasks);
+		Logger.info('Worker lane configuration validated');
+		const activeWorkerLanes = resolveWorkerLanes({
+			mode: Config.worker.mode,
+			laneName: Config.worker.laneName,
+			taskName: Config.worker.taskName,
+			laneConcurrencyOverrides: Config.worker.laneConcurrencyOverrides,
+		});
+		const cronSchedulerEnabled = resolveCronSchedulerEnabled(Config.worker.mode, Config.worker.enableCronScheduler);
+		Logger.info(
+			{
+				workerMode: Config.worker.mode,
+				workerLane: Config.worker.laneName,
+				workerTask: Config.worker.taskName,
+				lanes: activeWorkerLanes.map((lane) => `${lane.name}(${lane.concurrency})`).join(', '),
+				cronSchedulerEnabled,
+			},
+			'Worker runtime configuration resolved',
+		);
+		snowflakeService = createSnowflakeService();
+		await snowflakeService.initialize();
+		setInjectedSnowflakeService(snowflakeService);
+		Logger.info('Shared SnowflakeService initialised');
+		jsConnectionManager = new JetStreamConnectionManager({
+			url: Config.nats.jetStreamUrl,
+			token: Config.nats.authToken || undefined,
+			name: 'voxr-worker',
+		});
+		await jsConnectionManager.connect();
+		Logger.info('JetStream connection established');
+		const queue = new JetStreamWorkerQueue(jsConnectionManager);
+		await queue.ensureInfrastructure(activeWorkerLanes);
+		Logger.info('JetStream stream and lane consumers verified');
+		const jobLedger = new JobLedgerRepository();
+		const workerService = new WorkerService(queue, snowflakeService, jobLedger);
+		setInjectedWorkerService(workerService);
+		dependencies = await initializeWorkerDependencies(snowflakeService);
+		setWorkerDependencies(dependencies);
+		if (Config.blocklistFeeds.enabled) {
+			const didClaimEmailSync = await dependencies.kvClient.setnx(
+				'sync:email_domains:initialized',
+				'1',
+				ms('6 hours') / 1000,
+			);
+			if (didClaimEmailSync) {
+				Logger.info('Triggering initial disposable email domain sync');
+				try {
+					await workerService.addJob('syncDisposableEmailDomains', {});
+				} catch (error) {
+					if (!(error instanceof WorkerQueueOverflowError)) {
+						throw error;
+					}
+					Logger.warn('Dropped initial disposable email domain sync, jobs stream is at its limit');
+				}
+			}
+		}
+		cron = new CronScheduler(workerService, Logger, dependencies.kvClient, heartbeat);
+		registerCronJobs(cron);
+		for (const lane of activeWorkerLanes) {
+			const laneTasks: Record<string, WorkerTaskHandler> = {};
+			for (const taskType of lane.taskTypes) {
+				const handler = workerTasks[taskType];
+				if (handler) {
+					laneTasks[taskType] = handler;
+				}
+			}
+			const runner = new WorkerRunner({
+				tasks: laneTasks,
+				retiredTaskTypes: lane.retiredTaskTypes,
+				queue,
+				consumerName: lane.consumerName,
+				laneName: lane.name,
+				ledger: jobLedger,
+				concurrency: lane.concurrency,
+				maxDeliver: lane.maxDeliver,
+				ackWaitMs: lane.ackWaitMs,
+				heartbeat,
+			});
+			runners.push(runner);
+		}
+		if (workerLanesRequireSearch(activeWorkerLanes)) {
+			try {
+				await initializeSearch(getCacheService());
+				searchInitialized = true;
+				Logger.info('Search initialised for worker backend');
+			} catch (error) {
+				Logger.error({err: error}, 'Search initialisation failed for worker backend');
+				throw error;
+			}
+		} else {
+			Logger.info('Search initialisation skipped for worker lanes without search tasks');
+		}
+		if (dependencies.voiceReconciliationWorker !== null) {
+			dependencies.voiceReconciliationWorker.start();
+			Logger.info('VoiceReconciliationWorker started');
+		}
+		if (cronSchedulerEnabled) {
+			cron.start();
+			Logger.info('Cron scheduler started');
+		} else {
+			Logger.info('Cron scheduler disabled for this worker process');
+		}
+		await Promise.all(runners.map((runner) => runner.start()));
+		Logger.info(
+			{lanes: activeWorkerLanes.map((l) => `${l.name}(${l.concurrency})`).join(', ')},
+			'Worker runners started',
+		);
+		heartbeat.start();
+		setupGracefulShutdown(shutdown, {logger: Logger, timeoutMs: 30000});
+		const handleProcessError = createWorkerProcessErrorHandler({
+			logger: Logger,
+			shutdown,
+			exit: (code) => {
+				process.exit(code);
+			},
+		});
+		process.on('uncaughtException', (error) => {
+			void handleProcessError('uncaughtException', error);
+		});
+		process.on('unhandledRejection', (reason: unknown) => {
+			void handleProcessError('unhandledRejection', reason);
+		});
+	} catch (error: unknown) {
+		Logger.error({err: error}, 'Failed to start worker backend');
+		await shutdown();
+		process.exit(1);
+	}
+}

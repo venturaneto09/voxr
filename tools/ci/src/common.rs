@@ -33,8 +33,8 @@ pub(crate) const CALVER_SCHEME: &str = "YYYY.MDD.MICRO";
 #[derive(Default)]
 pub(crate) struct CalverEnv {
     pub(crate) build_version: Option<String>,
-    pub(crate) fluxer_build_version: Option<String>,
-    pub(crate) fluxer_build_date: Option<String>,
+    pub(crate) voxr_build_version: Option<String>,
+    pub(crate) voxr_build_date: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -328,7 +328,7 @@ pub(crate) fn resolve_calver(calver_env: &CalverEnv, now: DateTime<Utc>) -> Resu
     if let Some(version) = calver_env
         .build_version
         .as_deref()
-        .or(calver_env.fluxer_build_version.as_deref())
+        .or(calver_env.voxr_build_version.as_deref())
     {
         parse_version_instant(version)?;
         return Ok(version.to_string());
@@ -338,7 +338,7 @@ pub(crate) fn resolve_calver(calver_env: &CalverEnv, now: DateTime<Utc>) -> Resu
 }
 
 fn parse_instant(calver_env: &CalverEnv, now: DateTime<Utc>) -> Result<DateTime<Utc>> {
-    let Some(override_value) = calver_env.fluxer_build_date.as_deref() else {
+    let Some(override_value) = calver_env.voxr_build_date.as_deref() else {
         return Ok(now);
     };
 
@@ -346,14 +346,14 @@ fn parse_instant(calver_env: &CalverEnv, now: DateTime<Utc>) -> Result<DateTime<
         return date
             .and_hms_opt(0, 0, 0)
             .map(|instant| Utc.from_utc_datetime(&instant))
-            .ok_or_else(|| anyhow!("Invalid FLUXER_BUILD_DATE: {override_value}"));
+            .ok_or_else(|| anyhow!("Invalid VOXR_BUILD_DATE: {override_value}"));
     }
 
     if let Ok(instant) = NaiveDateTime::parse_from_str(override_value, "%Y-%m-%dT%H:%M:%SZ") {
         return Ok(Utc.from_utc_datetime(&instant));
     }
 
-    bail!("Invalid FLUXER_BUILD_DATE: {override_value}")
+    bail!("Invalid VOXR_BUILD_DATE: {override_value}")
 }
 
 fn format_calver(instant: DateTime<Utc>) -> String {
@@ -1358,7 +1358,7 @@ mod tests {
     #[test]
     fn resolves_generated_calver_from_date_override() {
         let calver_env = CalverEnv {
-            fluxer_build_date: Some("2026-05-20T01:02:03Z".to_string()),
+            voxr_build_date: Some("2026-05-20T01:02:03Z".to_string()),
             ..CalverEnv::default()
         };
         assert_eq!(

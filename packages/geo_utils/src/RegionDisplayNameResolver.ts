@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {Locales} from '@fluxer/constants/src/Locales';
-import {normalizeRegionCode} from '@fluxer/geo_utils/src/RegionCodeValidation';
+import {Locales} from '@voxr/constants/src/Locales';
+import {normalizeRegionCode} from '@voxr/geo_utils/src/RegionCodeValidation';
 
 const DISPLAY_NAME_TYPE: Intl.DisplayNamesOptions['type'] = 'region';
 const DISPLAY_NAME_FALLBACK: Intl.DisplayNamesOptions['fallback'] = 'none';

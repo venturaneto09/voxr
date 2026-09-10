@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - fluxer_api/src/api/openapi/openapi.json
+      - voxr_api/src/api/openapi/openapi.json
 
 permissions: {}
 
@@ -17,16 +17,16 @@ concurrency:
 jobs:
   dispatch:
     name: Dispatch regeneration
-    if: github.repository == 'fluxerapp/fluxer'
+    if: github.repository == 'voxrapp/voxr'
     runs-on: ubuntu-latest
     steps:
       - name: Create token
         id: create-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
-          client-id: ${{ vars.FLUXER_CI_APP_ID }}
-          private-key: ${{ secrets.FLUXER_CI_APP_KEY }}
-          owner: fluxerapp
+          client-id: ${{ vars.VOXR_CI_APP_ID }}
+          private-key: ${{ secrets.VOXR_CI_APP_KEY }}
+          owner: voxrapp
           repositories: dart_sdk
           permission-contents: write
 
@@ -34,5 +34,5 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.create-token.outputs.token }}
         run: |
-          gh api --method POST repos/fluxerapp/dart_sdk/dispatches \
-            --field event_type=fluxer-openapi-updated
+          gh api --method POST repos/voxrapp/dart_sdk/dispatches \
+            --field event_type=voxr-openapi-updated

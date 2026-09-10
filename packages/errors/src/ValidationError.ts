@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {HttpStatus} from '@fluxer/constants/src/HttpConstants';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {HttpStatus} from '@voxr/constants/src/HttpConstants';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
 
 interface PathError {
 	path: string;
@@ -16,7 +16,7 @@ interface ValidationErrorOptions {
 	errors: Array<PathError>;
 }
 
-export class ValidationError extends FluxerError {
+export class ValidationError extends VoxrError {
 	readonly errors: Array<PathError>;
 
 	constructor(options: ValidationErrorOptions) {

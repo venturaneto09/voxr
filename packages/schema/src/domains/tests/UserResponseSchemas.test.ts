@@ -5,7 +5,7 @@ import {
 	RelationshipResponse,
 	UserPartialResponse,
 	UserProfileFullResponse,
-} from '@fluxer/schema/src/domains/user/UserResponseSchemas';
+} from '@voxr/schema/src/domains/user/UserResponseSchemas';
 import {describe, expect, it} from 'vitest';
 
 describe('UserPartialResponse', () => {

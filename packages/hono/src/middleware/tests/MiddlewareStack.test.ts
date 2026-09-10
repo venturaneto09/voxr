@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {Headers} from '@fluxer/constants/src/Headers';
+import {Headers} from '@voxr/constants/src/Headers';
 import {
 	applyMiddlewareStack,
 	createDefaultErrorLogger,
 	createDefaultLogger,
 	createStandardMiddlewareStack,
-} from '@fluxer/hono/src/middleware/MiddlewareStack';
-import type {RateLimitResult, RateLimitService} from '@fluxer/hono/src/middleware/RateLimit';
-import {REQUEST_ID_KEY} from '@fluxer/hono/src/middleware/RequestId';
+} from '@voxr/hono/src/middleware/MiddlewareStack';
+import type {RateLimitResult, RateLimitService} from '@voxr/hono/src/middleware/RateLimit';
+import {REQUEST_ID_KEY} from '@voxr/hono/src/middleware/RequestId';
 import type {Context} from 'hono';
 import {Hono} from 'hono';
 import {describe, expect, test, vi} from 'vitest';
@@ -90,7 +90,7 @@ describe('applyMiddlewareStack', () => {
 		applyMiddlewareStack(app, {});
 		app.get('/test', (c) => c.json({ok: true}));
 		const response = await app.request('/test');
-		expect(response.headers.get(Headers.X_FLUXER_VERSION)).toBe('dev');
+		expect(response.headers.get(Headers.X_VOXR_VERSION)).toBe('dev');
 	});
 	test('applies requestId middleware', async () => {
 		const app = new Hono<{

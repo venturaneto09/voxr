@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {GuildMemberProfileFlags, GuildMemberProfileFlagsDescriptions} from '@fluxer/constants/src/GuildConstants';
-import {UserPartialResponse} from '@fluxer/schema/src/domains/user/UserResponseSchemas';
+import {GuildMemberProfileFlags, GuildMemberProfileFlagsDescriptions} from '@voxr/constants/src/GuildConstants';
+import {UserPartialResponse} from '@voxr/schema/src/domains/user/UserResponseSchemas';
 import {
 	createBitflagInt32Type,
 	Int32Type,
 	SnowflakeStringType,
 	withFieldDescription,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {MentionReplyPreferencesSchema} from '@fluxer/schema/src/primitives/UserSettingsValidators';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {MentionReplyPreferencesSchema} from '@voxr/schema/src/primitives/UserSettingsValidators';
 import {z} from 'zod';
 
 export const GuildMemberResponse = z.object({

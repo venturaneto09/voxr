@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use fluxer_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
+use voxr_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
 use proptest::prelude::*;
 use serde_json::json;
 
@@ -215,34 +215,34 @@ fn native_parser_allows_app_protocol_links() {
     let flags = ParserFlags::ALLOW_AUTOLINKS | ParserFlags::ALLOW_MASKED_LINKS;
     assert_eq!(
         parse(
-            "fluxer://invite/abc fluxer:/channels/123/456 [Open gift](fluxer:gift/xyz)",
+            "voxr://invite/abc voxr:/channels/123/456 [Open gift](voxr:gift/xyz)",
             flags,
             ""
         ),
         json!({"nodes":[
             {
                 "type":"Link",
-                "url":"fluxer://invite/abc",
+                "url":"voxr://invite/abc",
                 "escaped":false,
-                "rawUrl":"fluxer://invite/abc",
-                "source":"fluxer://invite/abc"
+                "rawUrl":"voxr://invite/abc",
+                "source":"voxr://invite/abc"
             },
             {"type":"Text","content":" "},
             {
                 "type":"Link",
-                "url":"fluxer:/channels/123/456",
+                "url":"voxr:/channels/123/456",
                 "escaped":false,
-                "rawUrl":"fluxer:/channels/123/456",
-                "source":"fluxer:/channels/123/456"
+                "rawUrl":"voxr:/channels/123/456",
+                "source":"voxr:/channels/123/456"
             },
             {"type":"Text","content":" "},
             {
                 "type":"Link",
                 "text":{"type":"Text","content":"Open gift"},
-                "url":"fluxer:gift/xyz",
+                "url":"voxr:gift/xyz",
                 "escaped":false,
-                "rawUrl":"fluxer:gift/xyz",
-                "source":"[Open gift](fluxer:gift/xyz)"
+                "rawUrl":"voxr:gift/xyz",
+                "source":"[Open gift](voxr:gift/xyz)"
             }
         ]})
     );

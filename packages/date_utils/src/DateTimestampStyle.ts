@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {getDateFormatter} from '@fluxer/date_utils/src/DateFormatterCache';
-import {localeUses12Hour} from '@fluxer/date_utils/src/DateHourCycle';
+import {getDateFormatter} from '@voxr/date_utils/src/DateFormatterCache';
+import {localeUses12Hour} from '@voxr/date_utils/src/DateHourCycle';
 
 const TimestampStyle = {
 	ShortTime: 'ShortTime',

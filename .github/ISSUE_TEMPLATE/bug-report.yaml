@@ -1,14 +1,14 @@
 # yaml-language-server: $schema=https://www.schemastore.org/github-issue-forms.json
 name: Bug report
-description: Report a reproducible defect in Fluxer.
+description: Report a reproducible defect in Voxr.
 type: Bug
 body:
   - type: markdown
     attributes:
       value: |
-        Search [open and closed issues](https://github.com/fluxerapp/fluxer/issues?q=is%3Aissue) before filing a report.
+        Search [open and closed issues](https://github.com/voxrapp/voxr/issues?q=is%3Aissue) before filing a report.
 
-        Report vulnerabilities through the [private form](https://github.com/fluxerapp/fluxer/security/advisories/new) or <security@fluxer.com>. Send account and billing requests to <support@fluxer.com>.
+        Report vulnerabilities through the [private form](https://github.com/voxrapp/voxr/security/advisories/new) or <security@voxr.com>. Send account and billing requests to <support@voxr.com>.
 
   - type: textarea
     id: summary
@@ -36,7 +36,7 @@ body:
       label: Build information
       description: >-
         Open User Settings, scroll to the bottom of the left sidebar, and select
-        the build information. Fluxer copies it to the clipboard.
+        the build information. Voxr copies it to the clipboard.
     validations:
       required: true
 
@@ -60,7 +60,7 @@ body:
     attributes:
       label: Instance
       description: For a self-hosted instance, include the release tag and database backend.
-      placeholder: fluxer.app
+      placeholder: voxr.app
     validations:
       required: false
 

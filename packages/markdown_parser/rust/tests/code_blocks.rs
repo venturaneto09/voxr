@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use fluxer_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
+use voxr_markdown_parser::{EmojiContext, MarkdownParser, ParserFlags};
 use serde_json::json;
 
 fn parse(input: &str) -> serde_json::Value {

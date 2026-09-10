@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {I18nConfig} from '@fluxer/i18n/src/runtime/I18nTypes';
+import type {I18nConfig} from '@voxr/i18n/src/runtime/I18nTypes';
 
 export function buildTemplates<TKey extends string, TValue, TVariables>(
 	record: Record<string, unknown>,

@@ -3,7 +3,7 @@
 version: v2
 modules:
   - path: .
-    name: buf.build/fluxer/preferences
+    name: buf.build/voxr/preferences
 lint:
   use:
     - STANDARD

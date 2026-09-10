@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {AllowedMentionParseTypes, MessageReferenceTypes} from '@fluxer/constants/src/ChannelConstants';
+import {AllowedMentionParseTypes, MessageReferenceTypes} from '@voxr/constants/src/ChannelConstants';
 import {
 	AllowedMentionParseTypeSchema,
 	MessageReferenceTypeSchema,
-} from '@fluxer/schema/src/primitives/MessageValidators';
-import {Int32Type, SnowflakeType, withFieldDescription} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/MessageValidators';
+import {Int32Type, SnowflakeType, withFieldDescription} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
 export const ALLOWED_MENTIONS_PARSE = [

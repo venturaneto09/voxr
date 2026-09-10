@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
-import {createQueryIntegerType, DateTimeType, QueryBooleanType} from '@fluxer/schema/src/primitives/QueryValidators';
+import {ValidationErrorCodes} from '@voxr/constants/src/ValidationErrorCodes';
+import {createQueryIntegerType, DateTimeType, QueryBooleanType} from '@voxr/schema/src/primitives/QueryValidators';
 import {describe, expect, it} from 'vitest';
 
 describe('QueryBooleanType', () => {

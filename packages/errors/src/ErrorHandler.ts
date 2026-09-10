@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {HttpStatus} from '@fluxer/constants/src/HttpConstants';
-import {createJsonErrorResponse, createXmlErrorResponse} from '@fluxer/errors/src/error_handling/ErrorResponse';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
+import {HttpStatus} from '@voxr/constants/src/HttpConstants';
+import {createJsonErrorResponse, createXmlErrorResponse} from '@voxr/errors/src/error_handling/ErrorResponse';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
 import type {Context, ErrorHandler} from 'hono';
 import {HTTPException} from 'hono/http-exception';
 
@@ -41,7 +41,7 @@ export function createErrorHandler(options: ErrorHandlerOptions = {}): ErrorHand
 				return customResponse;
 			}
 		}
-		if (error instanceof FluxerError) {
+		if (error instanceof VoxrError) {
 			return error.getResponse();
 		}
 		if (error instanceof HTTPException) {

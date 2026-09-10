@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {requestLogger} from '@fluxer/hono/src/middleware/RequestLogger';
+import {requestLogger} from '@voxr/hono/src/middleware/RequestLogger';
 import {Hono} from 'hono';
 import {describe, expect, test, vi} from 'vitest';
 

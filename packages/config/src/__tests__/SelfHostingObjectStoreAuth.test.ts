@@ -24,13 +24,13 @@ describe('the shipped object store checks the credentials the stack sends', () =
 
 	test('seaweedfs-init applies an S3 identity built from the .env credentials', () => {
 		expect(init).toContain(
-			's3.configure -user=fluxer -access_key=$$FLUXER_S3_ACCESS_KEY -secret_key=$$FLUXER_S3_SECRET_KEY',
+			's3.configure -user=voxr -access_key=$$VOXR_S3_ACCESS_KEY -secret_key=$$VOXR_S3_SECRET_KEY',
 		);
 		expect(init).toContain('-apply');
 	});
 
 	test('seaweedfs-init is handed the same credentials the api requires', () => {
-		for (const name of ['FLUXER_S3_ACCESS_KEY', 'FLUXER_S3_SECRET_KEY']) {
+		for (const name of ['VOXR_S3_ACCESS_KEY', 'VOXR_S3_SECRET_KEY']) {
 			expect(init).toMatch(new RegExp(`${name}: \\$\\{${name}:\\?set ${name} in \\.env\\}`, 'u'));
 		}
 	});
@@ -45,7 +45,7 @@ describe('the shipped object store checks the credentials the stack sends', () =
 	});
 
 	test('media-proxy signs its reads, which the store now refuses to serve unsigned', () => {
-		expect(serviceBlock('media-proxy')).toContain('FLUXER_S3_READ_SIGNED: "true"');
+		expect(serviceBlock('media-proxy')).toContain('VOXR_S3_READ_SIGNED: "true"');
 	});
 
 	test('every service that reaches the store waits for the identity to exist', () => {

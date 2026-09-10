@@ -10,34 +10,34 @@ use std::time::{Duration, Instant};
 use tokio::time::sleep;
 
 pub const S3_BUCKETS: &[&str] = &[
-    "fluxer",
-    "fluxer-uploads",
-    "fluxer-downloads",
-    "fluxer-reports",
-    "fluxer-harvests",
-    "fluxer-static",
+    "voxr",
+    "voxr-uploads",
+    "voxr-downloads",
+    "voxr-reports",
+    "voxr-harvests",
+    "voxr-static",
 ];
 
 pub fn s3_endpoint() -> String {
-    env::var("FLUXER_S3_ENDPOINT").unwrap_or_else(|_| "http://127.0.0.1:8333".to_owned())
+    env::var("VOXR_S3_ENDPOINT").unwrap_or_else(|_| "http://127.0.0.1:8333".to_owned())
 }
 
 pub fn s3_env() -> Vec<(String, Option<String>)> {
     vec![
         (
             "AWS_ACCESS_KEY_ID".to_owned(),
-            Some(env::var("FLUXER_S3_ACCESS_KEY_ID").unwrap_or_else(|_| "fluxer".to_owned())),
+            Some(env::var("VOXR_S3_ACCESS_KEY_ID").unwrap_or_else(|_| "voxr".to_owned())),
         ),
         (
             "AWS_SECRET_ACCESS_KEY".to_owned(),
             Some(
-                env::var("FLUXER_S3_SECRET_ACCESS_KEY")
-                    .unwrap_or_else(|_| "fluxer-secret".to_owned()),
+                env::var("VOXR_S3_SECRET_ACCESS_KEY")
+                    .unwrap_or_else(|_| "voxr-secret".to_owned()),
             ),
         ),
         (
             "AWS_DEFAULT_REGION".to_owned(),
-            Some(env::var("FLUXER_S3_REGION").unwrap_or_else(|_| "us-east-1".to_owned())),
+            Some(env::var("VOXR_S3_REGION").unwrap_or_else(|_| "us-east-1".to_owned())),
         ),
     ]
 }
@@ -176,7 +176,7 @@ pub async fn bootstrap_schema() -> Result<()> {
 }
 
 fn cassandra_backend_enabled() -> bool {
-    env::var("FLUXER_DATABASE_BACKEND").as_deref() == Ok("cassandra")
+    env::var("VOXR_DATABASE_BACKEND").as_deref() == Ok("cassandra")
 }
 
 #[cfg(test)]
@@ -184,7 +184,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn s3_env_uses_fluxer_defaults() {
+    fn s3_env_uses_voxr_defaults() {
         let env = s3_env();
         assert!(env.iter().any(
             |(key, value)| key == "AWS_DEFAULT_REGION" && value.as_deref() == Some("us-east-1")

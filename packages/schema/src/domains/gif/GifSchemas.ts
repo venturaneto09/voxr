@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {LocaleSchema} from '@fluxer/schema/src/primitives/LocaleSchema';
-import {createStringType, Int32Type} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {LocaleSchema} from '@voxr/schema/src/primitives/LocaleSchema';
+import {createStringType, Int32Type} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {z} from 'zod';
 
-export const GIF_PROVIDER_HEADER = 'X-Fluxer-GIF-Provider';
-export const GIF_PROVIDER_DISPLAY_NAME_HEADER = 'X-Fluxer-GIF-Provider-Display-Name';
-export const GIF_PROVIDER_ATTRIBUTION_HEADER = 'X-Fluxer-GIF-Provider-Attribution-Required';
+export const GIF_PROVIDER_HEADER = 'X-Voxr-GIF-Provider';
+export const GIF_PROVIDER_DISPLAY_NAME_HEADER = 'X-Voxr-GIF-Provider-Display-Name';
+export const GIF_PROVIDER_ATTRIBUTION_HEADER = 'X-Voxr-GIF-Provider-Attribution-Required';
 const LocaleType = LocaleSchema.default('en-US').transform((v) => v.replace('-', '_'));
 const GifProviderName = createStringType(1, 32).describe(
 	'Identifier of the active GIF provider. KLIPY is currently the only supported provider.',

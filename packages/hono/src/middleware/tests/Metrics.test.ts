@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {createMetricsMiddleware} from '@fluxer/hono/src/middleware/Metrics';
+import {createMetricsMiddleware} from '@voxr/hono/src/middleware/Metrics';
 import {Hono} from 'hono';
 import {describe, expect, test} from 'vitest';
 
@@ -30,7 +30,7 @@ describe('Metrics Middleware', () => {
 			await app.request('/users');
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('fluxer_test_http_requests_total{method="GET",status="2xx"} 2');
+			expect(body).toContain('voxr_test_http_requests_total{method="GET",status="2xx"} 2');
 		});
 
 		test('tracks different methods separately', async () => {
@@ -39,8 +39,8 @@ describe('Metrics Middleware', () => {
 			await app.request('/users', {method: 'POST'});
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('fluxer_test_http_requests_total{method="GET",status="2xx"} 1');
-			expect(body).toContain('fluxer_test_http_requests_total{method="POST",status="2xx"} 1');
+			expect(body).toContain('voxr_test_http_requests_total{method="GET",status="2xx"} 1');
+			expect(body).toContain('voxr_test_http_requests_total{method="POST",status="2xx"} 1');
 		});
 
 		test('tracks different status classes separately', async () => {
@@ -63,7 +63,7 @@ describe('Metrics Middleware', () => {
 			await app.request('/error');
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('fluxer_test_http_errors_total{method="GET"} 2');
+			expect(body).toContain('voxr_test_http_errors_total{method="GET"} 2');
 		});
 
 		test('does not count 4xx as errors', async () => {
@@ -71,7 +71,7 @@ describe('Metrics Middleware', () => {
 			await app.request('/bad');
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).not.toContain('fluxer_test_http_errors_total{method="GET"}');
+			expect(body).not.toContain('voxr_test_http_errors_total{method="GET"}');
 		});
 	});
 
@@ -81,10 +81,10 @@ describe('Metrics Middleware', () => {
 			await app.request('/users');
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('fluxer_test_http_request_duration_seconds_count 1');
-			expect(body).toContain('fluxer_test_http_request_duration_seconds_sum');
-			expect(body).toContain('fluxer_test_http_request_duration_seconds_bucket{le="0.005"}');
-			expect(body).toContain('fluxer_test_http_request_duration_seconds_bucket{le="+Inf"} 1');
+			expect(body).toContain('voxr_test_http_request_duration_seconds_count 1');
+			expect(body).toContain('voxr_test_http_request_duration_seconds_sum');
+			expect(body).toContain('voxr_test_http_request_duration_seconds_bucket{le="0.005"}');
+			expect(body).toContain('voxr_test_http_request_duration_seconds_bucket{le="+Inf"} 1');
 		});
 
 		test('accumulates across multiple requests', async () => {
@@ -94,7 +94,7 @@ describe('Metrics Middleware', () => {
 			await app.request('/users');
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('fluxer_test_http_request_duration_seconds_count 3');
+			expect(body).toContain('voxr_test_http_request_duration_seconds_count 3');
 		});
 	});
 
@@ -103,8 +103,8 @@ describe('Metrics Middleware', () => {
 			const {app} = createTestApp();
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('# TYPE fluxer_test_uptime_seconds gauge');
-			expect(body).toMatch(/fluxer_test_uptime_seconds \d/);
+			expect(body).toContain('# TYPE voxr_test_uptime_seconds gauge');
+			expect(body).toMatch(/voxr_test_uptime_seconds \d/);
 		});
 	});
 
@@ -159,22 +159,22 @@ describe('Metrics Middleware', () => {
 			const {app} = createTestApp();
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('# HELP fluxer_test_http_requests_total Total HTTP requests');
-			expect(body).toContain('# TYPE fluxer_test_http_requests_total counter');
-			expect(body).toContain('# HELP fluxer_test_http_request_duration_seconds HTTP request duration in seconds');
-			expect(body).toContain('# TYPE fluxer_test_http_request_duration_seconds histogram');
-			expect(body).toContain('# HELP fluxer_test_http_errors_total Total HTTP 5xx errors');
-			expect(body).toContain('# TYPE fluxer_test_http_errors_total counter');
-			expect(body).toContain('# HELP fluxer_test_uptime_seconds Process uptime in seconds');
-			expect(body).toContain('# TYPE fluxer_test_uptime_seconds gauge');
+			expect(body).toContain('# HELP voxr_test_http_requests_total Total HTTP requests');
+			expect(body).toContain('# TYPE voxr_test_http_requests_total counter');
+			expect(body).toContain('# HELP voxr_test_http_request_duration_seconds HTTP request duration in seconds');
+			expect(body).toContain('# TYPE voxr_test_http_request_duration_seconds histogram');
+			expect(body).toContain('# HELP voxr_test_http_errors_total Total HTTP 5xx errors');
+			expect(body).toContain('# TYPE voxr_test_http_errors_total counter');
+			expect(body).toContain('# HELP voxr_test_uptime_seconds Process uptime in seconds');
+			expect(body).toContain('# TYPE voxr_test_uptime_seconds gauge');
 		});
 
 		test('renders default counter value when no requests made', async () => {
 			const {app} = createTestApp();
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('fluxer_test_http_requests_total 0');
-			expect(body).toContain('fluxer_test_http_errors_total 0');
+			expect(body).toContain('voxr_test_http_requests_total 0');
+			expect(body).toContain('voxr_test_http_errors_total 0');
 		});
 	});
 
@@ -249,10 +249,10 @@ describe('Metrics Middleware', () => {
 			await app.request('/test');
 			const res = await requestMetrics(app);
 			const body = await res.text();
-			expect(body).toContain('fluxer_gateway_http_requests_total');
-			expect(body).toContain('fluxer_gateway_http_request_duration_seconds');
-			expect(body).toContain('fluxer_gateway_http_errors_total');
-			expect(body).toContain('fluxer_gateway_uptime_seconds');
+			expect(body).toContain('voxr_gateway_http_requests_total');
+			expect(body).toContain('voxr_gateway_http_request_duration_seconds');
+			expect(body).toContain('voxr_gateway_http_errors_total');
+			expect(body).toContain('voxr_gateway_uptime_seconds');
 		});
 	});
 });

@@ -1,0 +1,9 @@
+{
+	"extends": "../../../tsconfigs/package.json",
+	"compilerOptions": {
+		"paths": {
+			"@voxr/*": ["../../../packages/*", "../../../packages/*/src/index.ts"],
+			"@pkgs/*": ["../*"]
+		}
+	}
+}

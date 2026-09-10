@@ -1,5 +1,5 @@
 {
-	"name": "@fluxer/limits",
+	"name": "@voxr/limits",
 	"version": "0.0.0",
 	"type": "module",
 	"exports": {
@@ -11,7 +11,7 @@
 		"test": "vitest run"
 	},
 	"dependencies": {
-		"@fluxer/constants": "workspace:*"
+		"@voxr/constants": "workspace:*"
 	},
 	"devDependencies": {
 		"@typescript/native-preview": "catalog:",

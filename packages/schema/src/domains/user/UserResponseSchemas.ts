@@ -16,11 +16,11 @@ import {
 	ProfileFieldPrivacyFlagsDescriptions,
 	PublicUserFlags,
 	PublicUserFlagsDescriptions,
-} from '@fluxer/constants/src/UserConstants';
-import {ConnectionResponse} from '@fluxer/schema/src/domains/connection/ConnectionSchemas';
-import {GuildMemberResponse} from '@fluxer/schema/src/domains/guild/GuildMemberSchemas';
-import {MessageResponseSchema} from '@fluxer/schema/src/domains/message/MessageResponseSchemas';
-import {LocaleSchema} from '@fluxer/schema/src/primitives/LocaleSchema';
+} from '@voxr/constants/src/UserConstants';
+import {ConnectionResponse} from '@voxr/schema/src/domains/connection/ConnectionSchemas';
+import {GuildMemberResponse} from '@voxr/schema/src/domains/guild/GuildMemberSchemas';
+import {MessageResponseSchema} from '@voxr/schema/src/domains/message/MessageResponseSchemas';
+import {LocaleSchema} from '@voxr/schema/src/primitives/LocaleSchema';
 import {
 	createBitflagInt32Type,
 	createNamedStringLiteralUnion,
@@ -31,7 +31,7 @@ import {
 	SnowflakeStringType,
 	withFieldDescription,
 	withOpenApiType,
-} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+} from '@voxr/schema/src/primitives/SchemaPrimitives';
 import {
 	MentionReplyPreferencesSchema,
 	ProfilePrivacyLevelSchema,
@@ -44,7 +44,7 @@ import {
 	UserAuthenticatorTypesSchema,
 	UserNotificationSettingsSchema,
 	UserPremiumTypesSchema,
-} from '@fluxer/schema/src/primitives/UserSettingsValidators';
+} from '@voxr/schema/src/primitives/UserSettingsValidators';
 import {z} from 'zod';
 
 export const UserPartialResponse = z.object({

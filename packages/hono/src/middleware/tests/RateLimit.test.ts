@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {RateLimitOptions, RateLimitResult, RateLimitService} from '@fluxer/hono/src/middleware/RateLimit';
-import {rateLimit} from '@fluxer/hono/src/middleware/RateLimit';
+import type {RateLimitOptions, RateLimitResult, RateLimitService} from '@voxr/hono/src/middleware/RateLimit';
+import {rateLimit} from '@voxr/hono/src/middleware/RateLimit';
 import {Hono} from 'hono';
 import {describe, expect, test, vi} from 'vitest';
 

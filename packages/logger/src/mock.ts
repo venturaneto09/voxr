@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {LoggerInterface} from '@fluxer/logger/src/LoggerInterface';
+import type {LoggerInterface} from '@voxr/logger/src/LoggerInterface';
 
 export function createMockLogger(): LoggerInterface {
 	const logger: LoggerInterface = {

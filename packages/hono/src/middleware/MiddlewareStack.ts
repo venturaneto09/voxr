@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import type {CacheHeadersOptions} from '@fluxer/hono/src/middleware/CacheHeaders';
-import {cacheHeaders} from '@fluxer/hono/src/middleware/CacheHeaders';
-import type {CorsOptions} from '@fluxer/hono/src/middleware/Cors';
-import {cors} from '@fluxer/hono/src/middleware/Cors';
-import type {ErrorHandlerOptions} from '@fluxer/hono/src/middleware/ErrorHandler';
-import {createErrorHandler} from '@fluxer/hono/src/middleware/ErrorHandler';
-import type {RateLimitOptions, RateLimitService} from '@fluxer/hono/src/middleware/RateLimit';
-import {rateLimit} from '@fluxer/hono/src/middleware/RateLimit';
-import type {RequestIdOptions} from '@fluxer/hono/src/middleware/RequestId';
-import {requestId} from '@fluxer/hono/src/middleware/RequestId';
-import type {LogFunction, RequestLoggerOptions} from '@fluxer/hono/src/middleware/RequestLogger';
-import {requestLogger} from '@fluxer/hono/src/middleware/RequestLogger';
-import {fluxerVersionHeader} from '@fluxer/hono/src/middleware/VersionHeader';
+import type {CacheHeadersOptions} from '@voxr/hono/src/middleware/CacheHeaders';
+import {cacheHeaders} from '@voxr/hono/src/middleware/CacheHeaders';
+import type {CorsOptions} from '@voxr/hono/src/middleware/Cors';
+import {cors} from '@voxr/hono/src/middleware/Cors';
+import type {ErrorHandlerOptions} from '@voxr/hono/src/middleware/ErrorHandler';
+import {createErrorHandler} from '@voxr/hono/src/middleware/ErrorHandler';
+import type {RateLimitOptions, RateLimitService} from '@voxr/hono/src/middleware/RateLimit';
+import {rateLimit} from '@voxr/hono/src/middleware/RateLimit';
+import type {RequestIdOptions} from '@voxr/hono/src/middleware/RequestId';
+import {requestId} from '@voxr/hono/src/middleware/RequestId';
+import type {LogFunction, RequestLoggerOptions} from '@voxr/hono/src/middleware/RequestLogger';
+import {requestLogger} from '@voxr/hono/src/middleware/RequestLogger';
+import {voxrVersionHeader} from '@voxr/hono/src/middleware/VersionHeader';
 import type {Context, Env, Hono, MiddlewareHandler} from 'hono';
 
 interface MiddlewareStackOptions {
@@ -39,7 +39,7 @@ interface ApplyMiddlewareStackOptions extends MiddlewareStackOptions {
 }
 
 export function createStandardMiddlewareStack(options: MiddlewareStackOptions = {}): Array<MiddlewareHandler> {
-	const stack: Array<MiddlewareHandler> = [fluxerVersionHeader()];
+	const stack: Array<MiddlewareHandler> = [voxrVersionHeader()];
 	if (options.requestId) {
 		stack.push(requestId(options.requestId));
 	}

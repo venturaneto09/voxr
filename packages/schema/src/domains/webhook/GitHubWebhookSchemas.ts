@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {createStringType, Int32Type, Int64Type} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {URLType} from '@fluxer/schema/src/primitives/UrlValidators';
+import {createStringType, Int32Type, Int64Type} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {URLType} from '@voxr/schema/src/primitives/UrlValidators';
 import {z} from 'zod';
 
 const GitHubUser = z.object({

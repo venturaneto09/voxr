@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use anyhow::Result;
-use fluxer_content_update_frozen_snapshot::generate_snapshot_source;
+use voxr_content_update_frozen_snapshot::generate_snapshot_source;
 use std::env;
 use std::path::PathBuf;
 use std::process;
@@ -19,7 +19,7 @@ fn run() -> Result<()> {
         .next()
         .and_then(|value| PathBuf::from(value).file_name().map(|name| name.to_owned()))
         .and_then(|name| name.into_string().ok())
-        .unwrap_or_else(|| "fluxer-content-update-frozen-snapshot".to_owned());
+        .unwrap_or_else(|| "voxr-content-update-frozen-snapshot".to_owned());
 
     let Some(static_dir) = args.next() else {
         eprintln!("usage: {program} <static_dir>");

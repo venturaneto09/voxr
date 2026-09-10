@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {BadRequestError} from '@fluxer/errors/src/domains/core/BadRequestError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {BadRequestError} from '@voxr/errors/src/domains/core/BadRequestError';
 import {
 	sanitizeRetryAfterDecimalSeconds,
 	sanitizeRetryAfterSeconds,
-} from '@fluxer/errors/src/domains/core/RetryAfterSeconds';
+} from '@voxr/errors/src/domains/core/RetryAfterSeconds';
 
 export class SlowmodeRateLimitError extends BadRequestError {
 	constructor({

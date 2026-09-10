@@ -158,7 +158,7 @@ fn build_markdown_parser_wasm(app_dir: &Path) -> Result<()> {
             .current_dir(&rust_source_dir),
     )?)?;
 
-    let wasm_path = target_dir.join("wasm32-unknown-unknown/release/fluxer_markdown_parser.wasm");
+    let wasm_path = target_dir.join("wasm32-unknown-unknown/release/voxr_markdown_parser.wasm");
     let wasm =
         fs::read(&wasm_path).with_context(|| format!("Failed to read {}", wasm_path.display()))?;
     let content = markdown_wasm_bytes_content(&wasm);
@@ -330,14 +330,14 @@ fn patch_libfluxcore_bindgen_dts(content: &str) -> Result<String> {
 
 pub(crate) fn resolve_app_dir() -> Result<PathBuf> {
     let cwd = env::current_dir().context("Failed to resolve current directory")?;
-    if cwd.file_name().and_then(|value| value.to_str()) == Some("fluxer_app") {
+    if cwd.file_name().and_then(|value| value.to_str()) == Some("voxr_app") {
         return Ok(cwd);
     }
-    if cwd.join("fluxer_app").is_dir() {
-        return Ok(cwd.join("fluxer_app"));
+    if cwd.join("voxr_app").is_dir() {
+        return Ok(cwd.join("voxr_app"));
     }
     Err(anyhow!(
-        "Could not resolve fluxer_app directory from {}",
+        "Could not resolve voxr_app directory from {}",
         cwd.display()
     ))
 }
@@ -435,7 +435,7 @@ fn libfluxcore_package_json_content() -> String {
 fn libfluxcore_readme_content() -> &'static str {
     "<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->\n\
 # libfluxcore\n\n\
-Rust WebAssembly helpers and JavaScript codec wrappers for Fluxer media processing.\n"
+Rust WebAssembly helpers and JavaScript codec wrappers for Voxr media processing.\n"
 }
 
 fn markdown_wasm_bytes_content(wasm: &[u8]) -> String {

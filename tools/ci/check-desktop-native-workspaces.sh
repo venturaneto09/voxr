@@ -5,7 +5,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/../.." && pwd)"
-native_root="$repo_root/fluxer_desktop/native"
+native_root="$repo_root/voxr_desktop/native"
 cargo_bin="${CARGO_BIN:-cargo}"
 cargo_deny_bin="${CARGO_DENY_BIN:-cargo-deny}"
 native_target_dir="${DESKTOP_NATIVE_CARGO_TARGET_DIR:-$repo_root/target/desktop-native-workspaces}"

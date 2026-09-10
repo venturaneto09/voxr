@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {IpAuthorizationResendCooldownError} from '@fluxer/errors/src/domains/auth/IpAuthorizationResendCooldownError';
-import {IpAuthorizationResendLimitExceededError} from '@fluxer/errors/src/domains/auth/IpAuthorizationResendLimitExceededError';
-import {ThrottledError} from '@fluxer/errors/src/domains/core/ThrottledError';
-import type {FluxerError} from '@fluxer/errors/src/FluxerError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {IpAuthorizationResendCooldownError} from '@voxr/errors/src/domains/auth/IpAuthorizationResendCooldownError';
+import {IpAuthorizationResendLimitExceededError} from '@voxr/errors/src/domains/auth/IpAuthorizationResendLimitExceededError';
+import {ThrottledError} from '@voxr/errors/src/domains/core/ThrottledError';
+import type {VoxrError} from '@voxr/errors/src/VoxrError';
 import {describe, expect, it} from 'vitest';
 
 interface ThrottledResponseBody {
@@ -12,7 +12,7 @@ interface ThrottledResponseBody {
 	[key: string]: unknown;
 }
 
-async function readResponse(error: FluxerError): Promise<{
+async function readResponse(error: VoxrError): Promise<{
 	status: number;
 	retryAfter: string | null;
 	body: ThrottledResponseBody;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {ListGuildEmojisResponse, LookupGuildResponse} from '@fluxer/schema/src/domains/admin/AdminSchemas';
-import {ListUserRelationshipsResponse} from '@fluxer/schema/src/domains/admin/AdminUserSchemas';
+import {ListGuildEmojisResponse, LookupGuildResponse} from '@voxr/schema/src/domains/admin/AdminSchemas';
+import {ListUserRelationshipsResponse} from '@voxr/schema/src/domains/admin/AdminUserSchemas';
 import {describe, expect, it} from 'vitest';
 
 function snowflakeAt(index: number): string {

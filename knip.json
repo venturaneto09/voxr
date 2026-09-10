@@ -12,17 +12,17 @@
 		"tailwindcss",
 		"upng-js"
 	],
-	"ignoreFiles": ["fluxer_admin/src/styles/app.css", "fluxer_admin/static/htmx.min.js"],
+	"ignoreFiles": ["voxr_admin/src/styles/app.css", "voxr_admin/static/htmx.min.js"],
 	"ignoreIssues": {
-		"fluxer_app/scripts/build/Config.tsx": ["exports"],
-		"fluxer_app/scripts/build/rspack/static-files.mjs": ["exports"],
-		"fluxer_app/src/index.tsx": ["unlisted"],
-		"fluxer_desktop/native/mac-app-audio/index.test.mjs": ["unlisted"],
-		"fluxer_desktop/src/common/DesktopConfig.ts": ["types"],
-		"fluxer_desktop/src/common/Types.ts": ["types"],
-		"fluxer_desktop/src/main/Autostart.ts": ["exports"],
-		"fluxer_desktop/src/main/LinuxDesktopEntry.ts": ["exports"],
-		"fluxer_desktop/src/main/NotificationState.ts": ["exports", "types"],
+		"voxr_app/scripts/build/Config.tsx": ["exports"],
+		"voxr_app/scripts/build/rspack/static-files.mjs": ["exports"],
+		"voxr_app/src/index.tsx": ["unlisted"],
+		"voxr_desktop/native/mac-app-audio/index.test.mjs": ["unlisted"],
+		"voxr_desktop/src/common/DesktopConfig.ts": ["types"],
+		"voxr_desktop/src/common/Types.ts": ["types"],
+		"voxr_desktop/src/main/Autostart.ts": ["exports"],
+		"voxr_desktop/src/main/LinuxDesktopEntry.ts": ["exports"],
+		"voxr_desktop/src/main/NotificationState.ts": ["exports", "types"],
 		"packages/schema/src/domains/admin/AdminUserSchemas.ts": ["exports"],
 		"packages/schema/src/domains/geolocation/GeolocationSchemas.ts": ["exports"],
 		"pnpm-workspace.yaml": ["catalog"]
@@ -32,7 +32,7 @@
 			"ignoreDependencies": ["vite"],
 			"project": ["scripts/**/*.mjs"]
 		},
-		"fluxer_api": {
+		"voxr_api": {
 			"ignoreDependencies": [
 				"@elastic/elasticsearch",
 				"@hono/node-server",
@@ -49,11 +49,11 @@
 				"validator"
 			]
 		},
-		"fluxer_app": {
+		"voxr_app": {
 			"entry": ["lingui.config.js", "scripts/build-sw.mjs", "scripts/Generate*.ts"],
 			"ignoreDependencies": ["@lingui/swc-plugin"]
 		},
-		"fluxer_desktop": {
+		"voxr_desktop": {
 			"entry": [
 				"src/main/Bootstrap.ts",
 				"src/main/index.ts",
@@ -67,7 +67,7 @@
 			"project": ["src/**/*.{ts,tsx,mjs,js}", "scripts/**/*.mjs", "native/**/*.{js,mjs,cjs,d.ts}"],
 			"ignoreDependencies": ["electron-builder", "electron-builder-squirrel-windows"]
 		},
-		"fluxer_docs": {
+		"voxr_docs": {
 			"entry": ["scripts/*.ts", "src/**/*.astro"],
 			"project": ["src/**/*.{ts,astro}", "scripts/**/*.ts"],
 			"ignoreDependencies": ["sharp"]

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {matchesAnyPathPattern} from '@fluxer/hono/src/middleware/utils/PathMatchers';
+import {matchesAnyPathPattern} from '@voxr/hono/src/middleware/utils/PathMatchers';
 import type {MiddlewareHandler} from 'hono';
 
 export interface RequestLogData {

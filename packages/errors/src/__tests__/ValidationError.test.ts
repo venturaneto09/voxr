@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {HttpStatus} from '@fluxer/constants/src/HttpConstants';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
-import {ValidationError} from '@fluxer/errors/src/ValidationError';
+import {HttpStatus} from '@voxr/constants/src/HttpConstants';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
+import {ValidationError} from '@voxr/errors/src/ValidationError';
 import {describe, expect, it} from 'vitest';
 
 interface ValidationErrorBody {
@@ -51,11 +51,11 @@ describe('ValidationError', () => {
 			});
 			expect(error.message).toBe('Input validation failed');
 		});
-		it('should be instance of FluxerError', () => {
+		it('should be instance of VoxrError', () => {
 			const error = new ValidationError({
 				errors: [{path: 'field', code: 'CODE', message: 'message'}],
 			});
-			expect(error).toBeInstanceOf(FluxerError);
+			expect(error).toBeInstanceOf(VoxrError);
 		});
 	});
 	describe('getResponse', () => {

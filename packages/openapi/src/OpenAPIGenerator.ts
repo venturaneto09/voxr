@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import {discoverControllerFiles, extractRoutesFromControllers} from '@fluxer/openapi/src/extractors/RouteExtractor';
-import {isExcludedRoutePath, OpenAPIGeneratorCatalog} from '@fluxer/openapi/src/generator/OpenAPIGeneratorCatalog';
-import {OpenAPIOperationBuilder} from '@fluxer/openapi/src/generator/OpenAPIOperationBuilder';
-import {collectReferencedSchemaNames} from '@fluxer/openapi/src/generator/OpenAPISchemaReferenceCollector';
-import {loadSchemasIntoRegistry} from '@fluxer/openapi/src/generator/OpenAPISchemaRegistryLoader';
+import {discoverControllerFiles, extractRoutesFromControllers} from '@voxr/openapi/src/extractors/RouteExtractor';
+import {isExcludedRoutePath, OpenAPIGeneratorCatalog} from '@voxr/openapi/src/generator/OpenAPIGeneratorCatalog';
+import {OpenAPIOperationBuilder} from '@voxr/openapi/src/generator/OpenAPIOperationBuilder';
+import {collectReferencedSchemaNames} from '@voxr/openapi/src/generator/OpenAPISchemaReferenceCollector';
+import {loadSchemasIntoRegistry} from '@voxr/openapi/src/generator/OpenAPISchemaRegistryLoader';
 import type {
 	OpenAPIGenerationResult,
 	OpenAPIGeneratorOptions,
 	OpenAPIRouteScope,
 	SkippedRoute,
-} from '@fluxer/openapi/src/OpenAPIGenerationTypes';
-import type {ExtractedRoute, OpenAPIDocument, OpenAPIPathItem, OpenAPISchema} from '@fluxer/openapi/src/OpenAPITypes';
-import {convertPathToOpenAPI} from '@fluxer/openapi/src/registry/ParameterRegistry';
-import {SchemaRegistry} from '@fluxer/openapi/src/registry/SchemaRegistry';
+} from '@voxr/openapi/src/OpenAPIGenerationTypes';
+import type {ExtractedRoute, OpenAPIDocument, OpenAPIPathItem, OpenAPISchema} from '@voxr/openapi/src/OpenAPITypes';
+import {convertPathToOpenAPI} from '@voxr/openapi/src/registry/ParameterRegistry';
+import {SchemaRegistry} from '@voxr/openapi/src/registry/SchemaRegistry';
 
 interface PathBuildResult {
 	readonly paths: Record<string, OpenAPIPathItem>;
@@ -34,10 +34,10 @@ interface GeneratorSettings {
 function createGeneratorSettings(options: OpenAPIGeneratorOptions): GeneratorSettings {
 	return {
 		basePath: options.basePath,
-		title: options.title ?? 'Fluxer API',
+		title: options.title ?? 'Voxr API',
 		version: options.version ?? '1.0.0',
-		description: options.description ?? 'The Fluxer API',
-		serverUrl: options.serverUrl ?? 'https://api.fluxer.app',
+		description: options.description ?? 'The Voxr API',
+		serverUrl: options.serverUrl ?? 'https://api.voxr.app',
 		routeScope: options.routeScope ?? 'public',
 	};
 }
@@ -64,7 +64,7 @@ export class OpenAPIGenerator {
 		return result.document;
 	}
 	public async generateWithStats(): Promise<OpenAPIGenerationResult> {
-		const controllerFiles = discoverControllerFiles(`${this.settings.basePath}/fluxer_api`);
+		const controllerFiles = discoverControllerFiles(`${this.settings.basePath}/voxr_api`);
 		const routes = this.filterRoutesForScope(extractRoutesFromControllers(controllerFiles));
 		let registeredSchemaCount = 0;
 		let loadedSchemas = new Map();
@@ -93,8 +93,8 @@ export class OpenAPIGenerator {
 				version: this.settings.version,
 				description: this.settings.description,
 				contact: {
-					name: 'Fluxer Platform AB',
-					email: 'support@fluxer.app',
+					name: 'Voxr Platform AB',
+					email: 'support@voxr.app',
 				},
 				license: {
 					name: 'AGPL-3.0',

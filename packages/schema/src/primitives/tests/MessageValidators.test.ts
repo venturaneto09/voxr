@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {MessageReferenceTypes, MessageTypes} from '@fluxer/constants/src/ChannelConstants';
-import {MessageReferenceTypeSchema, MessageTypeSchema} from '@fluxer/schema/src/primitives/MessageValidators';
+import {MessageReferenceTypes, MessageTypes} from '@voxr/constants/src/ChannelConstants';
+import {MessageReferenceTypeSchema, MessageTypeSchema} from '@voxr/schema/src/primitives/MessageValidators';
 import {describe, expect, it} from 'vitest';
 
 describe('MessageTypeSchema', () => {

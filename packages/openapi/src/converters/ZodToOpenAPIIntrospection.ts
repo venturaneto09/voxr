@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {setEnumNames} from '@fluxer/openapi/src/converters/OpenAPIExtensions';
+import {setEnumNames} from '@voxr/openapi/src/converters/OpenAPIExtensions';
 import {
 	getZodDefinition,
 	getZodSchemaDescription,
@@ -8,9 +8,9 @@ import {
 	getZodTypeFromUnknown,
 	getZodValues,
 	type ZodCheck,
-} from '@fluxer/openapi/src/converters/ZodInternals';
-import {parseFluxerTypeAnnotation} from '@fluxer/openapi/src/converters/ZodToOpenAPIAnnotationParser';
-import type {OpenAPISchema} from '@fluxer/openapi/src/Types';
+} from '@voxr/openapi/src/converters/ZodInternals';
+import {parseVoxrTypeAnnotation} from '@voxr/openapi/src/converters/ZodToOpenAPIAnnotationParser';
+import type {OpenAPISchema} from '@voxr/openapi/src/Types';
 import type {ZodTypeAny} from 'zod';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -305,8 +305,8 @@ export function getDescription(schema: ZodTypeAny): string | undefined {
 }
 export function getUserDescription(schema: ZodTypeAny): string | undefined {
 	const description = getDescription(schema);
-	const fluxer = parseFluxerTypeAnnotation(description);
-	if (fluxer) return fluxer.userDescription;
+	const voxr = parseVoxrTypeAnnotation(description);
+	if (voxr) return voxr.userDescription;
 	return description;
 }
 export function getTupleItems(schema: ZodTypeAny): Array<ZodTypeAny> | undefined {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {createStringType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
-import {UserPremiumTypesSchema} from '@fluxer/schema/src/primitives/UserSettingsValidators';
+import {createStringType} from '@voxr/schema/src/primitives/SchemaPrimitives';
+import {UserPremiumTypesSchema} from '@voxr/schema/src/primitives/UserSettingsValidators';
 import {z} from 'zod';
 
 export const PricingModeEnum = z.enum(['localized', 'base']);

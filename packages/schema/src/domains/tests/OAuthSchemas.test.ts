@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {MAX_APPLICATION_REDIRECT_URIS} from '@fluxer/constants/src/LimitConstants';
-import {ApplicationCreateRequest, ApplicationResponse} from '@fluxer/schema/src/domains/oauth/OAuthSchemas';
+import {MAX_APPLICATION_REDIRECT_URIS} from '@voxr/constants/src/LimitConstants';
+import {ApplicationCreateRequest, ApplicationResponse} from '@voxr/schema/src/domains/oauth/OAuthSchemas';
 import {describe, expect, it} from 'vitest';
 
 const buildRedirectURIs = (count: number) =>

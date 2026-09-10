@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {HttpStatus} from '@fluxer/constants/src/HttpConstants';
-import {CaptchaRequiredError, InvalidCaptchaError} from '@fluxer/errors/src/CaptchaErrors';
-import {BadRequestError} from '@fluxer/errors/src/domains/core/BadRequestError';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
-import {ErrorCodeToI18nKey} from '@fluxer/errors/src/i18n/ErrorCodeMappings';
-import {getErrorMessage} from '@fluxer/errors/src/i18n/ErrorI18n';
-import type {ErrorI18nKey} from '@fluxer/errors/src/i18n/ErrorI18nTypes.generated';
+import {HttpStatus} from '@voxr/constants/src/HttpConstants';
+import {CaptchaRequiredError, InvalidCaptchaError} from '@voxr/errors/src/CaptchaErrors';
+import {BadRequestError} from '@voxr/errors/src/domains/core/BadRequestError';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
+import {ErrorCodeToI18nKey} from '@voxr/errors/src/i18n/ErrorCodeMappings';
+import {getErrorMessage} from '@voxr/errors/src/i18n/ErrorI18n';
+import type {ErrorI18nKey} from '@voxr/errors/src/i18n/ErrorI18nTypes.generated';
 import {describe, expect, it} from 'vitest';
 
 describe('CaptchaErrors', () => {
@@ -24,9 +24,9 @@ describe('CaptchaErrors', () => {
 			const error = new CaptchaRequiredError();
 			expect(error).toBeInstanceOf(BadRequestError);
 		});
-		it('should extend FluxerError', () => {
+		it('should extend VoxrError', () => {
 			const error = new CaptchaRequiredError();
-			expect(error).toBeInstanceOf(FluxerError);
+			expect(error).toBeInstanceOf(VoxrError);
 		});
 		it('should have an i18n mapping that resolves to the correct message', () => {
 			const error = new CaptchaRequiredError();
@@ -49,9 +49,9 @@ describe('CaptchaErrors', () => {
 			const error = new InvalidCaptchaError();
 			expect(error).toBeInstanceOf(BadRequestError);
 		});
-		it('should extend FluxerError', () => {
+		it('should extend VoxrError', () => {
 			const error = new InvalidCaptchaError();
-			expect(error).toBeInstanceOf(FluxerError);
+			expect(error).toBeInstanceOf(VoxrError);
 		});
 		it('should have an i18n mapping that resolves to the correct message', () => {
 			const error = new InvalidCaptchaError();

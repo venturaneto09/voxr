@@ -2,7 +2,7 @@
 
 #[tokio::main]
 async fn main() {
-    if let Err(error) = fluxer_ci::run().await {
+    if let Err(error) = voxr_ci::run().await {
         eprintln!("{error:?}");
         std::process::exit(1);
     }

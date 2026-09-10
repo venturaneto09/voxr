@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {Locales} from '@fluxer/constants/src/Locales';
-import {OAuth2Error} from '@fluxer/errors/src/domains/auth/OAuth2Error';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {Locales} from '@voxr/constants/src/Locales';
+import {OAuth2Error} from '@voxr/errors/src/domains/auth/OAuth2Error';
 import {
 	getErrorRecord,
 	hasApiErrorCode,
@@ -12,14 +12,14 @@ import {
 	resolveErrorMessage,
 	resolveErrorStatus,
 	resolveMessageVariables,
-} from '@fluxer/errors/src/error_handling/ErrorIntrospection';
-import {createJsonErrorResponse} from '@fluxer/errors/src/error_handling/ErrorResponse';
-import {FluxerError} from '@fluxer/errors/src/FluxerError';
-import {ErrorCodeToI18nKey} from '@fluxer/errors/src/i18n/ErrorCodeMappings';
-import {getErrorMessageUnsafe} from '@fluxer/errors/src/i18n/ErrorI18n';
-import type {ErrorI18nKey} from '@fluxer/errors/src/i18n/ErrorI18nMessages';
-import type {BaseHonoEnv, ErrorI18nService} from '@fluxer/hono_types/src/HonoTypes';
-import {createLogger} from '@fluxer/logger/src/Logger';
+} from '@voxr/errors/src/error_handling/ErrorIntrospection';
+import {createJsonErrorResponse} from '@voxr/errors/src/error_handling/ErrorResponse';
+import {VoxrError} from '@voxr/errors/src/VoxrError';
+import {ErrorCodeToI18nKey} from '@voxr/errors/src/i18n/ErrorCodeMappings';
+import {getErrorMessageUnsafe} from '@voxr/errors/src/i18n/ErrorI18n';
+import type {ErrorI18nKey} from '@voxr/errors/src/i18n/ErrorI18nMessages';
+import type {BaseHonoEnv, ErrorI18nService} from '@voxr/hono_types/src/HonoTypes';
+import {createLogger} from '@voxr/logger/src/Logger';
 import type {Context} from 'hono';
 import {HTTPException} from 'hono/http-exception';
 
@@ -161,7 +161,7 @@ function handleLocalizedValidationErrors<E extends BaseHonoEnv>(err: unknown, ct
 	}
 }
 
-function handleFluxerError<E extends BaseHonoEnv>(err: FluxerError, ctx: Context<E>): Response {
+function handleVoxrError<E extends BaseHonoEnv>(err: VoxrError, ctx: Context<E>): Response {
 	const localizedResponse = handleLocalizedValidationErrors(err, ctx);
 	if (localizedResponse) {
 		return localizedResponse;
@@ -265,8 +265,8 @@ function resolveErrorResponse<E extends BaseHonoEnv>(err: Error, ctx: Context<E>
 	if (err instanceof OAuth2Error) {
 		return {response: err.getResponse(), unexpected: false};
 	}
-	if (err instanceof FluxerError) {
-		return {response: handleFluxerError(err, ctx), unexpected: false};
+	if (err instanceof VoxrError) {
+		return {response: handleVoxrError(err, ctx), unexpected: false};
 	}
 	const errorCode = resolveApiErrorCode(err);
 	if (errorCode) {

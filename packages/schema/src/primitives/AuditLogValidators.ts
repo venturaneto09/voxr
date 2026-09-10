@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {AuditLogActionType} from '@fluxer/constants/src/AuditLogActionType';
-import {createInt32EnumType, withOpenApiType} from '@fluxer/schema/src/primitives/SchemaPrimitives';
+import {AuditLogActionType} from '@voxr/constants/src/AuditLogActionType';
+import {createInt32EnumType, withOpenApiType} from '@voxr/schema/src/primitives/SchemaPrimitives';
 
 export const AuditLogActionTypeSchema = withOpenApiType(
 	createInt32EnumType(

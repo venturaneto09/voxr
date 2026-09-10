@@ -4,7 +4,7 @@ import {
 	DONATION_CURRENCIES,
 	type DonationCurrency as DonationCurrencyCode,
 	getDonationAmountConstraints,
-} from '@fluxer/schema/src/domains/donation/DonationAmountUtils';
+} from '@voxr/schema/src/domains/donation/DonationAmountUtils';
 import {z} from 'zod';
 
 export const DonationRequestLinkRequest = z.object({

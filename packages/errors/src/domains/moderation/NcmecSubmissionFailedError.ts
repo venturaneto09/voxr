@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {InternalServerError} from '@fluxer/errors/src/domains/core/InternalServerError';
+import {APIErrorCodes} from '@voxr/constants/src/ApiErrorCodes';
+import {InternalServerError} from '@voxr/errors/src/domains/core/InternalServerError';
 
 export class NcmecSubmissionFailedError extends InternalServerError {
 	constructor(reason?: string) {
