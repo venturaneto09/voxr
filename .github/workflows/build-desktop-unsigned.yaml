@@ -417,7 +417,7 @@ jobs:
           --step create_portable_zip_windows
 
       - name: Package Windows app with Velopack
-        if: false  # assinatura desabilitada neste fork
+        if: matrix.platform == 'windows'
         working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_CHANNEL: ${{ env.BUILD_CHANNEL }}
@@ -426,7 +426,7 @@ jobs:
           --step package_app_windows_velopack
 
       - name: Analyze Velopack nupkg for long paths
-        if: false  # assinatura desabilitada neste fork
+        if: matrix.platform == 'windows'
         working-directory: ${{ env.WORKDIR }}/voxr_desktop
         env:
           BUILD_VERSION: ${{ env.VERSION }}
@@ -457,7 +457,7 @@ jobs:
           --step verify_windows_signed_artifacts
 
       - name: Prepare artifacts (Windows)
-        if: false  # assinatura desabilitada neste fork
+        if: runner.os == 'Windows'
         run: >-
           cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
           --step prepare_artifacts_windows
@@ -481,15 +481,17 @@ jobs:
           --step generate_checksums_unix
 
       - name: Generate SHA256 checksums (Windows)
-        if: false  # assinatura desabilitada neste fork
+        if: runner.os == 'Windows'
         run: >-
           cargo run --locked --quiet --manifest-path ${{ github.workspace }}/_ci/tools/ci/Cargo.toml -- build-desktop
           --step generate_checksums_windows
 
-      - name: Publicar ZIP portatil como artefato
+      - name: Publicar instalador como artefato
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: voxr-desktop-${{ matrix.platform }}-${{ matrix.arch }}
-          path: ${{ env.WORKDIR }}/voxr_desktop/dist-electron/*.zip
+          path: |
+            ${{ env.WORKDIR }}/voxr_desktop/upload_staging/**
+            ${{ env.WORKDIR }}/upload_staging/**
           if-no-files-found: error
           retention-days: 14
