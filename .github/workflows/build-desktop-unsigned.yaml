@@ -491,7 +491,7 @@ jobs:
         with:
           name: voxr-desktop-${{ matrix.platform }}-${{ matrix.arch }}
           path: |
-            ${{ env.WORKDIR }}/voxr_desktop/upload_staging/**
-            ${{ env.WORKDIR }}/upload_staging/**
+            ${{ github.workspace }}/upload_staging/**
+            ${{ env.WORKDIR }}/voxr_desktop/dist-electron/velopack-windows-*/**
           if-no-files-found: error
           retention-days: 14
