@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import assert from 'node:assert/strict';
+import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
 import {isElectronPlatform} from '@app/features/platform/types/Platform';
 import {Logger} from '@app/features/platform/utils/AppLogger';
 import {Store} from '@app/features/voice/engine/Store';
@@ -188,7 +189,8 @@ function createRoomConnectOptions(): RoomConnectOptions {
 		autoSubscribe: false,
 	};
 	assert.equal(connectOptions.autoSubscribe, false, 'LiveKit connect options must not auto-subscribe');
-	if (isElectronPlatform()) {
+	// Relay-only ICE hides client IPs from third-party servers; a self-hosted server is the operator's own.
+	if (isElectronPlatform() && !RuntimeConfig.isSelfHosted()) {
 		connectOptions.rtcConfig = {iceTransportPolicy: 'relay'};
 		assert.equal(
 			connectOptions.rtcConfig.iceTransportPolicy,
