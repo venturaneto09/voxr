@@ -14,16 +14,18 @@ export function resolveLivekitEndpoint(configuredUrl: string | undefined, apiPub
 }
 
 export class VoiceDataInitializer {
-	async initialize(): Promise<void> {
+	// Resolves true when it wrote region or server rows, so the caller can tell
+	// processes that already loaded the voice topology to reload it.
+	async initialize(): Promise<boolean> {
 		if (!Config.voice.enabled || !Config.voice.defaultRegion) {
-			return;
+			return false;
 		}
 		const defaultRegion = Config.voice.defaultRegion;
 		const livekitApiKey = Config.voice.apiKey;
 		const livekitApiSecret = Config.voice.apiSecret;
 		if (!livekitApiKey || !livekitApiSecret) {
 			Logger.warn('[VoiceDataInitializer] LiveKit API key/secret not configured, cannot create default region');
-			return;
+			return false;
 		}
 		try {
 			const repository = new VoiceRepository();
@@ -65,28 +67,28 @@ export class VoiceDataInitializer {
 				});
 				Logger.info(`[VoiceDataInitializer] Created server: ${serverId} -> ${livekitEndpoint}`);
 				Logger.info('[VoiceDataInitializer] Successfully created default voice region');
-				return;
+				return true;
 			}
 			const configuredRegion = await repository.getRegion(defaultRegion.id);
 			if (!configuredRegion) {
 				Logger.info(
 					`[VoiceDataInitializer] ${existingRegions.length} voice ${existingRegions.length === 1 ? 'region' : 'regions'} already exist and configured default region (${defaultRegion.id}) is absent, skipping config sync`,
 				);
-				return;
+				return false;
 			}
 			const configuredServer = await repository.getServer(defaultRegion.id, serverId);
 			if (!configuredServer) {
 				Logger.info(
 					`[VoiceDataInitializer] Region ${defaultRegion.id} exists but server ${serverId} is absent, skipping config sync`,
 				);
-				return;
+				return false;
 			}
 			const endpointChanged = configuredServer.endpoint !== livekitEndpoint;
 			const apiKeyChanged = configuredServer.apiKey !== livekitApiKey;
 			const apiSecretChanged = configuredServer.apiSecret !== livekitApiSecret;
 			if (!endpointChanged && !apiKeyChanged && !apiSecretChanged) {
 				Logger.info(`[VoiceDataInitializer] Default voice server ${serverId} already matches config credentials`);
-				return;
+				return false;
 			}
 			await repository.upsertServer({
 				...configuredServer,
@@ -96,8 +98,10 @@ export class VoiceDataInitializer {
 				updatedAt: new Date(),
 			});
 			Logger.info(`[VoiceDataInitializer] Synced default voice server ${serverId} credentials from config`);
+			return true;
 		} catch (error) {
 			Logger.error({error}, '[VoiceDataInitializer] Failed to initialise config-managed voice topology');
+			return false;
 		}
 	}
 }

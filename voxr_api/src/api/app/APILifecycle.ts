@@ -32,6 +32,7 @@ import {ensureApnsSigningKey} from '../push/ApnsPushService';
 import {initializeSearch, shutdownSearch} from '../SearchFactory';
 import {warmupAdminSearchIndexes} from '../search/SearchWarmup';
 import {VisionarySlotInitializer} from '../stripe/VisionarySlotInitializer';
+import {VOICE_CONFIGURATION_CHANNEL} from '../voice/VoiceConstants';
 import {VoiceDataInitializer} from '../voice/VoiceDataInitializer';
 import {JetStreamWorkerQueue} from '../worker/JetStreamWorkerQueue';
 import {WorkerService} from '../worker/WorkerService';
@@ -175,7 +176,15 @@ export function createInitializer(config: APIConfig, logger: ILogger): () => Pro
 			}
 			if (config.voice.enabled && config.voice.defaultRegion) {
 				const voiceDataInitializer = new VoiceDataInitializer();
-				await voiceDataInitializer.initialize();
+				const voiceDataChanged = await voiceDataInitializer.initialize();
+				if (voiceDataChanged) {
+					// The worker starts alongside the API and can load the topology before these rows
+					// exist; without this it keeps an empty server list and evicts every call as a ghost.
+					await kvClient.publish(
+						VOICE_CONFIGURATION_CHANNEL,
+						JSON.stringify({type: 'default_region_synced', regionId: config.voice.defaultRegion.id}),
+					);
+				}
 				await ensureVoiceResourcesInitialized();
 				logger.info('Voice data initialized');
 			}
